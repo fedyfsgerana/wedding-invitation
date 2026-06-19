@@ -1,89 +1,116 @@
 "use client";
 
+import React from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { SectionWrapper } from "@/components/ui/SectionWrapper";
+import Image from "next/image";
+import { SectionWrapper, SectionTitle } from "@/components/ui/SectionWrapper";
+import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
+import { Person } from "@/types";
 
-const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
+const cardVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.95 },
     visible: {
         opacity: 1,
-        y: 0,
-        transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
+        scale: 1,
+        transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
     },
 };
 
-const containerVariants: Variants = {
-    hidden: {},
-    visible: {
-        transition: { staggerChildren: 0.15 },
-    },
-};
+function PersonCard({ person, index }: { person: Person; index: number }) {
+    const InstagramIcon = getLucideIcon("Instagram");
+    const HeartIcon = getLucideIcon("Heart");
 
-export function OpeningSection() {
-    const { verse, groom, bride, groomParents, brideParents } = weddingData;
+    const avatarUrl =
+        "https://ui-avatars.com/api/?name=" +
+        encodeURIComponent(person.name) +
+        "&size=256&background=f9a8d4&color=fff";
+
+    const igHandle = person.instagram
+        ? person.instagram.replace("@", "")
+        : "";
+
+    const igUrl =
+        "https://instagram.com/" + igHandle;
+
+    function handleErr(e: React.SyntheticEvent<HTMLImageElement>) {
+        e.currentTarget.src = avatarUrl;
+    }
 
     return (
-        <SectionWrapper id="pembuka" variant="gradient">
-            <motion.div
-                variants={containerVariants}
-                initial="hidden"
-                whileInView="visible"
-                viewport={{ once: true }}
-                className="container-wedding text-center"
-            >
-                {/* Verse */}
+        <motion.div
+            variants={cardVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            transition={{ delay: index * 0.15 }}
+            className="flex flex-col items-center text-center"
+        >
+            <div className="relative mb-6">
+                <div className="w-52 h-52 md:w-64 md:h-64 rounded-full overflow-hidden border-4 border-primary/20 shadow-xl">
+                    <Image
+                        src={person.photo}
+                        alt={person.name}
+                        width={256}
+                        height={256}
+                        className="w-full h-full object-cover"
+                        onError={handleErr}
+                    />
+                </div>
+                <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-primary text-primary-foreground text-xs font-medium whitespace-nowrap shadow-md">
+                    {person.role}
+                </div>
+            </div>
+            <div className="mt-4">
+                <h3 className="font-script text-4xl text-primary mb-1">
+                    {person.nickname}
+                </h3>
+                <p className="font-serif text-base font-medium text-foreground mb-2">
+                    {person.fullName}
+                </p>
+                {person.bio && (
+                    <p className="text-muted-foreground text-sm mb-3">
+                        {person.bio}
+                    </p>
+                )}
+                {person.instagram && (
+                    <span className="inline-flex items-center gap-1.5 text-sm text-primary">
+                        <InstagramIcon className="w-4 h-4" />
+                        <span>{person.instagram}</span>
+                    </span>
+                )}
+            </div>
+        </motion.div>
+    );
+}
+
+export function BrideGroomSection() {
+    const { groom, bride } = weddingData;
+    const HeartIcon = getLucideIcon("Heart");
+
+    return (
+        <SectionWrapper id="mempelai" variant="default">
+            <div className="container-wedding">
+                <SectionTitle
+                    decorative="Mempelai"
+                    title="Yang Berbahagia"
+                    subtitle="Dua hati yang dipersatukan dalam ikatan suci pernikahan"
+                />
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12">
+                    <PersonCard person={groom} index={0} />
+                    <PersonCard person={bride} index={1} />
+                </div>
                 <motion.div
-                    variants={itemVariants}
-                    className="mb-12 px-6 py-8 rounded-2xl bg-background/60 backdrop-blur-sm border border-primary/10"
+                    initial={{ opacity: 0, scale: 0 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.5, delay: 0.3 }}
+                    className="flex justify-center mt-10"
                 >
-                    <p className="text-primary text-2xl mb-4">❝</p>
-                    <p className="text-foreground font-serif italic text-base md:text-lg leading-relaxed mb-4">
-                        {verse.text}
-                    </p>
-                    <p className="text-primary text-sm font-medium">{verse.source}</p>
+                    <HeartIcon className="w-8 h-8 text-primary animate-pulse-soft" />
                 </motion.div>
-
-                {/* Opening message */}
-                <motion.p
-                    variants={itemVariants}
-                    className="text-muted-foreground text-sm md:text-base leading-relaxed mb-10 max-w-lg mx-auto"
-                >
-                    Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud
-                    menyelenggarakan pernikahan putra-putri kami:
-                </motion.p>
-
-                {/* Groom */}
-                <motion.div variants={itemVariants} className="mb-6">
-                    <h2 className="font-script text-5xl md:text-6xl text-primary mb-1">
-                        {groom.fullName}
-                    </h2>
-                    <p className="text-muted-foreground text-sm">
-                        Putra dari {groomParents.father} &amp; {groomParents.mother}
-                    </p>
-                </motion.div>
-
-                {/* Divider */}
-                <motion.div
-                    variants={itemVariants}
-                    className="flex items-center justify-center gap-3 my-6"
-                >
-                    <div className="h-px w-16 bg-primary/30" />
-                    <p className="font-script text-3xl text-primary">dan</p>
-                    <div className="h-px w-16 bg-primary/30" />
-                </motion.div>
-
-                {/* Bride */}
-                <motion.div variants={itemVariants} className="mb-10">
-                    <h2 className="font-script text-5xl md:text-6xl text-primary mb-1">
-                        {bride.fullName}
-                    </h2>
-                    <p className="text-muted-foreground text-sm">
-                        Putri dari {brideParents.father} &amp; {brideParents.mother}
-                    </p>
-                </motion.div>
-            </motion.div>
+            </div>
         </SectionWrapper>
     );
 }
