@@ -1,27 +1,24 @@
 "use client";
 
 import { createContext, useContext, useEffect, useRef, useState } from "react";
+import { weddingData } from "@/lib/weddingData";
 
 interface AudioContextType {
     isPlaying: boolean;
     toggleAudio: () => void;
-    setMusicSrc: (src: string) => void;
 }
 
 const AudioContext = createContext<AudioContextType>({
     isPlaying: false,
     toggleAudio: () => { },
-    setMusicSrc: () => { },
 });
 
 export function AudioProvider({ children }: { children: React.ReactNode }) {
     const audioRef = useRef<HTMLAudioElement | null>(null);
     const [isPlaying, setIsPlaying] = useState(false);
-    const [src, setSrc] = useState("");
 
     useEffect(() => {
-        if (!src) return;
-        const audio = new Audio(src);
+        const audio = new Audio(weddingData.music);
         audio.loop = true;
         audio.volume = 0.4;
         audioRef.current = audio;
@@ -30,7 +27,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
             audio.pause();
             audio.src = "";
         };
-    }, [src]);
+    }, []);
 
     const toggleAudio = () => {
         const audio = audioRef.current;
@@ -44,12 +41,8 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    const setMusicSrc = (newSrc: string) => {
-        setSrc(newSrc);
-    };
-
     return (
-        <AudioContext.Provider value={{ isPlaying, toggleAudio, setMusicSrc }}>
+        <AudioContext.Provider value={{ isPlaying, toggleAudio }}>
             {children}
         </AudioContext.Provider>
     );

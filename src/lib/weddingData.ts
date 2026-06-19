@@ -26,7 +26,7 @@ export const weddingData: WeddingData = {
         mother: "Ibu Enita Endriani",
     },
     akad: {
-        date: "2025-09-13",
+        date: "2026-12-20",
         time: "08:00",
         endTime: "10:00",
         venue: "Masjid Al-Ikhlas",
@@ -37,7 +37,7 @@ export const weddingData: WeddingData = {
         calendarTitle: "Akad Nikah Fedy & Suci",
     },
     reception: {
-        date: "2025-09-13",
+        date: "2026-12-20",
         time: "11:00",
         endTime: "15:00",
         venue: "Gedung Serbaguna Melati",
@@ -122,7 +122,7 @@ export const weddingData: WeddingData = {
         text: "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.",
         source: "QS. Ar-Rum: 21",
     },
-    music: "/audio/wedding-music.mp3",
+    music: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
 };
 
 export const siteConfig = {
