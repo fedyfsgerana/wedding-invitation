@@ -88,6 +88,7 @@ export interface WishItem {
     name: string;
     message: string;
     attendance: string;
+    guestCount?: number | string;
     timestamp: string;
 }
 

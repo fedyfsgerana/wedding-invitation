@@ -13,19 +13,18 @@ interface Guest {
     createdAt: string;
 }
 
-const STORAGE_KEY = "wedding-admin-guests";
-const ADMIN_PASSWORD = "fedysuci2026";
-
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(false);
+    const [loginLoading, setLoginLoading] = useState(false);
     const [guests, setGuests] = useState<Guest[]>([]);
     const [guestName, setGuestName] = useState("");
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [search, setSearch] = useState("");
     const [filterSent, setFilterSent] = useState<"all" | "sent" | "unsent">("all");
     const [mounted, setMounted] = useState(false);
+    const [loadingGuests, setLoadingGuests] = useState(false);
 
     const LockIcon = getLucideIcon("Lock");
     const UnlockIcon = getLucideIcon("Unlock");
@@ -53,12 +52,19 @@ export default function AdminPage() {
 
     useEffect(() => {
         if (!isAuthenticated || !mounted) return;
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) setGuests(JSON.parse(stored));
-        } catch {
-            console.error("Gagal memuat daftar tamu");
-        }
+        const loadGuests = async () => {
+            setLoadingGuests(true);
+            try {
+                const res = await fetch("/api/guests");
+                const data = await res.json();
+                setGuests(data.guests || []);
+            } catch {
+                console.error("Gagal memuat daftar tamu");
+            } finally {
+                setLoadingGuests(false);
+            }
+        };
+        loadGuests();
     }, [isAuthenticated, mounted]);
 
     if (!mounted) {
@@ -69,27 +75,31 @@ export default function AdminPage() {
         );
     }
 
-    const saveGuests = (updated: Guest[]) => {
-        setGuests(updated);
+    const handleLogin = async () => {
+        setLoginLoading(true);
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
-        } catch {
-            console.error("Gagal menyimpan daftar tamu");
-        }
-    };
+            const res = await fetch("/api/admin/login", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ password }),
+            });
 
-    const handleLogin = () => {
-        if (password === ADMIN_PASSWORD) {
-            setIsAuthenticated(true);
-            try {
-                sessionStorage.setItem("wedding-admin-auth", "true");
-            } catch {
-                console.error("Gagal menyimpan session");
+            if (res.ok) {
+                setIsAuthenticated(true);
+                try {
+                    sessionStorage.setItem("wedding-admin-auth", "true");
+                } catch {
+                    console.error("Gagal menyimpan session");
+                }
+                setPasswordError(false);
+            } else {
+                setPasswordError(true);
+                setPassword("");
             }
-            setPasswordError(false);
-        } else {
+        } catch {
             setPasswordError(true);
-            setPassword("");
+        } finally {
+            setLoginLoading(false);
         }
     };
 
@@ -106,31 +116,54 @@ export default function AdminPage() {
         return `${siteConfig.url}?to=${encodeURIComponent(name)}`;
     };
 
-    const addGuest = () => {
+    const addGuest = async () => {
         if (!guestName.trim()) return;
-        const newGuest: Guest = {
-            id: Date.now().toString(),
-            name: guestName.trim(),
-            link: generateLink(guestName.trim()),
-            sent: false,
-            createdAt: new Date().toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "short",
-                year: "numeric",
-            }),
-        };
-        saveGuests([newGuest, ...guests]);
+        const name = guestName.trim();
+        const link = generateLink(name);
         setGuestName("");
+
+        try {
+            const res = await fetch("/api/guests", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ name, link }),
+            });
+            const data = await res.json();
+            if (data.guest) setGuests([data.guest, ...guests]);
+        } catch {
+            console.error("Gagal menambah tamu");
+        }
     };
 
-    const deleteGuest = (id: string) => {
-        saveGuests(guests.filter((g) => g.id !== id));
+    const deleteGuest = async (id: string) => {
+        setGuests(guests.filter((g) => g.id !== id));
+        try {
+            await fetch("/api/guests", {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id }),
+            });
+        } catch {
+            console.error("Gagal menghapus tamu");
+        }
     };
 
-    const toggleSent = (id: string) => {
-        saveGuests(
-            guests.map((g) => (g.id === id ? { ...g, sent: !g.sent } : g))
-        );
+    const toggleSent = async (id: string) => {
+        const target = guests.find((g) => g.id === id);
+        if (!target) return;
+        const newSent = !target.sent;
+
+        setGuests(guests.map((g) => (g.id === id ? { ...g, sent: newSent } : g)));
+
+        try {
+            await fetch("/api/guests", {
+                method: "PATCH",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id, sent: newSent }),
+            });
+        } catch {
+            console.error("Gagal memperbarui status terkirim");
+        }
     };
 
     const copyLink = async (guest: Guest) => {
@@ -240,10 +273,11 @@ export default function AdminPage() {
                             whileHover={{ scale: 1.02 }}
                             whileTap={{ scale: 0.98 }}
                             onClick={handleLogin}
-                            className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2"
+                            disabled={loginLoading}
+                            className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-60"
                         >
                             <UnlockIcon className="w-4 h-4" />
-                            Masuk
+                            {loginLoading ? "Memeriksa..." : "Masuk"}
                         </motion.button>
                     </div>
                 </motion.div>
@@ -279,7 +313,7 @@ export default function AdminPage() {
                         <motion.button
                             whileTap={{ scale: 0.95 }}
                             onClick={handleLogout}
-                            className="text-xs px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:bg-muted transition-colors"
+                            className="text-xs px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
                         >
                             Keluar
                         </motion.button>
@@ -289,76 +323,24 @@ export default function AdminPage() {
 
             <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
 
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-3">
-                    {[
-                        {
-                            label: "Total Tamu",
-                            value: guests.length,
-                            Icon: UsersIcon,
-                            color: "text-primary",
-                            bg: "bg-primary/10",
-                        },
-                        {
-                            label: "Terkirim",
-                            value: totalSent,
-                            Icon: SendIcon,
-                            color: "text-green-600",
-                            bg: "bg-green-100 dark:bg-green-900/20",
-                        },
-                        {
-                            label: "Belum Kirim",
-                            value: guests.length - totalSent,
-                            Icon: ClockIcon,
-                            color: "text-yellow-600",
-                            bg: "bg-yellow-100 dark:bg-yellow-900/20",
-                        },
-                    ].map((stat) => (
-                        <motion.div
-                            key={stat.label}
-                            initial={{ opacity: 0, y: 10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="card-wedding p-4 text-center"
-                        >
-                            <div className={"w-8 h-8 rounded-full " + stat.bg + " flex items-center justify-center mx-auto mb-2"}>
-                                <stat.Icon className={"w-4 h-4 " + stat.color} />
-                            </div>
-                            <p className={"text-2xl font-bold " + stat.color}>
-                                {stat.value}
-                            </p>
-                            <p className="text-xs text-muted-foreground mt-0.5">
-                                {stat.label}
-                            </p>
-                        </motion.div>
-                    ))}
-                </div>
-
                 {/* Tambah tamu */}
-                <div className="card-wedding p-4">
-                    <p className="text-sm font-medium text-foreground mb-3 flex items-center gap-2">
-                        <PlusIcon className="w-4 h-4 text-primary" />
-                        Tambah Tamu
-                    </p>
-                    <div className="flex gap-2">
-                        <input
-                            type="text"
-                            value={guestName}
-                            onChange={(e) => setGuestName(e.target.value)}
-                            onKeyDown={(e) => e.key === "Enter" && addGuest()}
-                            placeholder="Nama tamu, contoh: Budi Santoso"
-                            className="flex-1 px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-                        />
-                        <motion.button
-                            whileHover={{ scale: 1.03 }}
-                            whileTap={{ scale: 0.97 }}
-                            onClick={addGuest}
-                            disabled={!guestName.trim()}
-                            className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center gap-2 disabled:opacity-50 disabled:pointer-events-none shrink-0"
-                        >
-                            <PlusIcon className="w-4 h-4" />
-                            <span className="hidden sm:inline">Tambah</span>
-                        </motion.button>
-                    </div>
+                <div className="card-wedding p-4 flex gap-2">
+                    <input
+                        type="text"
+                        value={guestName}
+                        onChange={(e) => setGuestName(e.target.value)}
+                        onKeyDown={(e) => e.key === "Enter" && addGuest()}
+                        placeholder="Nama tamu baru..."
+                        className="flex-1 px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                    />
+                    <motion.button
+                        whileTap={{ scale: 0.95 }}
+                        onClick={addGuest}
+                        className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground flex items-center gap-1.5 text-sm font-medium shrink-0"
+                    >
+                        <PlusIcon className="w-4 h-4" />
+                        Tambah
+                    </motion.button>
                 </div>
 
                 {/* Search & Filter */}
@@ -393,7 +375,11 @@ export default function AdminPage() {
 
                 {/* Daftar tamu */}
                 <div className="space-y-3">
-                    {filteredGuests.length === 0 ? (
+                    {loadingGuests ? (
+                        <div className="card-wedding p-10 text-center">
+                            <p className="text-muted-foreground text-sm">Memuat data tamu...</p>
+                        </div>
+                    ) : filteredGuests.length === 0 ? (
                         <div className="card-wedding p-10 text-center">
                             <UsersIcon className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
                             <p className="text-muted-foreground text-sm">
@@ -517,7 +503,7 @@ export default function AdminPage() {
                 {/* Footer info */}
                 <div className="text-center pb-8">
                     <p className="text-xs text-muted-foreground">
-                        Data tersimpan di browser. Akses halaman ini di{" "}
+                        Data tersimpan di Google Sheets. Akses halaman ini di{" "}
                         <span className="text-primary font-medium">/admin</span>
                     </p>
                 </div>

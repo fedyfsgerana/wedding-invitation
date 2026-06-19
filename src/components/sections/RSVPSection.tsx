@@ -43,42 +43,41 @@ export function RSVPSection() {
     const MessageIcon = getLucideIcon("MessageCircle");
 
     useEffect(() => {
-        try {
-            const stored = localStorage.getItem(STORAGE_KEY);
-            if (stored) setWishes(JSON.parse(stored));
-        } catch {
-            console.error("Gagal memuat ucapan");
-        }
+        const loadWishes = async () => {
+            try {
+                const res = await fetch("/api/wishes");
+                const data = await res.json();
+                setWishes(data.wishes || []);
+            } catch {
+                console.error("Gagal memuat ucapan");
+            }
+        };
+        loadWishes();
     }, []);
 
     const handleSubmit = async () => {
         if (!form.name.trim() || !form.message.trim()) return;
         setLoading(true);
-        await new Promise((resolve) => setTimeout(resolve, 800));
-
-        const newWish: WishItem = {
-            id: Date.now().toString(),
-            name: form.name,
-            message: form.message,
-            attendance: form.attendance,
-            timestamp: new Date().toLocaleDateString("id-ID", {
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-            }),
-        };
-
-        const updated = [newWish, ...wishes];
-        setWishes(updated);
 
         try {
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+            const res = await fetch("/api/wishes", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    name: form.name,
+                    message: form.message,
+                    attendance: form.attendance,
+                    guestCount: form.guestCount,
+                }),
+            });
+            const data = await res.json();
+            if (data.wish) setWishes([data.wish, ...wishes]);
+            setSubmitted(true);
         } catch {
-            console.error("Gagal menyimpan ucapan");
+            console.error("Gagal mengirim ucapan");
+        } finally {
+            setLoading(false);
         }
-
-        setSubmitted(true);
-        setLoading(false);
     };
 
     const handleReset = () => {
@@ -164,8 +163,8 @@ export function RSVPSection() {
                                                             setForm({ ...form, attendance: option.value as RSVPData["attendance"] })
                                                         }
                                                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-all ${form.attendance === option.value
-                                                                ? "border-primary bg-primary/10 text-primary"
-                                                                : "border-border bg-background text-muted-foreground hover:border-primary/40"
+                                                            ? "border-primary bg-primary/10 text-primary"
+                                                            : "border-border bg-background text-muted-foreground hover:border-primary/40"
                                                             }`}
                                                     >
                                                         <OptionIcon className="w-4 h-4" />
@@ -267,10 +266,10 @@ export function RSVPSection() {
                                                         {wish.name}
                                                     </p>
                                                     <span className={`text-xs px-2 py-0.5 rounded-full shrink-0 ${wish.attendance === "hadir"
-                                                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                                                            : wish.attendance === "tidak_hadir"
-                                                                ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                                                                : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+                                                        ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+                                                        : wish.attendance === "tidak_hadir"
+                                                            ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                                                            : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
                                                         }`}>
                                                         {wish.attendance === "hadir" ? "Hadir"
                                                             : wish.attendance === "tidak_hadir" ? "Tidak Hadir"
