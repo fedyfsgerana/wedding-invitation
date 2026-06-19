@@ -50,8 +50,9 @@ export function OpeningSection() {
                     variants={itemVariants}
                     className="text-muted-foreground text-sm leading-relaxed mb-8 max-w-sm mx-auto"
                 >
-                    Dengan memohon rahmat dan ridho Allah SWT, kami bermaksud
-                    menyelenggarakan pernikahan putra-putri kami:
+                    Tanpa mengurangi rasa hormat, dengan memohon rahmat dan
+                    ridho Allah SWT, kami bermaksud melangsungkan pernikahan
+                    kami:
                 </motion.p>
 
                 {/* Groom */}

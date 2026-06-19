@@ -36,7 +36,7 @@ export function LocationSection() {
                 <SectionTitle
                     decorative="Lokasi"
                     title="Tempat Acara"
-                    subtitle="Kami menantikan kehadiran Anda di lokasi berikut"
+                    subtitle="Kami menantikan kehadiran Bapak/Ibu/Saudara/i di lokasi berikut"
                 />
 
                 <div className="space-y-8">

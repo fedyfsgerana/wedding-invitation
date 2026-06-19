@@ -112,18 +112,27 @@ export function CoverSection({ guestName, onOpen, isOpened }: CoverSectionProps)
                     })}
                 </motion.p>
 
-                {/* Guest Name */}
-                {guestName && (
-                    <motion.div
-                        variants={itemVariants}
-                        className="mb-6 px-6 py-3 rounded-full border border-primary/30 bg-primary/5 inline-block"
-                    >
-                        <p className="text-xs text-muted-foreground mb-0.5">Kepada Yth.</p>
-                        <p className="text-sm font-serif text-foreground font-medium">
-                            {guestName}
+                {/* Formal Greeting */}
+                <motion.div
+                    variants={itemVariants}
+                    className="mb-6 px-6 py-4 rounded-2xl border border-primary/30 bg-primary/5 inline-block"
+                >
+                    <p className="text-xs text-muted-foreground mb-1">Kepada Yth.</p>
+                    {guestName ? (
+                        <p className="text-sm font-serif text-foreground font-medium mb-2">
+                            Bapak/Ibu/Saudara/i {guestName}
                         </p>
-                    </motion.div>
-                )}
+                    ) : (
+                        <p className="text-sm font-serif text-foreground font-medium mb-2">
+                            Bapak/Ibu/Saudara/i Tamu Undangan
+                        </p>
+                    )}
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                        Tanpa mengurangi rasa hormat, kami bermaksud
+                        mengundang Bapak/Ibu/Saudara/i untuk berkenan hadir
+                        dan memberikan doa restu pada hari bahagia kami.
+                    </p>
+                </motion.div>
 
                 {/* Open Button */}
                 <motion.div variants={itemVariants}>

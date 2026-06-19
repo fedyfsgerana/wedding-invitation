@@ -74,7 +74,7 @@ export function RSVPSection() {
                 <SectionTitle
                     decorative="RSVP"
                     title="Konfirmasi Kehadiran"
-                    subtitle="Mohon konfirmasi kehadiran Anda agar kami dapat mempersiapkan segalanya"
+                    subtitle="Mohon konfirmasi kehadiran Bapak/Ibu/Saudara/i agar kami dapat mempersiapkan segalanya dengan baik"
                 />
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -242,7 +242,7 @@ export function RSVPSection() {
                         whileInView="visible"
                         viewport={{ once: true }}
                         transition={{ delay: 0.15 }}
-                        className="space-y-3 max-h-[480px] overflow-y-auto scrollbar-hide"
+                        className="space-y-3 max-h-120 overflow-y-auto scrollbar-hide"
                     >
                         {wishes.length === 0 ? (
                             <div className="card-wedding p-8 text-center">

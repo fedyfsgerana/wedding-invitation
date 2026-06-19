@@ -135,7 +135,7 @@ export function EventSection() {
                 <SectionTitle
                     decorative="Jadwal Acara"
                     title="Informasi Acara"
-                    subtitle="Kami mengundang Anda untuk hadir dan memberikan doa restu"
+                    subtitle="Kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu"
                 />
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <EventCard
