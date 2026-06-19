@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { useAudio } from "@/components/providers/AudioProvider";
 import { getLucideIcon, cn } from "@/lib/utils";
 
 const navItems = [
@@ -15,6 +17,13 @@ const navItems = [
 export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState("");
+    const { theme, toggleTheme } = useTheme();
+    const { isPlaying, toggleAudio } = useAudio();
+
+    const SunIcon = getLucideIcon("Sun");
+    const MoonIcon = getLucideIcon("Moon");
+    const MusicIcon = getLucideIcon("Music");
+    const MusicOffIcon = getLucideIcon("VolumeX");
 
     useEffect(() => {
         const handleScroll = () => {
@@ -74,8 +83,33 @@ export function Navbar() {
                             </button>
                         ))}
                     </div>
-                    {/* Empty spacer column keeps the menu visually centered */}
-                    <div aria-hidden="true" />
+                    {/* Theme & music controls (desktop navbar only) */}
+                    <div className="flex items-center justify-end gap-2">
+                        <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={toggleAudio}
+                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
+                            aria-label="Putar/Hentikan musik"
+                        >
+                            {isPlaying
+                                ? <MusicIcon className="w-4 h-4" />
+                                : <MusicOffIcon className="w-4 h-4" />
+                            }
+                        </motion.button>
+                        <motion.button
+                            whileHover={{ scale: 1.1 }}
+                            whileTap={{ scale: 0.9 }}
+                            onClick={toggleTheme}
+                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
+                            aria-label="Ganti mode terang/gelap"
+                        >
+                            {theme === "light"
+                                ? <MoonIcon className="w-4 h-4" />
+                                : <SunIcon className="w-4 h-4" />
+                            }
+                        </motion.button>
+                    </div>
                 </div>
             </motion.nav>
 

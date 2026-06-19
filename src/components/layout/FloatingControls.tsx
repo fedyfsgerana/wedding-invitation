@@ -16,7 +16,7 @@ export function FloatingControls() {
 
     return (
         <>
-            {/* Music toggle - top left */}
+            {/* Music toggle - top left (mobile only, desktop uses navbar) */}
             <motion.button
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -24,7 +24,7 @@ export function FloatingControls() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={toggleAudio}
-                className="fixed top-4 left-4 z-50 p-2.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-sm hover:bg-muted transition-colors text-foreground/70"
+                className="fixed top-4 left-4 z-50 p-2.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-sm hover:bg-muted transition-colors text-foreground/70 md:hidden"
                 aria-label="Putar/Hentikan musik"
             >
                 {isPlaying
@@ -33,7 +33,7 @@ export function FloatingControls() {
                 }
             </motion.button>
 
-            {/* Theme toggle - top right */}
+            {/* Theme toggle - top right (mobile only, desktop uses navbar) */}
             <motion.button
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -41,7 +41,7 @@ export function FloatingControls() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.9 }}
                 onClick={toggleTheme}
-                className="fixed top-4 right-4 z-50 p-2.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-sm hover:bg-muted transition-colors text-foreground/70"
+                className="fixed top-4 right-4 z-50 p-2.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-sm hover:bg-muted transition-colors text-foreground/70 md:hidden"
                 aria-label="Ganti mode terang/gelap"
             >
                 {theme === "light"
