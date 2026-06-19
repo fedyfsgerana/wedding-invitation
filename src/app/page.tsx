@@ -21,6 +21,7 @@ import { LocationSection } from "@/components/sections/LocationSection";
 import { RSVPSection } from "@/components/sections/RSVPSection";
 import { GiftSection } from "@/components/sections/GiftSection";
 import { ClosingSection } from "@/components/sections/ClosingSection";
+import { FloatingControls } from "@/components/layout/FloatingControls";
 
 function WeddingPage() {
   const { guestName } = useGuestParam();
@@ -53,6 +54,7 @@ function WeddingPage() {
             <ScrollProgress />
             <FloatingPetals />
             <BackToTop />
+            <FloatingControls />
 
             {/* Cover */}
             <AnimatePresence>

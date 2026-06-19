@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "@/components/providers/ThemeProvider";
-import { useAudio } from "@/components/providers/AudioProvider";
 import { getLucideIcon, cn } from "@/lib/utils";
 
 const navItems = [
@@ -17,13 +15,6 @@ const navItems = [
 export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
     const [activeSection, setActiveSection] = useState("");
-    const { theme, toggleTheme } = useTheme();
-    const { isPlaying, toggleAudio } = useAudio();
-
-    const SunIcon = getLucideIcon("Sun");
-    const MoonIcon = getLucideIcon("Moon");
-    const MusicIcon = getLucideIcon("Music");
-    const MusicOffIcon = getLucideIcon("VolumeX");
 
     useEffect(() => {
         const handleScroll = () => {
@@ -67,7 +58,7 @@ export function Navbar() {
                     >
                         F & S
                     </button>
-                    <div className="flex items-center gap-6">
+                    <div className="flex items-center gap-2">
                         {navItems.map((item) => (
                             <button
                                 key={item.href}
@@ -82,30 +73,6 @@ export function Navbar() {
                                 {item.label}
                             </button>
                         ))}
-                    </div>
-                    <div className="flex items-center gap-2">
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={toggleAudio}
-                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
-                        >
-                            {isPlaying
-                                ? <MusicIcon className="w-4 h-4" />
-                                : <MusicOffIcon className="w-4 h-4" />
-                            }
-                        </motion.button>
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={toggleTheme}
-                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
-                        >
-                            {theme === "light"
-                                ? <MoonIcon className="w-4 h-4" />
-                                : <SunIcon className="w-4 h-4" />
-                            }
-                        </motion.button>
                     </div>
                 </div>
             </motion.nav>
@@ -147,38 +114,6 @@ export function Navbar() {
                                 </motion.button>
                             );
                         })}
-
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            onClick={toggleAudio}
-                            className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl flex-1"
-                        >
-                            <div className="w-7 h-7 rounded-full flex items-center justify-center">
-                                {isPlaying
-                                    ? <MusicIcon className="w-4 h-4 text-muted-foreground" />
-                                    : <MusicOffIcon className="w-4 h-4 text-muted-foreground" />
-                                }
-                            </div>
-                            <span className="text-[9px] font-medium text-muted-foreground leading-tight">
-                                Musik
-                            </span>
-                        </motion.button>
-
-                        <motion.button
-                            whileTap={{ scale: 0.9 }}
-                            onClick={toggleTheme}
-                            className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl flex-1"
-                        >
-                            <div className="w-7 h-7 rounded-full flex items-center justify-center">
-                                {theme === "light"
-                                    ? <MoonIcon className="w-4 h-4 text-muted-foreground" />
-                                    : <SunIcon className="w-4 h-4 text-muted-foreground" />
-                                }
-                            </div>
-                            <span className="text-[9px] font-medium text-muted-foreground leading-tight">
-                                Tema
-                            </span>
-                        </motion.button>
                     </div>
                 </div>
             </motion.nav>

@@ -36,7 +36,7 @@ export function SectionWrapper({
             viewport={{ once: true, margin: "-80px" }}
             variants={fadeInUp}
             className={cn(
-                "w-full",
+                "w-full scroll-mt-20 md:scroll-mt-24",
                 !noPadding && "section-padding",
                 {
                     "bg-background": variant === "default",

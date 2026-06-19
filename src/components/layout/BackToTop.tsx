@@ -28,7 +28,7 @@ export function BackToTop() {
                     whileHover={{ scale: 1.1 }}
                     whileTap={{ scale: 0.9 }}
                     onClick={scrollToTop}
-                    className="fixed bottom-6 right-6 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
+                    className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
                     aria-label="Back to top"
                 >
                     <ChevronUpIcon className="w-5 h-5" />
