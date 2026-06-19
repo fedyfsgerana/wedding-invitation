@@ -20,7 +20,6 @@ export interface Person {
     nickname: string;
     role: string;
     photo: string;
-    instagram?: string;
     bio?: string;
 }
 
