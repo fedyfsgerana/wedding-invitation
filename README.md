@@ -1,36 +1,69 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fedy & Suci Wedding Invitation
+
+Undangan pernikahan digital berbasis web untuk Fedy & Suci. Dibangun dengan Next.js, mendukung personalisasi nama tamu lewat URL, musik latar, hitung mundur acara, galeri foto, RSVP, dan amplop digital (transfer bank/QRIS).
+
+## Tech Stack
+
+- Next.js (App Router)
+- React + TypeScript
+- Tailwind CSS
+- Framer Motion - animasi
+- react-confetti - efek confetti
+- lucide-react - ikon
+
+## Fitur
+
+- Cover undangan dengan nama tamu personal (?to=NamaTamu di URL)
+- Musik latar dengan kontrol play/pause
+- Hitung mundur menuju hari pernikahan
+- Profil mempelai & orang tua
+- Detail acara akad & resepsi (peta, link Maps/Waze, tambah ke kalender)
+- Timeline kisah cinta (love story)
+- Galeri foto
+- Agenda acara
+- Form RSVP (konfirmasi kehadiran & ucapan)
+- Amplop digital (transfer bank & QRIS)
+- Dark/light mode
+- Animasi kelopak bunga jatuh & scroll progress bar
+
+## Struktur Folder
+
+src/
+app/ Routing utama (App Router): layout.tsx, page.tsx, globals.css
+components/
+layout/ Navbar, BackToTop, FloatingPetals
+providers/ AudioProvider, ThemeProvider
+sections/ Semua section undangan (Cover, BrideGroom, dst)
+ui/ Komponen reusable (Button, LoadingScreen, dll)
+hooks/ useCountdown, useGuestParam, useScrollProgress
+lib/ weddingData.ts, calendarHelper.ts, utils.ts
+types/ Definisi TypeScript
 
 ## Getting Started
 
-First, run the development server:
+Install dependencies:
+npm install
 
-```bash
+Jalankan development server:
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Buka http://localhost:3000 di browser.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Untuk mencoba link personal tamu:
+http://localhost:3000/?to=Budi
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Konfigurasi Data
 
-## Learn More
+Semua data undangan (nama mempelai, orang tua, lokasi, tanggal, kisah cinta, galeri, rekening, dll) diatur di satu file:
+src/lib/weddingData.ts
 
-To learn more about Next.js, take a look at the following resources:
+Ubah nilai-nilai di sana sesuai kebutuhan. Tipe data didefinisikan di src/types/index.ts.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Build untuk Production
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+npm run build
+npm run start
 
-## Deploy on Vercel
+## Deploy
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Proyek ini bisa langsung di-deploy ke Vercel (https://vercel.com/new) atau platform hosting Next.js lainnya.
