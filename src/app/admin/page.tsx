@@ -68,57 +68,57 @@ export default function AdminPage() {
     }, [isAuthenticated, mounted]);
 
     if (!mounted) {
-    return (
-        <div className="fixed inset-0 z-50 bg-background flex flex-col items-center justify-center">
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <motion.div
-                    animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
-                    transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-                    className="w-64 h-64 rounded-full border border-primary/20"
-                />
-            </div>
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                <motion.div
-                    animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.05, 0.2] }}
-                    transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", delay: 0.3 }}
-                    className="w-80 h-80 rounded-full border border-primary/10"
-                />
-            </div>
-            <div className="relative z-10 text-center">
-                <motion.p
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="font-script text-6xl text-primary mb-4"
-                >
-                    F & S
-                </motion.p>
-                <motion.p
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3 }}
-                    className="text-xs uppercase tracking-widest text-muted-foreground mb-8"
-                >
-                    Memuat Admin...
-                </motion.p>
-                <div className="flex items-center justify-center gap-2">
-                    {[0, 1, 2].map((i) => (
-                        <motion.div
-                            key={i}
-                            animate={{ y: [0, -8, 0], opacity: [0.4, 1, 0.4] }}
-                            transition={{
-                                repeat: Infinity,
-                                duration: 0.8,
-                                delay: i * 0.15,
-                                ease: "easeInOut",
-                            }}
-                            className="w-2 h-2 rounded-full bg-primary"
-                        />
-                    ))}
+        return (
+            <div className="fixed inset-0 z-50 bg-background flex flex-col items-center justify-center">
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
+                        transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
+                        className="w-64 h-64 rounded-full border border-primary/20"
+                    />
+                </div>
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
+                    <motion.div
+                        animate={{ scale: [1, 1.3, 1], opacity: [0.2, 0.05, 0.2] }}
+                        transition={{ repeat: Infinity, duration: 2.5, ease: "easeInOut", delay: 0.3 }}
+                        className="w-80 h-80 rounded-full border border-primary/10"
+                    />
+                </div>
+                <div className="relative z-10 text-center">
+                    <motion.p
+                        animate={{ opacity: [0.5, 1, 0.5] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                        className="font-script text-6xl text-primary mb-4"
+                    >
+                        F & S
+                    </motion.p>
+                    <motion.p
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3 }}
+                        className="text-xs uppercase tracking-widest text-muted-foreground mb-8"
+                    >
+                        Memuat Admin...
+                    </motion.p>
+                    <div className="flex items-center justify-center gap-2">
+                        {[0, 1, 2].map((i) => (
+                            <motion.div
+                                key={i}
+                                animate={{ y: [0, -8, 0], opacity: [0.4, 1, 0.4] }}
+                                transition={{
+                                    repeat: Infinity,
+                                    duration: 0.8,
+                                    delay: i * 0.15,
+                                    ease: "easeInOut",
+                                }}
+                                className="w-2 h-2 rounded-full bg-primary"
+                            />
+                        ))}
+                    </div>
                 </div>
             </div>
-        </div>
-    );
-}
+        );
+    }
 
     const handleLogin = async () => {
         setLoginLoading(true);
@@ -265,66 +265,156 @@ export default function AdminPage() {
     // ─── LOGIN ───────────────────────────────────────────────
     if (!isAuthenticated) {
         return (
-            <div className="min-h-screen bg-background flex items-center justify-center px-4">
+            <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
+
+                {/* Background decorations */}
+                <div className="absolute inset-0 pointer-events-none">
+                    <motion.div
+                        animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
+                        transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                        className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary"
+                    />
+                    <motion.div
+                        animate={{ scale: [1, 1.2, 1], opacity: [0.04, 0.09, 0.04] }}
+                        transition={{ repeat: Infinity, duration: 8, ease: "easeInOut", delay: 1 }}
+                        className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-primary"
+                    />
+                    <motion.div
+                        animate={{ y: [0, -12, 0], opacity: [0.15, 0.3, 0.15] }}
+                        transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                        className="absolute top-1/4 right-12 w-3 h-3 rounded-full bg-primary"
+                    />
+                    <motion.div
+                        animate={{ y: [0, 10, 0], opacity: [0.1, 0.25, 0.1] }}
+                        transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.5 }}
+                        className="absolute bottom-1/3 left-16 w-2 h-2 rounded-full bg-primary"
+                    />
+                    <div className="absolute top-8 left-8 w-24 h-24 rounded-full border border-primary/10" />
+                    <div className="absolute bottom-8 right-8 w-32 h-32 rounded-full border border-primary/10" />
+                </div>
+
                 <motion.div
-                    initial={{ opacity: 0, y: 20 }}
+                    initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4 }}
-                    className="w-full max-w-sm"
+                    transition={{ duration: 0.6, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="w-full max-w-sm relative z-10"
                 >
+                    {/* Header */}
                     <div className="text-center mb-8">
-                        <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-                            <LockIcon className="w-7 h-7 text-primary" />
-                        </div>
-                        <h1 className="font-script text-5xl text-primary mb-1">
+                        <motion.div
+                            initial={{ scale: 0.8, opacity: 0 }}
+                            animate={{ scale: 1, opacity: 1 }}
+                            transition={{ delay: 0.2, duration: 0.5 }}
+                            className="relative inline-block mb-5"
+                        >
+                            <div className="w-20 h-20 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center mx-auto">
+                                <LockIcon className="w-8 h-8 text-primary" />
+                            </div>
+                            <motion.div
+                                animate={{ rotate: 360 }}
+                                transition={{ repeat: Infinity, duration: 8, ease: "linear" }}
+                                className="absolute inset-0 rounded-full border border-dashed border-primary/20"
+                            />
+                        </motion.div>
+
+                        <motion.h1
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                            className="font-script text-6xl text-primary mb-2 leading-none"
+                        >
                             F & S
-                        </h1>
-                        <p className="text-sm text-muted-foreground">
-                            Halaman Admin Undangan
-                        </p>
+                        </motion.h1>
+                        <motion.p
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 0.4 }}
+                            className="text-xs uppercase tracking-widest text-muted-foreground"
+                        >
+                            Fedy & Suci Wedding
+                        </motion.p>
                     </div>
 
-                    <div className="card-wedding p-6 space-y-4">
+                    {/* Card */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.35, duration: 0.5 }}
+                        className="bg-card border border-border rounded-2xl p-6 shadow-sm space-y-5"
+                    >
                         <div>
-                            <label className="text-sm font-medium text-foreground mb-1.5 block">
+                            <label className="text-xs uppercase tracking-widest text-muted-foreground mb-2 block">
                                 Password
                             </label>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => {
-                                    setPassword(e.target.value);
-                                    setPasswordError(false);
-                                }}
-                                onKeyDown={(e) => e.key === "Enter" && handleLogin()}
-                                placeholder="Masukkan password admin"
-                                className={
-                                    "w-full px-4 py-2.5 rounded-xl border bg-background " +
-                                    "text-foreground text-sm focus:outline-none focus:ring-2 " +
-                                    "focus:ring-primary/30 transition-colors " +
-                                    (passwordError
-                                        ? "border-red-400"
-                                        : "border-border focus:border-primary")
-                                }
-                            />
-                            {passwordError && (
-                                <p className="text-xs text-red-500 mt-1.5">
-                                    Password salah, coba lagi.
-                                </p>
-                            )}
+                            <div className="relative">
+                                <LockIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                                <input
+                                    type="password"
+                                    value={password}
+                                    onChange={(e) => {
+                                        setPassword(e.target.value);
+                                        setPasswordError(false);
+                                    }}
+                                    onKeyDown={(e) => e.key === "Enter" && handleLogin()}
+                                    placeholder="Masukkan password"
+                                    className={
+                                        "w-full pl-10 pr-4 py-3 rounded-xl border bg-background " +
+                                        "text-foreground text-sm focus:outline-none focus:ring-2 " +
+                                        "focus:ring-primary/30 transition-all " +
+                                        (passwordError
+                                            ? "border-red-400 focus:ring-red-200"
+                                            : "border-border focus:border-primary")
+                                    }
+                                />
+                            </div>
+                            <AnimatePresence>
+                                {passwordError && (
+                                    <motion.p
+                                        initial={{ opacity: 0, y: -5 }}
+                                        animate={{ opacity: 1, y: 0 }}
+                                        exit={{ opacity: 0 }}
+                                        className="text-xs text-red-500 mt-2 flex items-center gap-1"
+                                    >
+                                        ✕ Password salah, coba lagi.
+                                    </motion.p>
+                                )}
+                            </AnimatePresence>
                         </div>
 
                         <motion.button
                             whileHover={{ scale: 1.02 }}
-                            whileTap={{ scale: 0.98 }}
+                            whileTap={{ scale: 0.97 }}
                             onClick={handleLogin}
                             disabled={loginLoading}
-                            className="w-full py-3 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-60"
+                            className="w-full py-3.5 rounded-xl bg-primary text-primary-foreground text-sm font-medium flex items-center justify-center gap-2 disabled:opacity-60 shadow-sm hover:shadow-md transition-shadow"
                         >
-                            <UnlockIcon className="w-4 h-4" />
-                            {loginLoading ? "Memeriksa..." : "Masuk"}
+                            {loginLoading ? (
+                                <>
+                                    <motion.div
+                                        animate={{ rotate: 360 }}
+                                        transition={{ repeat: Infinity, duration: 0.8, ease: "linear" }}
+                                        className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full"
+                                    />
+                                    Memeriksa...
+                                </>
+                            ) : (
+                                <>
+                                    <UnlockIcon className="w-4 h-4" />
+                                    Masuk
+                                </>
+                            )}
                         </motion.button>
-                    </div>
+                    </motion.div>
+
+                    {/* Footer */}
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="text-center text-xs text-muted-foreground/50 mt-6"
+                    >
+                        Fedy & Suci Wedding · 20 Desember 2026
+                    </motion.p>
                 </motion.div>
             </div>
         );
@@ -335,99 +425,166 @@ export default function AdminPage() {
         <div className="min-h-screen bg-background">
 
             {/* Header */}
-            <div className="sticky top-0 z-50 bg-background/90 backdrop-blur-md border-b border-border">
+            <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
                 <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
-                    <div>
-                        <h1 className="font-script text-2xl text-primary leading-none">
-                            F & S
-                        </h1>
-                        <p className="text-xs text-muted-foreground">Admin Undangan</p>
+                    <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
+                            <span className="font-script text-lg text-primary leading-none">F</span>
+                        </div>
+                        <div>
+                            <h1 className="font-script text-xl text-primary leading-none">
+                                Fedy & Suci
+                            </h1>
+                            <p className="text-xs text-muted-foreground">Admin Undangan</p>
+                        </div>
                     </div>
 
                     <div className="flex items-center gap-3">
-                        <div className="hidden sm:flex items-center gap-4 text-xs text-muted-foreground">
-                            <span className="flex items-center gap-1.5">
+                        <div className="hidden sm:flex items-center gap-3">
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-muted text-xs text-muted-foreground">
                                 <UsersIcon className="w-3.5 h-3.5" />
-                                {guests.length} tamu
-                            </span>
-                            <span className="flex items-center gap-1.5 text-green-600">
+                                <span>{guests.length} tamu</span>
+                            </div>
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 text-xs text-green-600 border border-green-100">
                                 <SendIcon className="w-3.5 h-3.5" />
-                                {totalSent} terkirim
-                            </span>
+                                <span>{totalSent} terkirim</span>
+                            </div>
                         </div>
                         <motion.button
                             whileTap={{ scale: 0.95 }}
                             onClick={handleLogout}
-                            className="text-xs px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors"
+                            className="text-xs px-3 py-1.5 rounded-lg border border-border text-muted-foreground hover:bg-muted transition-colors flex items-center gap-1.5"
                         >
+                            <LockIcon className="w-3.5 h-3.5" />
                             Keluar
                         </motion.button>
                     </div>
                 </div>
             </div>
 
-            <div className="max-w-4xl mx-auto px-4 py-6 space-y-5">
+            <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
 
-                {/* Tambah tamu */}
-                <div className="card-wedding p-4 flex gap-2">
-                    <input
-                        type="text"
-                        value={guestName}
-                        onChange={(e) => setGuestName(e.target.value)}
-                        onKeyDown={(e) => e.key === "Enter" && addGuest()}
-                        placeholder="Nama tamu baru..."
-                        className="flex-1 px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
-                    />
-                    <motion.button
-                        whileTap={{ scale: 0.95 }}
-                        onClick={addGuest}
-                        className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground flex items-center gap-1.5 text-sm font-medium shrink-0"
-                    >
-                        <PlusIcon className="w-4 h-4" />
-                        Tambah
-                    </motion.button>
+                {/* Stat cards */}
+                <div className="grid grid-cols-3 gap-3">
+                    {[
+                        { label: "Total Tamu", value: guests.length, color: "text-primary", bg: "bg-primary/5 border-primary/10" },
+                        { label: "Terkirim", value: totalSent, color: "text-green-600", bg: "bg-green-50 border-green-100" },
+                        { label: "Belum Kirim", value: guests.length - totalSent, color: "text-amber-600", bg: "bg-amber-50 border-amber-100" },
+                    ].map((stat, i) => (
+                        <motion.div
+                            key={stat.label}
+                            initial={{ opacity: 0, y: 10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: i * 0.08 }}
+                            className={"rounded-2xl border p-4 text-center " + stat.bg}
+                        >
+                            <p className={"text-2xl font-bold " + stat.color}>{stat.value}</p>
+                            <p className="text-xs text-muted-foreground mt-0.5">{stat.label}</p>
+                        </motion.div>
+                    ))}
                 </div>
 
+                {/* Tambah tamu */}
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.15 }}
+                    className="bg-card border border-border rounded-2xl p-4 shadow-sm"
+                >
+                    <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
+                        Tambah Tamu Baru
+                    </p>
+                    <div className="flex gap-2">
+                        <div className="relative flex-1">
+                            <UsersIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                            <input
+                                type="text"
+                                value={guestName}
+                                onChange={(e) => setGuestName(e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && addGuest()}
+                                placeholder="Nama tamu..."
+                                className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+                            />
+                        </div>
+                        <motion.button
+                            whileHover={{ scale: 1.03 }}
+                            whileTap={{ scale: 0.96 }}
+                            onClick={addGuest}
+                            className="px-4 py-2.5 rounded-xl bg-primary text-primary-foreground flex items-center gap-1.5 text-sm font-medium shrink-0 shadow-sm"
+                        >
+                            <PlusIcon className="w-4 h-4" />
+                            Tambah
+                        </motion.button>
+                    </div>
+                </motion.div>
+
                 {/* Search & Filter */}
-                <div className="flex gap-2">
+                <motion.div
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.2 }}
+                    className="flex gap-2"
+                >
                     <div className="relative flex-1">
-                        <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+                        <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <input
                             type="text"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                             placeholder="Cari nama tamu..."
-                            className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
+                            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
                         />
                     </div>
                     <div className="flex items-center gap-1 bg-muted rounded-xl p-1 shrink-0">
                         {(["all", "sent", "unsent"] as const).map((f) => (
-                            <button
+                            <motion.button
                                 key={f}
+                                whileTap={{ scale: 0.95 }}
                                 onClick={() => setFilterSent(f)}
                                 className={
-                                    "px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all " +
+                                    "px-3 py-1.5 rounded-lg text-xs font-medium transition-all " +
                                     (filterSent === f
                                         ? "bg-background text-foreground shadow-sm"
                                         : "text-muted-foreground hover:text-foreground")
                                 }
                             >
-                                {f === "all" ? "Semua" : f === "sent" ? "Terkirim" : "Belum"}
-                            </button>
+                                {f === "all" ? "Semua" : f === "sent" ? "✓ Terkirim" : "○ Belum"}
+                            </motion.button>
                         ))}
                     </div>
-                </div>
+                </motion.div>
 
                 {/* Daftar tamu */}
-                <div className="space-y-3">
+                <div className="space-y-2.5">
                     {loadingGuests ? (
-                        <div className="card-wedding p-10 text-center">
-                            <p className="text-muted-foreground text-sm">Memuat data tamu...</p>
+                        <div className="bg-card border border-border rounded-2xl p-12 flex flex-col items-center justify-center gap-4">
+                            <motion.p
+                                animate={{ opacity: [0.5, 1, 0.5] }}
+                                transition={{ repeat: Infinity, duration: 2 }}
+                                className="font-script text-5xl text-primary"
+                            >
+                                F & S
+                            </motion.p>
+                            <div className="flex items-center justify-center gap-2">
+                                {[0, 1, 2].map((i) => (
+                                    <motion.div
+                                        key={i}
+                                        animate={{ y: [0, -8, 0], opacity: [0.4, 1, 0.4] }}
+                                        transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.15, ease: "easeInOut" }}
+                                        className="w-2 h-2 rounded-full bg-primary"
+                                    />
+                                ))}
+                            </div>
+                            <p className="text-xs uppercase tracking-widest text-muted-foreground">
+                                Memuat data tamu...
+                            </p>
                         </div>
                     ) : filteredGuests.length === 0 ? (
-                        <div className="card-wedding p-10 text-center">
-                            <UsersIcon className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
-                            <p className="text-muted-foreground text-sm">
+                        <div className="bg-card border border-border rounded-2xl p-12 text-center">
+                            <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                                <UsersIcon className="w-6 h-6 text-muted-foreground/40" />
+                            </div>
+                            <p className="text-sm text-muted-foreground">
                                 {guests.length === 0
                                     ? "Belum ada tamu. Tambahkan tamu di atas."
                                     : "Tidak ada tamu yang sesuai pencarian."}
@@ -435,21 +592,27 @@ export default function AdminPage() {
                         </div>
                     ) : (
                         <AnimatePresence>
-                            {filteredGuests.map((guest) => (
+                            {filteredGuests.map((guest, index) => (
                                 <motion.div
                                     key={guest.id}
                                     initial={{ opacity: 0, y: -8 }}
                                     animate={{ opacity: 1, y: 0 }}
                                     exit={{ opacity: 0, x: -20 }}
-                                    className={"card-wedding p-4 " + (guest.sent ? "opacity-60" : "")}
+                                    transition={{ delay: index * 0.03 }}
+                                    className={
+                                        "bg-card border rounded-2xl p-4 transition-all " +
+                                        (guest.sent
+                                            ? "border-green-100 bg-green-50/30 opacity-75"
+                                            : "border-border hover:border-primary/20 hover:shadow-sm")
+                                    }
                                 >
-                                    <div className="flex items-start gap-3">
+                                    <div className="flex items-center gap-3">
                                         {/* Avatar */}
                                         <div className={
-                                            "w-10 h-10 rounded-full flex items-center justify-center shrink-0 text-sm font-bold " +
+                                            "w-11 h-11 rounded-full flex items-center justify-center shrink-0 text-sm font-bold border " +
                                             (guest.sent
-                                                ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400"
-                                                : "bg-primary/10 text-primary")
+                                                ? "bg-green-100 text-green-700 border-green-200"
+                                                : "bg-primary/10 text-primary border-primary/20")
                                         }>
                                             {guest.name.charAt(0).toUpperCase()}
                                         </div>
@@ -457,43 +620,38 @@ export default function AdminPage() {
                                         {/* Info */}
                                         <div className="flex-1 min-w-0">
                                             <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                                                <p className="text-sm font-medium text-foreground truncate">
+                                                <p className="text-sm font-semibold text-foreground truncate">
                                                     {guest.name}
                                                 </p>
                                                 {guest.sent && (
-                                                    <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 shrink-0">
-                                                        Terkirim
+                                                    <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 shrink-0">
+                                                        ✓ Terkirim
                                                     </span>
                                                 )}
                                             </div>
-                                            <p className="text-xs text-muted-foreground truncate flex items-center gap-1">
-                                                <LinkIcon className="w-3 h-3 shrink-0" />
-                                                {guest.link}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground/50 mt-0.5">
+                                            <p className="text-xs text-muted-foreground/60 mt-0.5 flex items-center gap-1">
+                                                <ClockIcon className="w-3 h-3 shrink-0" />
                                                 {guest.createdAt}
                                             </p>
                                         </div>
 
                                         {/* Aksi */}
                                         <div className="flex items-center gap-0.5 shrink-0">
-                                            {/* Preview */}
                                             <motion.a
                                                 href={guest.link}
                                                 target="_blank"
                                                 rel="noopener noreferrer"
                                                 whileTap={{ scale: 0.9 }}
-                                                className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground"
+                                                className="p-2 rounded-xl hover:bg-muted transition-colors text-muted-foreground"
                                                 title="Preview undangan"
                                             >
                                                 <EyeIcon className="w-4 h-4" />
                                             </motion.a>
 
-                                            {/* Salin link */}
                                             <motion.button
                                                 whileTap={{ scale: 0.9 }}
                                                 onClick={() => copyLink(guest)}
-                                                className="p-2 rounded-lg hover:bg-muted transition-colors text-muted-foreground"
+                                                className="p-2 rounded-xl hover:bg-muted transition-colors text-muted-foreground"
                                                 title="Salin link"
                                             >
                                                 {copiedId === guest.id ? (
@@ -503,36 +661,33 @@ export default function AdminPage() {
                                                 )}
                                             </motion.button>
 
-                                            {/* WhatsApp */}
                                             <motion.button
                                                 whileTap={{ scale: 0.9 }}
                                                 onClick={() => shareWhatsapp(guest)}
-                                                className="p-2 rounded-lg hover:bg-green-50 dark:hover:bg-green-900/20 transition-colors text-green-600"
+                                                className="p-2 rounded-xl hover:bg-green-50 transition-colors text-green-600"
                                                 title="Kirim via WhatsApp"
                                             >
                                                 <WhatsappIcon className="w-4 h-4" />
                                             </motion.button>
 
-                                            {/* Tandai terkirim */}
                                             <motion.button
                                                 whileTap={{ scale: 0.9 }}
                                                 onClick={() => toggleSent(guest.id)}
                                                 className={
-                                                    "p-2 rounded-lg transition-colors " +
+                                                    "p-2 rounded-xl transition-colors " +
                                                     (guest.sent
-                                                        ? "hover:bg-yellow-50 dark:hover:bg-yellow-900/20 text-yellow-500"
-                                                        : "hover:bg-muted text-muted-foreground")
+                                                        ? "text-amber-500 hover:bg-amber-50"
+                                                        : "text-muted-foreground hover:bg-muted")
                                                 }
                                                 title={guest.sent ? "Tandai belum terkirim" : "Tandai sudah terkirim"}
                                             >
                                                 <SendIcon className="w-4 h-4" />
                                             </motion.button>
 
-                                            {/* Hapus */}
                                             <motion.button
                                                 whileTap={{ scale: 0.9 }}
                                                 onClick={() => deleteGuest(guest.id)}
-                                                className="p-2 rounded-lg hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-muted-foreground hover:text-red-500"
+                                                className="p-2 rounded-xl hover:bg-red-50 transition-colors text-muted-foreground hover:text-red-500"
                                                 title="Hapus tamu"
                                             >
                                                 <TrashIcon className="w-4 h-4" />
@@ -545,11 +700,11 @@ export default function AdminPage() {
                     )}
                 </div>
 
-                {/* Footer info */}
-                <div className="text-center pb-8">
-                    <p className="text-xs text-muted-foreground">
-                        Data tersimpan di Google Sheets. Akses halaman ini di{" "}
-                        <span className="text-primary font-medium">/admin</span>
+                {/* Footer */}
+                <div className="text-center pb-8 pt-2">
+                    <p className="font-script text-2xl text-primary/30 mb-1">F & S</p>
+                    <p className="text-xs text-muted-foreground/40">
+                        Data tersimpan di Google Sheets · /admin
                     </p>
                 </div>
 
