@@ -4,8 +4,7 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { SectionWrapper, SectionTitle } from "@/components/ui/SectionWrapper";
 import { Button } from "@/components/ui/Button";
-import { getLucideIcon } from "@/lib/utils";
-import { formatDate, formatTime } from "@/lib/utils";
+import { getLucideIcon, formatDate, formatTime } from "@/lib/utils";
 import { generateGoogleCalendarUrl, generateAppleCalendarUrl } from "@/lib/calendarHelper";
 import { weddingData } from "@/lib/weddingData";
 import { EventDetail } from "@/types";
@@ -31,7 +30,6 @@ function EventCard({ title, event, calendarTitle, icon }: EventCardProps) {
     const ClockIcon = getLucideIcon("Clock");
     const MapPinIcon = getLucideIcon("MapPin");
     const CalendarIcon = getLucideIcon("Calendar");
-    const NavigationIcon = getLucideIcon("Navigation");
 
     const handleAppleCalendar = () => {
         const url = generateAppleCalendarUrl(event, calendarTitle);
@@ -48,50 +46,40 @@ function EventCard({ title, event, calendarTitle, icon }: EventCardProps) {
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true }}
-            className="card-wedding p-6 md:p-8"
+            className="card-wedding p-5 md:p-6"
         >
             {/* Header */}
-            <div className="flex items-center gap-3 mb-6">
-                <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Icon className="w-6 h-6 text-primary" />
+            <div className="flex items-center gap-3 mb-5">
+                <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+                    <Icon className="w-5 h-5 text-primary" />
                 </div>
-                <h3 className="font-serif text-xl font-bold text-foreground">{title}</h3>
+                <h3 className="font-serif text-lg font-bold text-foreground">{title}</h3>
             </div>
 
             {/* Details */}
-            <div className="space-y-4 mb-6">
-                <div className="flex items-start gap-3">
+            <div className="space-y-3 mb-5">
+                <div className="flex items-start gap-2.5">
                     <CalendarIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                    <div>
-                        <p className="text-sm font-medium text-foreground">
-                            {formatDate(event.date)}
-                        </p>
-                    </div>
+                    <p className="text-sm text-foreground">{formatDate(event.date)}</p>
                 </div>
-
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-2.5">
                     <ClockIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                    <div>
-                        <p className="text-sm font-medium text-foreground">
-                            {formatTime(event.time)}
-                            {event.endTime && ` - ${formatTime(event.endTime)}`}
-                        </p>
-                    </div>
+                    <p className="text-sm text-foreground">
+                        {formatTime(event.time)}
+                        {event.endTime && ` - ${formatTime(event.endTime)}`}
+                    </p>
                 </div>
-
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-2.5">
                     <MapPinIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
                     <div>
                         <p className="text-sm font-medium text-foreground">{event.venue}</p>
-                        <p className="text-xs text-muted-foreground mt-0.5">
-                            {event.address}
-                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">{event.address}</p>
                     </div>
                 </div>
             </div>
 
             {/* Maps Embed */}
-            <div className="rounded-xl overflow-hidden border border-border mb-4 h-48">
+            <div className="rounded-xl overflow-hidden border border-border mb-3 h-44">
                 <iframe
                     src={event.embedUrl}
                     width="100%"
@@ -105,49 +93,33 @@ function EventCard({ title, event, calendarTitle, icon }: EventCardProps) {
             </div>
 
             {/* Map buttons */}
-            <div className="flex gap-2 mb-4">
-                <Button
-                    href={event.mapsUrl}
-                    target="_blank"
-                    variant="outline"
-                    size="sm"
-                    icon="Map"
-                    fullWidth
-                >
+            <div className="grid grid-cols-2 gap-2 mb-2">
+                <Button href={event.mapsUrl} target="_blank" variant="outline" size="sm" icon="Map">
                     Google Maps
                 </Button>
-                <Button
-                    href={event.wazeUrl}
-                    target="_blank"
-                    variant="outline"
-                    size="sm"
-                    icon="Navigation"
-                    fullWidth
-                >
+                <Button href={event.wazeUrl} target="_blank" variant="outline" size="sm" icon="Navigation">
                     Waze
                 </Button>
             </div>
 
             {/* Calendar buttons */}
-            <div className="flex gap-2">
+            <div className="grid grid-cols-2 gap-2">
                 <Button
                     href={generateGoogleCalendarUrl(event, calendarTitle)}
                     target="_blank"
                     variant="secondary"
                     size="sm"
                     icon="CalendarPlus"
-                    fullWidth
                 >
-                    Google Calendar
+                    Google Cal
                 </Button>
                 <Button
                     onClick={handleAppleCalendar}
                     variant="secondary"
                     size="sm"
                     icon="CalendarCheck"
-                    fullWidth
                 >
-                    Apple Calendar
+                    Apple Cal
                 </Button>
             </div>
         </motion.div>
@@ -159,14 +131,13 @@ export function EventSection() {
 
     return (
         <SectionWrapper id="acara" variant="default">
-            <div className="container-wedding">
+            <div className="container-wedding px-4">
                 <SectionTitle
                     decorative="Jadwal Acara"
                     title="Informasi Acara"
                     subtitle="Kami mengundang Anda untuk hadir dan memberikan doa restu"
                 />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <EventCard
                         title="Akad Nikah"
                         event={akad}

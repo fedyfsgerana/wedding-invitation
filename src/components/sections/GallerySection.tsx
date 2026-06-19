@@ -57,7 +57,7 @@ export function GallerySection() {
                     initial="hidden"
                     whileInView="visible"
                     viewport={{ once: true }}
-                    className="grid grid-cols-2 md:grid-cols-3 gap-3 md:gap-4"
+                    className="grid grid-cols-2 md:grid-cols-3 gap-2 md:gap-4"
                 >
                     {gallery.map((item, index) => (
                         <motion.div
