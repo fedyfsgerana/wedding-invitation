@@ -21,7 +21,6 @@ import { LocationSection } from "@/components/sections/LocationSection";
 import { RSVPSection } from "@/components/sections/RSVPSection";
 import { GiftSection } from "@/components/sections/GiftSection";
 import { ClosingSection } from "@/components/sections/ClosingSection";
-import { weddingData } from "@/lib/weddingData";
 
 function WeddingPage() {
   const { guestName } = useGuestParam();
@@ -36,40 +35,44 @@ function WeddingPage() {
   const handleOpen = () => {
     setIsOpened(true);
     setTimeout(() => {
-      const el = document.getElementById("pembuka");
-      el?.scrollIntoView({ behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "smooth" });
     }, 100);
   };
 
   return (
     <AudioProvider>
-      {/* Loading Screen */}
       <LoadingScreen isLoading={isLoading} />
 
-      {/* Main Content */}
       <AnimatePresence>
         {!isLoading && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.6 }}
-            className="pb-20 md:pb-0"
+            transition={{ duration: 0.5 }}
           >
-            {/* Utilities */}
             <ScrollProgress />
             <FloatingPetals />
             <BackToTop />
 
-            {/* Cover — always visible */}
-            <CoverSection guestName={guestName} onOpen={handleOpen} />
+            {/* Cover */}
+            <AnimatePresence>
+              {!isOpened && (
+                <CoverSection
+                  guestName={guestName}
+                  onOpen={handleOpen}
+                  isOpened={isOpened}
+                />
+              )}
+            </AnimatePresence>
 
-            {/* Main content — revealed after open */}
+            {/* Main content */}
             <AnimatePresence>
               {isOpened && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   transition={{ duration: 0.6 }}
+                  className="pb-20 md:pb-0"
                 >
                   <Navbar />
                   <OpeningSection />

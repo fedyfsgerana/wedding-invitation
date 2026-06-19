@@ -13,9 +13,8 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
                 <motion.div
                     initial={{ opacity: 1 }}
                     exit={{ opacity: 0, transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] } }}
-                    className="fixed inset-0 z-[999] bg-background flex flex-col items-center justify-center"
+                    className="fixed inset-0 z-999 bg-background flex flex-col items-center justify-center"
                 >
-                    {/* Decorative circles */}
                     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
                         <motion.div
                             animate={{ scale: [1, 1.2, 1], opacity: [0.3, 0.1, 0.3] }}
@@ -30,17 +29,14 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
                             className="w-80 h-80 rounded-full border border-primary/10"
                         />
                     </div>
-
-                    {/* Content */}
                     <div className="relative z-10 text-center">
                         <motion.p
                             animate={{ opacity: [0.5, 1, 0.5] }}
                             transition={{ repeat: Infinity, duration: 2 }}
                             className="font-script text-6xl text-primary mb-4"
                         >
-                            R & A
+                            F & S
                         </motion.p>
-
                         <motion.p
                             initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
@@ -49,8 +45,6 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
                         >
                             Memuat Undangan...
                         </motion.p>
-
-                        {/* Loader dots */}
                         <div className="flex items-center justify-center gap-2">
                             {[0, 1, 2].map((i) => (
                                 <motion.div

@@ -106,10 +106,17 @@ export const weddingData: WeddingData = {
             accountName: "Fedy Fs. Gerana",
             logo: "/images/mandiri-logo.png",
         },
+        {
+            id: 2,
+            bank: "Bank Mandiri",
+            accountNumber: "0987654321",
+            accountName: "Suci Venitasya",
+            logo: "/images/mandiri-logo.png",
+        },
     ],
     qris: {
-        image: "/images/qris-bca.png",
-        name: "Suci Venitasya",
+        image: "/images/qris-fedy.png",
+        name: "Fedy Fs. Gerana",
     },
     verse: {
         text: "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.",

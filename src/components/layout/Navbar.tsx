@@ -1,11 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { useAudio } from "@/components/providers/AudioProvider";
-import { getLucideIcon } from "@/lib/utils";
-import { cn } from "@/lib/utils";
+import { getLucideIcon, cn } from "@/lib/utils";
 
 const navItems = [
     { label: "Mempelai", href: "#mempelai", icon: "Heart" },
@@ -29,8 +28,7 @@ export function Navbar() {
     useEffect(() => {
         const handleScroll = () => {
             setScrolled(window.scrollY > 50);
-
-            const sections = navItems.map((item) => item.href.replace("#", ""));
+            const sections = [...navItems].map((item) => item.href.replace("#", ""));
             for (const section of sections.reverse()) {
                 const el = document.getElementById(section);
                 if (el && window.scrollY >= el.offsetTop - 120) {
@@ -39,7 +37,6 @@ export function Navbar() {
                 }
             }
         };
-
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
@@ -64,15 +61,12 @@ export function Navbar() {
                 )}
             >
                 <div className="container-wedding flex items-center justify-between px-4">
-                    {/* Logo */}
                     <button
                         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
                         className="font-script text-2xl text-primary"
                     >
-                        R & A
+                        F & S
                     </button>
-
-                    {/* Nav Links */}
                     <div className="flex items-center gap-6">
                         {navItems.map((item) => (
                             <button
@@ -89,8 +83,6 @@ export function Navbar() {
                             </button>
                         ))}
                     </div>
-
-                    {/* Controls */}
                     <div className="flex items-center gap-2">
                         <motion.button
                             whileHover={{ scale: 1.1 }}
@@ -119,83 +111,77 @@ export function Navbar() {
             </motion.nav>
 
             {/* Mobile Bottom Navigation */}
-            <AnimatePresence>
-                <motion.nav
-                    initial={{ y: 100 }}
-                    animate={{ y: 0 }}
-                    transition={{ duration: 0.4, delay: 0.5 }}
-                    className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
-                >
-                    {/* Backdrop blur bar */}
-                    <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
-                        <div className="flex items-center justify-around px-2 py-2 pb-safe">
-                            {navItems.map((item) => {
-                                const Icon = getLucideIcon(item.icon);
-                                const isActive = activeSection === item.href.replace("#", "");
-                                return (
-                                    <motion.button
-                                        key={item.href}
-                                        onClick={() => handleNavClick(item.href)}
-                                        whileTap={{ scale: 0.9 }}
-                                        className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all"
-                                    >
-                                        <div className={cn(
-                                            "w-8 h-8 rounded-full flex items-center justify-center transition-all",
-                                            isActive
-                                                ? "bg-primary/15"
-                                                : "bg-transparent"
-                                        )}>
-                                            <Icon className={cn(
-                                                "w-4 h-4 transition-colors",
-                                                isActive ? "text-primary" : "text-muted-foreground"
-                                            )} />
-                                        </div>
-                                        <span className={cn(
-                                            "text-[10px] font-medium transition-colors",
+            <motion.nav
+                initial={{ y: 100 }}
+                animate={{ y: 0 }}
+                transition={{ duration: 0.4, delay: 0.5 }}
+                className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
+            >
+                <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
+                    <div className="flex items-center justify-around px-1 py-1.5">
+                        {navItems.map((item) => {
+                            const Icon = getLucideIcon(item.icon);
+                            const isActive = activeSection === item.href.replace("#", "");
+                            return (
+                                <motion.button
+                                    key={item.href}
+                                    onClick={() => handleNavClick(item.href)}
+                                    whileTap={{ scale: 0.9 }}
+                                    className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl transition-all flex-1"
+                                >
+                                    <div className={cn(
+                                        "w-7 h-7 rounded-full flex items-center justify-center transition-all",
+                                        isActive ? "bg-primary/15" : "bg-transparent"
+                                    )}>
+                                        <Icon className={cn(
+                                            "w-4 h-4 transition-colors",
                                             isActive ? "text-primary" : "text-muted-foreground"
-                                        )}>
-                                            {item.label}
-                                        </span>
-                                    </motion.button>
-                                );
-                            })}
+                                        )} />
+                                    </div>
+                                    <span className={cn(
+                                        "text-[9px] font-medium transition-colors leading-tight",
+                                        isActive ? "text-primary" : "text-muted-foreground"
+                                    )}>
+                                        {item.label}
+                                    </span>
+                                </motion.button>
+                            );
+                        })}
 
-                            {/* Music & Theme toggle di mobile */}
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={toggleAudio}
-                                className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl"
-                            >
-                                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                                    {isPlaying
-                                        ? <MusicIcon className="w-4 h-4 text-muted-foreground" />
-                                        : <MusicOffIcon className="w-4 h-4 text-muted-foreground" />
-                                    }
-                                </div>
-                                <span className="text-[10px] font-medium text-muted-foreground">
-                                    Musik
-                                </span>
-                            </motion.button>
+                        <motion.button
+                            whileTap={{ scale: 0.9 }}
+                            onClick={toggleAudio}
+                            className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl flex-1"
+                        >
+                            <div className="w-7 h-7 rounded-full flex items-center justify-center">
+                                {isPlaying
+                                    ? <MusicIcon className="w-4 h-4 text-muted-foreground" />
+                                    : <MusicOffIcon className="w-4 h-4 text-muted-foreground" />
+                                }
+                            </div>
+                            <span className="text-[9px] font-medium text-muted-foreground leading-tight">
+                                Musik
+                            </span>
+                        </motion.button>
 
-                            <motion.button
-                                whileTap={{ scale: 0.9 }}
-                                onClick={toggleTheme}
-                                className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl"
-                            >
-                                <div className="w-8 h-8 rounded-full flex items-center justify-center">
-                                    {theme === "light"
-                                        ? <MoonIcon className="w-4 h-4 text-muted-foreground" />
-                                        : <SunIcon className="w-4 h-4 text-muted-foreground" />
-                                    }
-                                </div>
-                                <span className="text-[10px] font-medium text-muted-foreground">
-                                    Tema
-                                </span>
-                            </motion.button>
-                        </div>
+                        <motion.button
+                            whileTap={{ scale: 0.9 }}
+                            onClick={toggleTheme}
+                            className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl flex-1"
+                        >
+                            <div className="w-7 h-7 rounded-full flex items-center justify-center">
+                                {theme === "light"
+                                    ? <MoonIcon className="w-4 h-4 text-muted-foreground" />
+                                    : <SunIcon className="w-4 h-4 text-muted-foreground" />
+                                }
+                            </div>
+                            <span className="text-[9px] font-medium text-muted-foreground leading-tight">
+                                Tema
+                            </span>
+                        </motion.button>
                     </div>
-                </motion.nav>
-            </AnimatePresence>
+                </div>
+            </motion.nav>
         </>
     );
 }
