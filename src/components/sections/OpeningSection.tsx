@@ -56,7 +56,7 @@ export function OpeningSection() {
 
                 {/* Groom */}
                 <motion.div variants={itemVariants} className="mb-4">
-                    <h2 className="font-script text-4xl md:text-5xl text-primary mb-1 break-words">
+                    <h2 className="font-script text-4xl md:text-5xl text-primary mb-1 wrap-break-word">
                         {groom.fullName}
                     </h2>
                     <p className="text-muted-foreground text-xs md:text-sm">
@@ -76,7 +76,7 @@ export function OpeningSection() {
 
                 {/* Bride */}
                 <motion.div variants={itemVariants} className="mb-6">
-                    <h2 className="font-script text-4xl md:text-5xl text-primary mb-1 break-words">
+                    <h2 className="font-script text-4xl md:text-5xl text-primary mb-1 wrap-break-word">
                         {bride.fullName}
                     </h2>
                     <p className="text-muted-foreground text-xs md:text-sm">

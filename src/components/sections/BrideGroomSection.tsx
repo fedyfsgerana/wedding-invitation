@@ -19,20 +19,10 @@ const cardVariants: Variants = {
 };
 
 function PersonCard({ person, index }: { person: Person; index: number }) {
-    const InstagramIcon = getLucideIcon("Instagram");
-    const HeartIcon = getLucideIcon("Heart");
-
     const avatarUrl =
         "https://ui-avatars.com/api/?name=" +
         encodeURIComponent(person.name) +
         "&size=256&background=f9a8d4&color=fff";
-
-    const igHandle = person.instagram
-        ? person.instagram.replace("@", "")
-        : "";
-
-    const igUrl =
-        "https://instagram.com/" + igHandle;
 
     function handleErr(e: React.SyntheticEvent<HTMLImageElement>) {
         e.currentTarget.src = avatarUrl;
@@ -73,12 +63,6 @@ function PersonCard({ person, index }: { person: Person; index: number }) {
                     <p className="text-muted-foreground text-sm mb-3">
                         {person.bio}
                     </p>
-                )}
-                {person.instagram && (
-                    <span className="inline-flex items-center gap-1.5 text-sm text-primary">
-                        <InstagramIcon className="w-4 h-4" />
-                        <span>{person.instagram}</span>
-                    </span>
                 )}
             </div>
         </motion.div>
