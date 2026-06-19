@@ -52,7 +52,8 @@ function WeddingPage() {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
+            transition={{ duration: 0.6 }}
+            className="pb-20 md:pb-0"
           >
             {/* Utilities */}
             <ScrollProgress />

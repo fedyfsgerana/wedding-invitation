@@ -8,46 +8,56 @@ import { getLucideIcon } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 
 const navItems = [
-    { label: "Mempelai", href: "#mempelai" },
-    { label: "Acara", href: "#acara" },
-    { label: "Galeri", href: "#galeri" },
-    { label: "RSVP", href: "#rsvp" },
-    { label: "Hadiah", href: "#hadiah" },
+    { label: "Mempelai", href: "#mempelai", icon: "Heart" },
+    { label: "Acara", href: "#acara", icon: "Calendar" },
+    { label: "Galeri", href: "#galeri", icon: "Image" },
+    { label: "RSVP", href: "#rsvp", icon: "MessageCircle" },
+    { label: "Hadiah", href: "#hadiah", icon: "Gift" },
 ];
 
 export function Navbar() {
     const [scrolled, setScrolled] = useState(false);
-    const [menuOpen, setMenuOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState("");
     const { theme, toggleTheme } = useTheme();
     const { isPlaying, toggleAudio } = useAudio();
 
     const SunIcon = getLucideIcon("Sun");
     const MoonIcon = getLucideIcon("Moon");
-    const MenuIcon = getLucideIcon("Menu");
-    const XIcon = getLucideIcon("X");
     const MusicIcon = getLucideIcon("Music");
     const MusicOffIcon = getLucideIcon("VolumeX");
 
     useEffect(() => {
-        const handleScroll = () => setScrolled(window.scrollY > 50);
+        const handleScroll = () => {
+            setScrolled(window.scrollY > 50);
+
+            const sections = navItems.map((item) => item.href.replace("#", ""));
+            for (const section of sections.reverse()) {
+                const el = document.getElementById(section);
+                if (el && window.scrollY >= el.offsetTop - 120) {
+                    setActiveSection(section);
+                    break;
+                }
+            }
+        };
+
         window.addEventListener("scroll", handleScroll, { passive: true });
         return () => window.removeEventListener("scroll", handleScroll);
     }, []);
 
     const handleNavClick = (href: string) => {
-        setMenuOpen(false);
         const el = document.querySelector(href);
         el?.scrollIntoView({ behavior: "smooth" });
     };
 
     return (
         <>
+            {/* Desktop Top Navbar */}
             <motion.nav
                 initial={{ y: -100 }}
                 animate={{ y: 0 }}
                 transition={{ duration: 0.5 }}
                 className={cn(
-                    "fixed top-0 left-0 right-0 z-50 transition-all duration-300",
+                    "fixed top-0 left-0 right-0 z-50 transition-all duration-300 hidden md:block",
                     scrolled
                         ? "bg-background/90 backdrop-blur-md border-b border-border shadow-sm py-3"
                         : "bg-transparent py-5"
@@ -62,13 +72,18 @@ export function Navbar() {
                         R & A
                     </button>
 
-                    {/* Desktop Nav */}
-                    <div className="hidden md:flex items-center gap-6">
+                    {/* Nav Links */}
+                    <div className="flex items-center gap-6">
                         {navItems.map((item) => (
                             <button
                                 key={item.href}
                                 onClick={() => handleNavClick(item.href)}
-                                className="text-sm font-medium text-foreground/80 hover:text-primary transition-colors"
+                                className={cn(
+                                    "text-sm font-medium transition-colors",
+                                    activeSection === item.href.replace("#", "")
+                                        ? "text-primary"
+                                        : "text-foreground/70 hover:text-primary"
+                                )}
                             >
                                 {item.label}
                             </button>
@@ -81,71 +96,105 @@ export function Navbar() {
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={toggleAudio}
-                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/80"
-                            aria-label="Toggle music"
+                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
                         >
-                            {isPlaying ? (
-                                <MusicIcon className="w-4 h-4" />
-                            ) : (
-                                <MusicOffIcon className="w-4 h-4" />
-                            )}
+                            {isPlaying
+                                ? <MusicIcon className="w-4 h-4" />
+                                : <MusicOffIcon className="w-4 h-4" />
+                            }
                         </motion.button>
-
                         <motion.button
                             whileHover={{ scale: 1.1 }}
                             whileTap={{ scale: 0.9 }}
                             onClick={toggleTheme}
-                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/80"
-                            aria-label="Toggle theme"
+                            className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
                         >
-                            {theme === "light" ? (
-                                <MoonIcon className="w-4 h-4" />
-                            ) : (
-                                <SunIcon className="w-4 h-4" />
-                            )}
-                        </motion.button>
-
-                        {/* Mobile menu button */}
-                        <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.9 }}
-                            onClick={() => setMenuOpen(!menuOpen)}
-                            className="md:hidden p-2 rounded-full hover:bg-muted transition-colors text-foreground/80"
-                            aria-label="Toggle menu"
-                        >
-                            {menuOpen ? (
-                                <XIcon className="w-4 h-4" />
-                            ) : (
-                                <MenuIcon className="w-4 h-4" />
-                            )}
+                            {theme === "light"
+                                ? <MoonIcon className="w-4 h-4" />
+                                : <SunIcon className="w-4 h-4" />
+                            }
                         </motion.button>
                     </div>
                 </div>
             </motion.nav>
 
-            {/* Mobile Menu */}
+            {/* Mobile Bottom Navigation */}
             <AnimatePresence>
-                {menuOpen && (
-                    <motion.div
-                        initial={{ opacity: 0, y: -20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -20 }}
-                        transition={{ duration: 0.2 }}
-                        className="fixed top-16 left-0 right-0 z-40 bg-background/95 backdrop-blur-md border-b border-border shadow-lg md:hidden"
-                    >
-                        <div className="flex flex-col py-4 px-6 gap-4">
-                            {navItems.map((item) => (
-                                <button
-                                    key={item.href}
-                                    onClick={() => handleNavClick(item.href)}
-                                    className="text-left text-base font-medium text-foreground/80 hover:text-primary transition-colors py-1"
-                                >
-                                    {item.label}
-                                </button>
-                            ))}
+                <motion.nav
+                    initial={{ y: 100 }}
+                    animate={{ y: 0 }}
+                    transition={{ duration: 0.4, delay: 0.5 }}
+                    className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
+                >
+                    {/* Backdrop blur bar */}
+                    <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
+                        <div className="flex items-center justify-around px-2 py-2 pb-safe">
+                            {navItems.map((item) => {
+                                const Icon = getLucideIcon(item.icon);
+                                const isActive = activeSection === item.href.replace("#", "");
+                                return (
+                                    <motion.button
+                                        key={item.href}
+                                        onClick={() => handleNavClick(item.href)}
+                                        whileTap={{ scale: 0.9 }}
+                                        className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all"
+                                    >
+                                        <div className={cn(
+                                            "w-8 h-8 rounded-full flex items-center justify-center transition-all",
+                                            isActive
+                                                ? "bg-primary/15"
+                                                : "bg-transparent"
+                                        )}>
+                                            <Icon className={cn(
+                                                "w-4 h-4 transition-colors",
+                                                isActive ? "text-primary" : "text-muted-foreground"
+                                            )} />
+                                        </div>
+                                        <span className={cn(
+                                            "text-[10px] font-medium transition-colors",
+                                            isActive ? "text-primary" : "text-muted-foreground"
+                                        )}>
+                                            {item.label}
+                                        </span>
+                                    </motion.button>
+                                );
+                            })}
+
+                            {/* Music & Theme toggle di mobile */}
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                onClick={toggleAudio}
+                                className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl"
+                            >
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                                    {isPlaying
+                                        ? <MusicIcon className="w-4 h-4 text-muted-foreground" />
+                                        : <MusicOffIcon className="w-4 h-4 text-muted-foreground" />
+                                    }
+                                </div>
+                                <span className="text-[10px] font-medium text-muted-foreground">
+                                    Musik
+                                </span>
+                            </motion.button>
+
+                            <motion.button
+                                whileTap={{ scale: 0.9 }}
+                                onClick={toggleTheme}
+                                className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl"
+                            >
+                                <div className="w-8 h-8 rounded-full flex items-center justify-center">
+                                    {theme === "light"
+                                        ? <MoonIcon className="w-4 h-4 text-muted-foreground" />
+                                        : <SunIcon className="w-4 h-4 text-muted-foreground" />
+                                    }
+                                </div>
+                                <span className="text-[10px] font-medium text-muted-foreground">
+                                    Tema
+                                </span>
+                            </motion.button>
                         </div>
-                    </motion.div>
-                )}
+                    </div>
+                </motion.nav>
             </AnimatePresence>
         </>
     );

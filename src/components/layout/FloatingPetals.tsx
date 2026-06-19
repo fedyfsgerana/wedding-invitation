@@ -12,24 +12,24 @@ interface Petal {
 }
 
 const PETAL_COLORS = [
-    "#f9a8d4",
-    "#fda4af",
-    "#fbcfe8",
-    "#fecdd3",
-    "#f0abfc",
-    "#e879f9",
+    "#d4a843",
+    "#e8c97a",
+    "#c9a84c",
+    "#f0dfa0",
+    "#b8956a",
+    "#e2c97e",
 ];
 
 export function FloatingPetals() {
     const [petals, setPetals] = useState<Petal[]>([]);
 
     useEffect(() => {
-        const generated: Petal[] = Array.from({ length: 12 }, (_, i) => ({
+        const generated: Petal[] = Array.from({ length: 10 }, (_, i) => ({
             id: i,
             left: Math.random() * 100,
-            size: Math.random() * 10 + 8,
-            duration: Math.random() * 8 + 8,
-            delay: Math.random() * 10,
+            size: Math.random() * 8 + 6,
+            duration: Math.random() * 10 + 10,
+            delay: Math.random() * 12,
             color: PETAL_COLORS[Math.floor(Math.random() * PETAL_COLORS.length)],
         }));
         setPetals(generated);
