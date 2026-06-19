@@ -128,7 +128,7 @@ export const weddingData: WeddingData = {
 export const siteConfig = {
     title: "Fedy & Suci Wedding",
     description: "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
-    url: "https://fedy-suci.vercel.app",
+    url: "https://wedding-invitation-fedy-suci.vercel.app",
     ogImage: "/images/og-image.jpg",
     favicon: "/favicon.ico",
 };

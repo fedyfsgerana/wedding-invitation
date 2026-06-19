@@ -25,11 +25,11 @@ const greatVibes = Great_Vibes({
 export const metadata: Metadata = {
   title: "Fedy & Suci Wedding",
   description: "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
-  metadataBase: new URL("https://fedy-suci.vercel.app"),
+  metadataBase: new URL("https://wedding-invitation-fedy-suci.vercel.app"),
   openGraph: {
     title: "Fedy & Suci Wedding",
     description: "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
-    url: "https://fedy-suci.vercel.app",
+    url: "https://wedding-invitation-fedy-suci.vercel.app",
     siteName: "Fedy & Suci Wedding",
     images: [{ url: "/images/og-image.jpg", width: 1200, height: 630 }],
     type: "website",
