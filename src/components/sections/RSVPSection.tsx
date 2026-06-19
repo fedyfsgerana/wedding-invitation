@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { SectionWrapper, SectionTitle } from "@/components/ui/SectionWrapper";
@@ -23,6 +23,8 @@ const ATTENDANCE_OPTIONS = [
     { value: "masih_ragu", label: "Masih Ragu", icon: "HelpCircle" },
 ];
 
+const STORAGE_KEY = "wedding-wishes-fedy-suci";
+
 export function RSVPSection() {
     const [form, setForm] = useState<RSVPData>({
         name: "",
@@ -40,10 +42,18 @@ export function RSVPSection() {
     const UsersIcon = getLucideIcon("Users");
     const MessageIcon = getLucideIcon("MessageCircle");
 
+    useEffect(() => {
+        try {
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) setWishes(JSON.parse(stored));
+        } catch {
+            console.error("Gagal memuat ucapan");
+        }
+    }, []);
+
     const handleSubmit = async () => {
         if (!form.name.trim() || !form.message.trim()) return;
         setLoading(true);
-
         await new Promise((resolve) => setTimeout(resolve, 800));
 
         const newWish: WishItem = {
@@ -58,7 +68,15 @@ export function RSVPSection() {
             }),
         };
 
-        setWishes((prev) => [newWish, ...prev]);
+        const updated = [newWish, ...wishes];
+        setWishes(updated);
+
+        try {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(updated));
+        } catch {
+            console.error("Gagal menyimpan ucapan");
+        }
+
         setSubmitted(true);
         setLoading(false);
     };
@@ -70,21 +88,21 @@ export function RSVPSection() {
 
     return (
         <SectionWrapper id="rsvp" variant="gradient">
-            <div className="container-wedding">
+            <div className="container-wedding px-4">
                 <SectionTitle
                     decorative="RSVP"
                     title="Konfirmasi Kehadiran"
                     subtitle="Mohon konfirmasi kehadiran Bapak/Ibu/Saudara/i agar kami dapat mempersiapkan segalanya dengan baik"
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {/* Form */}
                     <motion.div
                         variants={itemVariants}
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
-                        className="card-wedding p-6"
+                        className="card-wedding p-5"
                     >
                         <AnimatePresence mode="wait">
                             {submitted ? (
@@ -118,7 +136,6 @@ export function RSVPSection() {
                                     exit={{ opacity: 0 }}
                                     className="space-y-4"
                                 >
-                                    {/* Name */}
                                     <div>
                                         <label className="text-sm font-medium text-foreground mb-1.5 flex items-center gap-1.5">
                                             <UserIcon className="w-3.5 h-3.5 text-primary" />
@@ -127,15 +144,12 @@ export function RSVPSection() {
                                         <input
                                             type="text"
                                             value={form.name}
-                                            onChange={(e) =>
-                                                setForm({ ...form, name: e.target.value })
-                                            }
+                                            onChange={(e) => setForm({ ...form, name: e.target.value })}
                                             placeholder="Masukkan nama Anda"
                                             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors"
                                         />
                                     </div>
 
-                                    {/* Attendance */}
                                     <div>
                                         <label className="text-sm font-medium text-foreground mb-1.5 block">
                                             Konfirmasi Kehadiran
@@ -147,10 +161,7 @@ export function RSVPSection() {
                                                     <button
                                                         key={option.value}
                                                         onClick={() =>
-                                                            setForm({
-                                                                ...form,
-                                                                attendance: option.value as RSVPData["attendance"],
-                                                            })
+                                                            setForm({ ...form, attendance: option.value as RSVPData["attendance"] })
                                                         }
                                                         className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border text-xs font-medium transition-all ${form.attendance === option.value
                                                                 ? "border-primary bg-primary/10 text-primary"
@@ -165,7 +176,6 @@ export function RSVPSection() {
                                         </div>
                                     </div>
 
-                                    {/* Guest Count */}
                                     {form.attendance === "hadir" && (
                                         <div>
                                             <label className="text-sm font-medium text-foreground mb-1.5 flex items-center gap-1.5">
@@ -174,12 +184,7 @@ export function RSVPSection() {
                                             </label>
                                             <div className="flex items-center gap-3">
                                                 <button
-                                                    onClick={() =>
-                                                        setForm({
-                                                            ...form,
-                                                            guestCount: Math.max(1, form.guestCount - 1),
-                                                        })
-                                                    }
+                                                    onClick={() => setForm({ ...form, guestCount: Math.max(1, form.guestCount - 1) })}
                                                     className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors text-foreground font-medium"
                                                 >
                                                     -
@@ -188,12 +193,7 @@ export function RSVPSection() {
                                                     {form.guestCount}
                                                 </span>
                                                 <button
-                                                    onClick={() =>
-                                                        setForm({
-                                                            ...form,
-                                                            guestCount: Math.min(10, form.guestCount + 1),
-                                                        })
-                                                    }
+                                                    onClick={() => setForm({ ...form, guestCount: Math.min(10, form.guestCount + 1) })}
                                                     className="w-9 h-9 rounded-full border border-border flex items-center justify-center hover:bg-muted transition-colors text-foreground font-medium"
                                                 >
                                                     +
@@ -202,7 +202,6 @@ export function RSVPSection() {
                                         </div>
                                     )}
 
-                                    {/* Message */}
                                     <div>
                                         <label className="text-sm font-medium text-foreground mb-1.5 flex items-center gap-1.5">
                                             <MessageIcon className="w-3.5 h-3.5 text-primary" />
@@ -210,9 +209,7 @@ export function RSVPSection() {
                                         </label>
                                         <textarea
                                             value={form.message}
-                                            onChange={(e) =>
-                                                setForm({ ...form, message: e.target.value })
-                                            }
+                                            onChange={(e) => setForm({ ...form, message: e.target.value })}
                                             placeholder="Tuliskan ucapan dan doa terbaik Anda..."
                                             rows={4}
                                             className="w-full px-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors resize-none"
@@ -242,7 +239,7 @@ export function RSVPSection() {
                         whileInView="visible"
                         viewport={{ once: true }}
                         transition={{ delay: 0.15 }}
-                        className="space-y-3 max-h-120 overflow-y-auto scrollbar-hide"
+                        className="space-y-3 max-h-96 overflow-y-auto scrollbar-hide"
                     >
                         {wishes.length === 0 ? (
                             <div className="card-wedding p-8 text-center">
@@ -265,26 +262,22 @@ export function RSVPSection() {
                                                 <UserIcon className="w-4 h-4 text-primary" />
                                             </div>
                                             <div className="flex-1 min-w-0">
-                                                <div className="flex items-center justify-between gap-2 mb-1">
+                                                <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
                                                     <p className="text-sm font-medium text-foreground truncate">
                                                         {wish.name}
                                                     </p>
-                                                    <span
-                                                        className={`text-xs px-2 py-0.5 rounded-full shrink-0 ${wish.attendance === "hadir"
-                                                                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
-                                                                : wish.attendance === "tidak_hadir"
-                                                                    ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
-                                                                    : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
-                                                            }`}
-                                                    >
-                                                        {wish.attendance === "hadir"
-                                                            ? "Hadir"
+                                                    <span className={`text-xs px-2 py-0.5 rounded-full shrink-0 ${wish.attendance === "hadir"
+                                                            ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
                                                             : wish.attendance === "tidak_hadir"
-                                                                ? "Tidak Hadir"
+                                                                ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+                                                                : "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400"
+                                                        }`}>
+                                                        {wish.attendance === "hadir" ? "Hadir"
+                                                            : wish.attendance === "tidak_hadir" ? "Tidak Hadir"
                                                                 : "Masih Ragu"}
                                                     </span>
                                                 </div>
-                                                <p className="text-sm text-muted-foreground leading-relaxed">
+                                                <p className="text-sm text-muted-foreground leading-relaxed wrap-break-word">
                                                     {wish.message}
                                                 </p>
                                                 <p className="text-xs text-muted-foreground/60 mt-1">

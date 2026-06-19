@@ -44,15 +44,14 @@ export function GiftSection() {
 
     return (
         <SectionWrapper id="hadiah" variant="cream">
-            <div className="container-wedding">
+            <div className="container-wedding px-4">
                 <SectionTitle
                     decorative="Wedding Gift"
                     title="Hadiah Pernikahan"
-                    subtitle="Doa restu dari Bapak/Ibu/Saudara/i merupakan hadiah terindah bagi kami. Namun bila ingin memberi tanda kasih, kami sediakan informasinya di bawah ini"
+                    subtitle="Doa restu Anda adalah hadiah terindah bagi kami. Namun jika ingin memberikan hadiah, berikut informasinya"
                 />
 
                 <div className="max-w-lg mx-auto space-y-4">
-                    {/* Bank Accounts */}
                     {bankAccounts.map((account) => {
                         const bankColor = BANK_COLORS[account.bank] ?? "#333";
                         return (
@@ -100,7 +99,6 @@ export function GiftSection() {
                         );
                     })}
 
-                    {/* Note */}
                     <motion.div
                         variants={itemVariants}
                         initial="hidden"

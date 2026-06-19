@@ -78,7 +78,7 @@ export const weddingData: WeddingData = {
         },
         {
             id: 5,
-            date: "September 2025",
+            date: "Desember 2026",
             title: "Hari Pernikahan",
             description: "Hari yang paling dinantikan. Kami bersatu dalam ikatan pernikahan yang penuh berkah.",
             icon: "PartyPopper",
