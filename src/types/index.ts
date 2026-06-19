@@ -9,7 +9,6 @@ export interface WeddingData {
     gallery: GalleryItem[];
     agenda: AgendaItem[];
     bankAccounts: BankAccount[];
-    qris: QRIS;
     verse: Verse;
     music: string;
 }
@@ -70,11 +69,6 @@ export interface BankAccount {
     accountNumber: string;
     accountName: string;
     logo: string;
-}
-
-export interface QRIS {
-    image: string;
-    name: string;
 }
 
 export interface Verse {

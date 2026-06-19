@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import Image from "next/image";
 import { SectionWrapper, SectionTitle } from "@/components/ui/SectionWrapper";
 import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
@@ -25,13 +24,11 @@ const BANK_COLORS: Record<string, string> = {
 };
 
 export function GiftSection() {
-    const { bankAccounts, qris } = weddingData;
+    const { bankAccounts } = weddingData;
     const [copiedId, setCopiedId] = useState<number | null>(null);
-    const [showQris, setShowQris] = useState(false);
 
     const CopyIcon = getLucideIcon("Copy");
     const CheckIcon = getLucideIcon("Check");
-    const QrCodeIcon = getLucideIcon("QrCode");
     const GiftIcon = getLucideIcon("Gift");
     const BuildingIcon = getLucideIcon("Building2");
 
@@ -102,65 +99,6 @@ export function GiftSection() {
                             </motion.div>
                         );
                     })}
-
-                    {/* QRIS */}
-                    <motion.div
-                        variants={itemVariants}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        className="card-wedding p-5"
-                    >
-                        <div
-                            className="flex items-center justify-between gap-4 cursor-pointer"
-                            onClick={() => setShowQris(!showQris)}
-                        >
-                            <div className="flex items-center gap-3">
-                                <div className="w-12 h-12 rounded-xl bg-blue-600 flex items-center justify-center shrink-0">
-                                    <QrCodeIcon className="w-6 h-6 text-white" />
-                                </div>
-                                <div>
-                                    <p className="text-xs text-muted-foreground">QRIS BCA Digital</p>
-                                    <p className="text-sm font-medium text-foreground">{qris.name}</p>
-                                    <p className="text-xs text-primary">
-                                        {showQris ? "Sembunyikan QR" : "Tampilkan QR"}
-                                    </p>
-                                </div>
-                            </div>
-                            <motion.div
-                                animate={{ rotate: showQris ? 180 : 0 }}
-                                transition={{ duration: 0.3 }}
-                            >
-                                <QrCodeIcon className="w-5 h-5 text-muted-foreground" />
-                            </motion.div>
-                        </div>
-
-                        {showQris && (
-                            <motion.div
-                                initial={{ opacity: 0, height: 0 }}
-                                animate={{ opacity: 1, height: "auto" }}
-                                className="mt-4 flex flex-col items-center gap-2"
-                            >
-                                <div className="relative w-52 h-52 rounded-xl overflow-hidden border border-border bg-white p-2">
-                                    <Image
-                                        src={qris.image}
-                                        alt="QRIS BCA Digital"
-                                        fill
-                                        className="object-contain p-2"
-                                        onError={(e) => {
-                                            const target = e.target as HTMLImageElement;
-                                            target.src =
-                                                "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=QRIS-" +
-                                                encodeURIComponent(qris.name);
-                                        }}
-                                    />
-                                </div>
-                                <p className="text-xs text-muted-foreground">
-                                    Scan untuk transfer
-                                </p>
-                            </motion.div>
-                        )}
-                    </motion.div>
 
                     {/* Note */}
                     <motion.div
