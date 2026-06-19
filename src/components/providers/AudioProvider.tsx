@@ -20,7 +20,7 @@ export function AudioProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         const audio = new Audio(weddingData.music);
         audio.loop = true;
-        audio.volume = 0.4;
+        audio.volume = 1.0;
         audioRef.current = audio;
 
         return () => {

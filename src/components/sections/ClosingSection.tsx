@@ -170,6 +170,12 @@ export function ClosingSection() {
                     >
                         © {new Date().getFullYear()} Fedy & Suci Wedding. All rights reserved.
                     </p>
+                    <p
+                        className="text-[10px] pt-1"
+                        style={{ color: "rgba(255, 248, 230, 0.15)" }}
+                    >
+                        Music: &quot;Canon in D Major&quot; by Kevin MacLeod (incompetech.com), CC BY 3.0
+                    </p>
                 </motion.div>
             </motion.div>
         </section>

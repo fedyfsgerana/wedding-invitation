@@ -122,7 +122,7 @@ export const weddingData: WeddingData = {
         text: "Dan di antara tanda-tanda (kebesaran)-Nya ialah Dia menciptakan pasangan-pasangan untukmu dari jenismu sendiri, agar kamu cenderung dan merasa tenteram kepadanya, dan Dia menjadikan di antaramu rasa kasih dan sayang.",
         source: "QS. Ar-Rum: 21",
     },
-    music: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3",
+    music: "https://upload.wikimedia.org/wikipedia/commons/c/c6/Canon_in_D_Major_%28ISRC_USUAN1100301%29.mp3",
 };
 
 export const siteConfig = {
