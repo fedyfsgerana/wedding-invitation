@@ -51,20 +51,20 @@ export function Navbar() {
                         : "bg-transparent py-5"
                 )}
             >
-                <div className="container-wedding flex items-center justify-between px-4">
+                <div className="container-wedding grid grid-cols-3 items-center px-4">
                     <button
                         onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-                        className="font-script text-2xl text-primary"
+                        className="font-script text-2xl text-primary justify-self-start"
                     >
                         F & S
                     </button>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center gap-6">
                         {navItems.map((item) => (
                             <button
                                 key={item.href}
                                 onClick={() => handleNavClick(item.href)}
                                 className={cn(
-                                    "text-sm font-medium transition-colors",
+                                    "text-sm font-medium transition-colors whitespace-nowrap",
                                     activeSection === item.href.replace("#", "")
                                         ? "text-primary"
                                         : "text-foreground/70 hover:text-primary"
@@ -74,6 +74,8 @@ export function Navbar() {
                             </button>
                         ))}
                     </div>
+                    {/* Empty spacer column keeps the menu visually centered */}
+                    <div aria-hidden="true" />
                 </div>
             </motion.nav>
 
