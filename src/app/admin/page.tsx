@@ -428,15 +428,12 @@ export default function AdminPage() {
             <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
                 <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center">
-                            <span className="font-script text-lg text-primary leading-none">F</span>
-                        </div>
-                        <div>
-                            <h1 className="font-script text-xl text-primary leading-none">
-                                Fedy & Suci
-                            </h1>
-                            <p className="text-xs text-muted-foreground">Admin Undangan</p>
-                        </div>
+                        <button
+                            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+                            className="font-script text-3xl text-primary leading-none"
+                        >
+                            F & S
+                        </button>
                     </div>
 
                     <div className="flex items-center gap-3">
