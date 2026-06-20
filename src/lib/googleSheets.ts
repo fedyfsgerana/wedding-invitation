@@ -73,6 +73,27 @@ async function getAccessToken(): Promise<string> {
     return cachedToken.value;
 }
 
+async function readRowsFresh(sheetName: string): Promise<string[][]> {
+    const token = await getAccessToken();
+    const range = `${sheetName}!A:Z`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}`;
+
+    const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+    });
+
+    if (!res.ok) {
+        throw new Error("Gagal membaca Google Sheets: " + (await res.text()));
+    }
+
+    const data = await res.json();
+    const rows: string[][] = data.values || [];
+
+    setCache(sheetName, rows);
+    return rows;
+}
+
 export async function readRows(sheetName: string): Promise<string[][]> {
     const cached = getCached(sheetName);
     if (cached) return cached;
@@ -120,7 +141,7 @@ export async function appendRow(sheetName: string, values: (string | number)[]) 
 }
 
 export async function deleteRowById(sheetName: string, id: string, sheetGid: number) {
-    const rows = await readRows(sheetName);
+    const rows = await readRowsFresh(sheetName);
     const rowIndex = rows.findIndex((r) => String(r[0]).trim() === String(id).trim());
     if (rowIndex === -1) {
         throw new Error("Baris dengan id tersebut tidak ditemukan di Sheets");
@@ -165,7 +186,7 @@ export async function updateCell(
     value: string,
     idColumnIndex = 0
 ) {
-    const rows = await readRows(sheetName);
+    const rows = await readRowsFresh(sheetName);
     const rowIndex = rows.findIndex(
         (r) => String(r[idColumnIndex]).trim() === String(id).trim()
     );
