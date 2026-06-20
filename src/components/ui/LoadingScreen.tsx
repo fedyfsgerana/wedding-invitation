@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface LoadingScreenProps {
     isLoading: boolean;
+    text?: string;
 }
 
-export function LoadingScreen({ isLoading }: LoadingScreenProps) {
+export function LoadingScreen({ isLoading, text = "Memuat Undangan..." }: LoadingScreenProps) {
     return (
         <AnimatePresence>
             {isLoading && (
@@ -43,7 +44,7 @@ export function LoadingScreen({ isLoading }: LoadingScreenProps) {
                             transition={{ delay: 0.3 }}
                             className="text-xs uppercase tracking-widest text-muted-foreground mb-8"
                         >
-                            Memuat Undangan...
+                            {text}
                         </motion.p>
                         <div className="flex items-center justify-center gap-2">
                             {[0, 1, 2].map((i) => (

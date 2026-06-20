@@ -8,6 +8,7 @@ import { AdminStats } from "./components/AdminStats";
 import { AdminAddGuest } from "./components/AdminAddGuest";
 import { AdminGuestFilter } from "./components/AdminGuestFilter";
 import { AdminGuestList } from "./components/AdminGuestList";
+import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { motion, AnimatePresence } from "framer-motion";
 
 export interface Guest {
@@ -69,37 +70,7 @@ export default function AdminPage() {
     }, [actionError]);
 
     if (!mounted) {
-        return (
-            <div className="fixed inset-0 z-50 bg-background flex flex-col items-center justify-center">
-                <div className="relative z-10 text-center">
-                    <motion.p
-                        animate={{ opacity: [0.5, 1, 0.5] }}
-                        transition={{ repeat: Infinity, duration: 2 }}
-                        className="font-script text-6xl text-primary mb-4"
-                    >
-                        F & S
-                    </motion.p>
-                    <motion.p
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: 0.3 }}
-                        className="text-xs uppercase tracking-widest text-muted-foreground mb-8"
-                    >
-                        Memuat Admin...
-                    </motion.p>
-                    <div className="flex items-center justify-center gap-2">
-                        {[0, 1, 2].map((i) => (
-                            <motion.div
-                                key={i}
-                                animate={{ y: [0, -8, 0], opacity: [0.4, 1, 0.4] }}
-                                transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.15, ease: "easeInOut" }}
-                                className="w-2 h-2 rounded-full bg-primary"
-                            />
-                        ))}
-                    </div>
-                </div>
-            </div>
-        );
+        return <LoadingScreen isLoading={true} text="Memuat halaman Admin..." />;
     }
 
     const handleLogin = async () => {
