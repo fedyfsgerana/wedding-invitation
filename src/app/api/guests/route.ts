@@ -9,7 +9,7 @@ function rowToGuest(row: string[]) {
         id: String(row[0] || ""),
         name: row[1] || "",
         link: row[2] || "",
-        sent: row[3] === "true",
+        sent: String(row[3] || "").toLowerCase() === "true",
         createdAt: row[4] || "",
     };
 }

@@ -133,7 +133,7 @@ export async function updateCell(
 
     const token = await getAccessToken();
     const range = `${sheetName}!${columnLetter}${rowIndex + 1}`;
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=USER_ENTERED`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}?valueInputOption=RAW`;
 
     const res = await fetch(url, {
         method: "PUT",
