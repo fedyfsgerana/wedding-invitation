@@ -190,24 +190,33 @@ export default function AdminPage() {
     };
 
     const shareWhatsapp = (guest: Guest) => {
-        const pesan =
-            "Kepada Yth.\n" +
-            "Bapak/Ibu/Saudara/i *" + guest.name + "*\n\n" +
-            "Tanpa mengurangi rasa hormat, kami bermaksud mengundang " +
-            "Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu " +
-            "pada hari pernikahan kami.\n\n" +
-            "*" + weddingData.groom.fullName + "*\n" +
-            "& *" + weddingData.bride.fullName + "*\n\n" +
-            "Hari/Tanggal: *" +
-            new Date(weddingData.akad.date).toLocaleDateString("id-ID", {
+        const formatTanggal = (date: string) =>
+            new Date(date).toLocaleDateString("id-ID", {
                 weekday: "long",
                 day: "numeric",
                 month: "long",
                 year: "numeric",
-            }) +
-            "*\n\n" +
-            "Silakan buka undangan digital kami di:\n" +
-            guest.link;
+            });
+
+        const pesan =
+            "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n" +
+            "Yth. Bapak/Ibu/Saudara/i\n" +
+            "*" + guest.name + "*\n\n" +
+            "Dengan penuh sukacita dan tanpa mengurangi rasa hormat, " +
+            "kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk berkenan hadir " +
+            "serta memberikan doa restu pada pernikahan kami:\n\n" +
+            "*" + weddingData.groom.fullName + "*\n" +
+            "& *" + weddingData.bride.fullName + "*\n\n" +
+            "Yang insyaAllah akan diselenggarakan pada:\n" +
+            "Akad: *" + formatTanggal(weddingData.akad.date) + "*\n" +
+            "Resepsi: *" + formatTanggal(weddingData.reception.date) + "*\n\n" +
+            "Untuk informasi lengkap mengenai waktu, lokasi, dan rangkaian acara, " +
+            "silakan membuka undangan digital kami melalui tautan berikut:\n" +
+            guest.link + "\n\n" +
+            "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila " +
+            "Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.\n\n" +
+            "Atas perhatian dan doa restunya, kami ucapkan terima kasih.\n\n" +
+            "Wassalamu'alaikum Warahmatullahi Wabarakatuh";
 
         window.open("https://wa.me/?text=" + encodeURIComponent(pesan), "_blank");
         if (!guest.sent) toggleSent(guest.id);
