@@ -73,7 +73,7 @@ export default function AdminPage() {
     }, [actionError]);
 
     if (!mounted) {
-        return <LoadingScreen isLoading={true} text="Memuat Admin..." />;
+        return <LoadingScreen isLoading={true} text="Memuat halaman Admin..." />;
     }
 
     const handleLogin = async () => {
@@ -237,7 +237,7 @@ export default function AdminPage() {
     if (!isAuthenticated) {
         return (
             <>
-                <LoadingScreen isLoading={pageLoading} text="Memuat Admin..." />
+                <LoadingScreen isLoading={pageLoading} text="Memuat halaman Admin..." />
                 <AdminLogin
                     password={password}
                     setPassword={setPassword}
@@ -252,7 +252,7 @@ export default function AdminPage() {
 
     return (
         <div className="min-h-screen bg-background relative overflow-hidden">
-            <LoadingScreen isLoading={pageLoading} text="Memuat Admin..." />
+            <LoadingScreen isLoading={pageLoading} text="Memuat halaman Admin..." />
 
             {/* Background decorations - konsisten dengan halaman login */}
             <div className="absolute inset-0 pointer-events-none">
