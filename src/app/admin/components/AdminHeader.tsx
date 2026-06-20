@@ -6,12 +6,15 @@ import { getLucideIcon } from "@/lib/utils";
 interface Props {
     guestCount: number;
     totalSent: number;
+    wishesCount: number;
+    onOpenWishes: () => void;
     onLogout: () => void;
 }
 
-export function AdminHeader({ guestCount, totalSent, onLogout }: Props) {
+export function AdminHeader({ guestCount, totalSent, wishesCount, onOpenWishes, onLogout }: Props) {
     const UsersIcon = getLucideIcon("Users");
     const SendIcon = getLucideIcon("Send");
+    const MessageIcon = getLucideIcon("MessageCircle");
     const LogOutIcon = getLucideIcon("LogOut");
 
     return (
@@ -35,6 +38,18 @@ export function AdminHeader({ guestCount, totalSent, onLogout }: Props) {
                             <span>{totalSent} terkirim</span>
                         </div>
                     </div>
+                    <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={onOpenWishes}
+                        className="text-xs px-3 py-1.5 rounded-full border border-primary/20 bg-primary/5 text-primary hover:bg-primary/10 transition-all flex items-center gap-1.5"
+                    >
+                        <MessageIcon className="w-3.5 h-3.5" />
+                        Ucapan
+                        <span className="px-1.5 py-0.5 rounded-full bg-primary/15 text-[10px] font-semibold leading-none">
+                            {wishesCount}
+                        </span>
+                    </motion.button>
                     <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.95 }}

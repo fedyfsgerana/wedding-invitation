@@ -1,13 +1,15 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { siteConfig, weddingData } from "@/lib/weddingData";
+import { WishItem } from "@/types";
 import { AdminLogin } from "./components/AdminLogin";
 import { AdminHeader } from "./components/AdminHeader";
 import { AdminStats } from "./components/AdminStats";
 import { AdminAddGuest } from "./components/AdminAddGuest";
 import { AdminGuestFilter } from "./components/AdminGuestFilter";
 import { AdminGuestList } from "./components/AdminGuestList";
+import { AdminWishesModal } from "./components/AdminWishesModal";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -31,6 +33,11 @@ export default function AdminPage() {
     const [filterSent, setFilterSent] = useState<"all" | "sent" | "unsent">("all");
     const [pageSize, setPageSize] = useState(5);
     const [currentPage, setCurrentPage] = useState(1);
+    const [wishes, setWishes] = useState<WishItem[]>([]);
+    const [wishesCount, setWishesCount] = useState(0);
+    const [wishesFetched, setWishesFetched] = useState(false);
+    const [loadingWishes, setLoadingWishes] = useState(false);
+    const [showWishesModal, setShowWishesModal] = useState(false);
     const [mounted, setMounted] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
     const [loadingGuests, setLoadingGuests] = useState(false);
@@ -48,8 +55,28 @@ export default function AdminPage() {
         return () => clearTimeout(timer);
     }, []);
 
+    const fetchWishes = useCallback(async (showLoading = false) => {
+        if (showLoading) setLoadingWishes(true);
+        try {
+            const res = await fetch("/api/wishes");
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Gagal memuat ucapan");
+            const list: WishItem[] = data.wishes || [];
+            setWishes(list);
+            setWishesCount(list.length);
+            setWishesFetched(true);
+        } catch (err) {
+            if (showLoading) {
+                setActionError(err instanceof Error ? err.message : "Gagal memuat ucapan");
+            }
+        } finally {
+            if (showLoading) setLoadingWishes(false);
+        }
+    }, []);
+
     useEffect(() => {
         if (!isAuthenticated || !mounted) return;
+
         const loadGuests = async () => {
             setLoadingGuests(true);
             try {
@@ -65,8 +92,29 @@ export default function AdminPage() {
                 setLoadingGuests(false);
             }
         };
+
         loadGuests();
-    }, [isAuthenticated, mounted]);
+        // Fetch wishes count saat pertama load agar angka tidak 0 setelah refresh
+        fetchWishes(false);
+    }, [isAuthenticated, mounted, fetchWishes]);
+
+    // Polling background setiap 15 detik untuk update wishesCount di header
+    useEffect(() => {
+        if (!isAuthenticated) return;
+        const interval = setInterval(() => {
+            fetchWishes(false);
+        }, 15000);
+        return () => clearInterval(interval);
+    }, [isAuthenticated, fetchWishes]);
+
+    // Polling lebih cepat (5 detik) saat modal terbuka
+    useEffect(() => {
+        if (!showWishesModal || !isAuthenticated) return;
+        const interval = setInterval(() => {
+            fetchWishes(false);
+        }, 5000);
+        return () => clearInterval(interval);
+    }, [showWishesModal, isAuthenticated, fetchWishes]);
 
     useEffect(() => {
         if (!actionError) return;
@@ -196,6 +244,12 @@ export default function AdminPage() {
         }
     };
 
+    const openWishesModal = async () => {
+        setShowWishesModal(true);
+        // Selalu fetch fresh saat modal dibuka
+        await fetchWishes(true);
+    };
+
     const formatTanggal = (date: string) =>
         new Date(date).toLocaleDateString("id-ID", {
             weekday: "long",
@@ -266,7 +320,7 @@ export default function AdminPage() {
         <div className="min-h-screen bg-background relative overflow-hidden">
             <LoadingScreen isLoading={pageLoading} text="Memuat halaman Admin..." />
 
-            {/* Background decorations - konsisten dengan halaman login */}
+            {/* Background decorations */}
             <div className="absolute inset-0 pointer-events-none">
                 <motion.div
                     animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
@@ -294,6 +348,8 @@ export default function AdminPage() {
                 <AdminHeader
                     guestCount={guests.length}
                     totalSent={totalSent}
+                    wishesCount={wishesCount}
+                    onOpenWishes={openWishesModal}
                     onLogout={handleLogout}
                 />
                 <motion.div
@@ -389,6 +445,13 @@ export default function AdminPage() {
                     </motion.div>
                 </motion.div>
             </div>
+
+            <AdminWishesModal
+                open={showWishesModal}
+                onClose={() => setShowWishesModal(false)}
+                wishes={wishes}
+                loading={loadingWishes}
+            />
         </div>
     );
 }
