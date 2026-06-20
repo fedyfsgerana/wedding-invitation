@@ -23,6 +23,7 @@ export interface Guest {
 
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
     const [password, setPassword] = useState("");
     const [passwordError, setPasswordError] = useState(false);
     const [loginLoading, setLoginLoading] = useState(false);
@@ -43,12 +44,23 @@ export default function AdminPage() {
     const [loadingGuests, setLoadingGuests] = useState(false);
     const [actionError, setActionError] = useState<string | null>(null);
 
+    const handleSessionExpired = useCallback(() => {
+        setIsAuthenticated(false);
+        setSessionExpiresAt(null);
+        setGuests([]);
+        setActionError("Sesi telah habis. Silakan login kembali.");
+    }, []);
+
     useEffect(() => {
         setMounted(true);
         const checkAuth = async () => {
             try {
                 const res = await fetch("/api/admin/session");
-                if (res.ok) setIsAuthenticated(true);
+                if (res.ok) {
+                    const data = await res.json();
+                    setIsAuthenticated(true);
+                    if (data.expiresAt) setSessionExpiresAt(data.expiresAt);
+                }
             } catch {
             }
         };
@@ -57,10 +69,30 @@ export default function AdminPage() {
         return () => clearTimeout(timer);
     }, []);
 
+    // Auto-logout saat sesi habis
+    useEffect(() => {
+        if (!sessionExpiresAt || !isAuthenticated) return;
+        const remaining = sessionExpiresAt - Date.now();
+        if (remaining <= 0) {
+            handleSessionExpired();
+            return;
+        }
+        const timer = setTimeout(handleSessionExpired, remaining);
+        return () => clearTimeout(timer);
+    }, [sessionExpiresAt, isAuthenticated, handleSessionExpired]);
+
+    const fetchWithAuth = useCallback(async (input: RequestInfo, init?: RequestInit): Promise<Response> => {
+        const res = await fetch(input, init);
+        if (res.status === 401) {
+            handleSessionExpired();
+        }
+        return res;
+    }, [handleSessionExpired]);
+
     const fetchWishes = useCallback(async (showLoading = false) => {
         if (showLoading) setLoadingWishes(true);
         try {
-            const res = await fetch("/api/wishes");
+            const res = await fetchWithAuth("/api/wishes");
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Gagal memuat ucapan");
             const list: WishItem[] = data.wishes || [];
@@ -82,7 +114,7 @@ export default function AdminPage() {
         const loadGuests = async () => {
             setLoadingGuests(true);
             try {
-                const res = await fetch("/api/guests");
+                const res = await fetchWithAuth("/api/guests");
                 const data = await res.json();
                 if (!res.ok) throw new Error(data.error || "Gagal memuat daftar tamu");
                 setGuests(data.guests || []);
@@ -141,6 +173,7 @@ export default function AdminPage() {
             if (res.ok && data.success) {
                 setIsAuthenticated(true);
                 setPasswordError(false);
+                setSessionExpiresAt(Date.now() + 60 * 60 * 8 * 1000);
             } else if (res.status === 429) {
                 setActionError(data.error || "Terlalu banyak percobaan.");
                 setPassword("");
@@ -173,7 +206,7 @@ export default function AdminPage() {
         const link = generateLink(name);
         setGuestName("");
         try {
-            const res = await fetch("/api/guests", {
+            const res = await fetchWithAuth("/api/guests", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ name, link }),
@@ -192,7 +225,7 @@ export default function AdminPage() {
         const backup = guests;
         setGuests(guests.filter((g) => g.id !== id));
         try {
-            const res = await fetch("/api/guests", {
+            const res = await fetchWithAuth("/api/guests", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id }),
@@ -214,7 +247,7 @@ export default function AdminPage() {
         const backup = guests;
         setGuests(guests.map((g) => (g.id === id ? { ...g, sent: newSent } : g)));
         try {
-            const res = await fetch("/api/guests", {
+            const res = await fetchWithAuth("/api/guests", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, sent: newSent }),
