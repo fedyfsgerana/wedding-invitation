@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 interface Props {
     password: string;
@@ -22,9 +23,31 @@ export function AdminLogin({
 }: Props) {
     const LogInIcon = getLucideIcon("LogIn");
     const KeyIcon = getLucideIcon("KeyRound");
+    const SunIcon = getLucideIcon("Sun");
+    const MoonIcon = getLucideIcon("Moon");
+
+    const { theme, toggleTheme } = useTheme();
 
     return (
         <div className="min-h-screen bg-background flex items-center justify-center px-4 relative overflow-hidden">
+
+            {/* Theme toggle - top right */}
+            <motion.button
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.4 }}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                onClick={toggleTheme}
+                className="fixed top-4 right-4 z-50 w-9 h-9 rounded-full border border-border bg-background/80 backdrop-blur-md flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all shadow-sm"
+                aria-label="Ganti tema"
+                title={theme === "light" ? "Mode Gelap" : "Mode Terang"}
+            >
+                {theme === "light"
+                    ? <MoonIcon className="w-4 h-4" />
+                    : <SunIcon className="w-4 h-4" />
+                }
+            </motion.button>
 
             {/* Background decorations */}
             <div className="absolute inset-0 pointer-events-none">

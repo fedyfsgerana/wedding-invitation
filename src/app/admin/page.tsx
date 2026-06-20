@@ -94,11 +94,9 @@ export default function AdminPage() {
         };
 
         loadGuests();
-        // Fetch wishes count saat pertama load agar angka tidak 0 setelah refresh
         fetchWishes(false);
     }, [isAuthenticated, mounted, fetchWishes]);
 
-    // Polling background setiap 15 detik untuk update wishesCount di header
     useEffect(() => {
         if (!isAuthenticated) return;
         const interval = setInterval(() => {
@@ -107,7 +105,6 @@ export default function AdminPage() {
         return () => clearInterval(interval);
     }, [isAuthenticated, fetchWishes]);
 
-    // Polling lebih cepat (5 detik) saat modal terbuka
     useEffect(() => {
         if (!showWishesModal || !isAuthenticated) return;
         const interval = setInterval(() => {
@@ -246,7 +243,6 @@ export default function AdminPage() {
 
     const openWishesModal = async () => {
         setShowWishesModal(true);
-        // Selalu fetch fresh saat modal dibuka
         await fetchWishes(true);
     };
 
@@ -317,11 +313,11 @@ export default function AdminPage() {
     }
 
     return (
-        <div className="min-h-screen bg-background relative overflow-hidden">
+        <div className="min-h-screen bg-background relative">
             <LoadingScreen isLoading={pageLoading} text="Memuat halaman Admin..." />
 
             {/* Background decorations */}
-            <div className="absolute inset-0 pointer-events-none">
+            <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 <motion.div
                     animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
                     transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
@@ -346,8 +342,6 @@ export default function AdminPage() {
 
             <div className="relative z-10">
                 <AdminHeader
-                    guestCount={guests.length}
-                    totalSent={totalSent}
                     wishesCount={wishesCount}
                     onOpenWishes={openWishesModal}
                     onLogout={handleLogout}

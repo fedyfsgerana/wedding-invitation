@@ -2,20 +2,21 @@
 
 import { motion } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
+import { useTheme } from "@/components/providers/ThemeProvider";
 
 interface Props {
-    guestCount: number;
-    totalSent: number;
     wishesCount: number;
     onOpenWishes: () => void;
     onLogout: () => void;
 }
 
-export function AdminHeader({ guestCount, totalSent, wishesCount, onOpenWishes, onLogout }: Props) {
-    const UsersIcon = getLucideIcon("Users");
-    const SendIcon = getLucideIcon("Send");
+export function AdminHeader({ wishesCount, onOpenWishes, onLogout }: Props) {
     const MessageIcon = getLucideIcon("MessageCircle");
     const LogOutIcon = getLucideIcon("LogOut");
+    const SunIcon = getLucideIcon("Sun");
+    const MoonIcon = getLucideIcon("Moon");
+
+    const { theme, toggleTheme } = useTheme();
 
     return (
         <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
@@ -28,16 +29,7 @@ export function AdminHeader({ guestCount, totalSent, wishesCount, onOpenWishes, 
                 </button>
 
                 <div className="flex items-center gap-2">
-                    <div className="hidden sm:flex items-center gap-2">
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-primary/5 border border-primary/10 text-xs text-primary/70">
-                            <UsersIcon className="w-3.5 h-3.5" />
-                            <span>{guestCount} tamu</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-green-50 text-xs text-green-600 border border-green-100">
-                            <SendIcon className="w-3.5 h-3.5" />
-                            <span>{totalSent} terkirim</span>
-                        </div>
-                    </div>
+
                     <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.95 }}
@@ -50,11 +42,27 @@ export function AdminHeader({ guestCount, totalSent, wishesCount, onOpenWishes, 
                             {wishesCount}
                         </span>
                     </motion.button>
+
+                    {/* Theme toggle */}
+                    <motion.button
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.95 }}
+                        onClick={toggleTheme}
+                        className="w-8 h-8 rounded-full border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+                        aria-label="Ganti tema"
+                        title={theme === "light" ? "Mode Gelap" : "Mode Terang"}
+                    >
+                        {theme === "light"
+                            ? <MoonIcon className="w-3.5 h-3.5" />
+                            : <SunIcon className="w-3.5 h-3.5" />
+                        }
+                    </motion.button>
+
                     <motion.button
                         whileHover={{ scale: 1.03 }}
                         whileTap={{ scale: 0.95 }}
                         onClick={onLogout}
-                        className="text-xs px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:border-red-200 hover:text-red-500 hover:bg-red-50 transition-all flex items-center gap-1.5"
+                        className="text-xs px-3 py-1.5 rounded-full border border-border text-muted-foreground hover:border-red-200 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all flex items-center gap-1.5"
                     >
                         <LogOutIcon className="w-3.5 h-3.5" />
                         Keluar
