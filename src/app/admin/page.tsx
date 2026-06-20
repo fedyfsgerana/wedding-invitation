@@ -21,6 +21,12 @@ export interface Guest {
     createdAt: string;
 }
 
+interface Toast {
+    id: string;
+    type: "success" | "error";
+    message: string;
+}
+
 export default function AdminPage() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
@@ -42,14 +48,27 @@ export default function AdminPage() {
     const [mounted, setMounted] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
     const [loadingGuests, setLoadingGuests] = useState(false);
-    const [actionError, setActionError] = useState<string | null>(null);
+    const [toasts, setToasts] = useState<Toast[]>([]);
+
+    const removeToast = useCallback((id: string) => {
+        setToasts((prev) => prev.filter((t) => t.id !== id));
+    }, []);
+
+    const addToast = useCallback(
+        (type: "success" | "error", message: string) => {
+            const id = `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+            setToasts((prev) => [...prev, { id, type, message }]);
+            setTimeout(() => removeToast(id), type === "success" ? 3000 : 5000);
+        },
+        [removeToast]
+    );
 
     const handleSessionExpired = useCallback(() => {
         setIsAuthenticated(false);
         setSessionExpiresAt(null);
         setGuests([]);
-        setActionError("Sesi telah habis. Silakan login kembali.");
-    }, []);
+        addToast("error", "Sesi telah habis. Silakan login kembali.");
+    }, [addToast]);
 
     useEffect(() => {
         setMounted(true);
@@ -69,7 +88,6 @@ export default function AdminPage() {
         return () => clearTimeout(timer);
     }, []);
 
-    // Auto-logout saat sesi habis
     useEffect(() => {
         if (!sessionExpiresAt || !isAuthenticated) return;
         const remaining = sessionExpiresAt - Date.now();
@@ -101,12 +119,12 @@ export default function AdminPage() {
             setWishesFetched(true);
         } catch (err) {
             if (showLoading) {
-                setActionError(err instanceof Error ? err.message : "Gagal memuat ucapan");
+                addToast("error", err instanceof Error ? err.message : "Gagal memuat ucapan");
             }
         } finally {
             if (showLoading) setLoadingWishes(false);
         }
-    }, []);
+    }, [addToast]);
 
     useEffect(() => {
         if (!isAuthenticated || !mounted) return;
@@ -119,7 +137,8 @@ export default function AdminPage() {
                 if (!res.ok) throw new Error(data.error || "Gagal memuat daftar tamu");
                 setGuests(data.guests || []);
             } catch (err) {
-                setActionError(
+                addToast(
+                    "error",
                     err instanceof Error ? err.message : "Gagal memuat daftar tamu"
                 );
             } finally {
@@ -129,7 +148,7 @@ export default function AdminPage() {
 
         loadGuests();
         fetchWishes(false);
-    }, [isAuthenticated, mounted, fetchWishes]);
+    }, [isAuthenticated, mounted, fetchWishes, addToast]);
 
     useEffect(() => {
         if (!isAuthenticated) return;
@@ -146,12 +165,6 @@ export default function AdminPage() {
         }, 5000);
         return () => clearInterval(interval);
     }, [showWishesModal, isAuthenticated, fetchWishes]);
-
-    useEffect(() => {
-        if (!actionError) return;
-        const timer = setTimeout(() => setActionError(null), 5000);
-        return () => clearTimeout(timer);
-    }, [actionError]);
 
     useEffect(() => {
         setCurrentPage(1);
@@ -175,7 +188,7 @@ export default function AdminPage() {
                 setPasswordError(false);
                 setSessionExpiresAt(Date.now() + 60 * 60 * 8 * 1000);
             } else if (res.status === 429) {
-                setActionError(data.error || "Terlalu banyak percobaan.");
+                addToast("error", data.error || "Terlalu banyak percobaan.");
                 setPassword("");
             } else {
                 setPasswordError(true);
@@ -214,8 +227,10 @@ export default function AdminPage() {
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Gagal menambah tamu");
             if (data.guest) setGuests([data.guest, ...guests]);
+            addToast("success", `Tamu "${name}" berhasil ditambahkan`);
         } catch (err) {
-            setActionError(
+            addToast(
+                "error",
                 err instanceof Error ? err.message : "Gagal menambah tamu ke Google Sheets"
             );
         }
@@ -223,6 +238,7 @@ export default function AdminPage() {
 
     const deleteGuest = async (id: string) => {
         const backup = guests;
+        const target = guests.find((g) => g.id === id);
         setGuests(guests.filter((g) => g.id !== id));
         try {
             const res = await fetchWithAuth("/api/guests", {
@@ -232,9 +248,14 @@ export default function AdminPage() {
             });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || "Gagal menghapus tamu");
+            addToast(
+                "success",
+                target ? `Tamu "${target.name}" berhasil dihapus` : "Tamu berhasil dihapus"
+            );
         } catch (err) {
             setGuests(backup);
-            setActionError(
+            addToast(
+                "error",
                 err instanceof Error ? err.message : "Gagal menghapus tamu dari Google Sheets"
             );
         }
@@ -256,7 +277,8 @@ export default function AdminPage() {
             if (!res.ok) throw new Error(data.error || "Gagal memperbarui status terkirim");
         } catch (err) {
             setGuests(backup);
-            setActionError(
+            addToast(
+                "error",
                 err instanceof Error
                     ? err.message
                     : "Gagal menyimpan status terkirim ke Google Sheets"
@@ -349,6 +371,43 @@ export default function AdminPage() {
         <div className="min-h-screen bg-background relative">
             <LoadingScreen isLoading={pageLoading} text="Memuat halaman Admin..." />
 
+            {/* Toast notifications */}
+            <div className="fixed top-4 right-4 z-100 flex flex-col gap-2 w-[calc(100%-2rem)] max-w-sm">
+                <AnimatePresence>
+                    {toasts.map((toast: Toast) => (
+                        <motion.div
+                            key={toast.id}
+                            initial={{ opacity: 0, y: -16, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, x: 40, scale: 0.95 }}
+                            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
+                            className={
+                                "text-sm rounded-xl px-4 py-3 flex items-center justify-between gap-3 shadow-lg border backdrop-blur-sm " +
+                                (toast.type === "success"
+                                    ? "bg-green-50/95 border-green-200 text-green-700"
+                                    : "bg-red-50/95 border-red-200 text-red-600")
+                            }
+                        >
+                            <span className="flex items-center gap-2">
+                                <span>{toast.type === "success" ? "✓" : "⚠"}</span>
+                                <span>{toast.message}</span>
+                            </span>
+                            <button
+                                onClick={() => removeToast(toast.id)}
+                                className={
+                                    "shrink-0 " +
+                                    (toast.type === "success"
+                                        ? "text-green-400 hover:text-green-600"
+                                        : "text-red-400 hover:text-red-600")
+                                }
+                            >
+                                ✕
+                            </button>
+                        </motion.div>
+                    ))}
+                </AnimatePresence>
+            </div>
+
             {/* Background decorations */}
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
                 <motion.div
@@ -385,24 +444,6 @@ export default function AdminPage() {
                     transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
                     className="max-w-4xl mx-auto px-4 py-6 space-y-6"
                 >
-                    <AnimatePresence>
-                        {actionError && (
-                            <motion.div
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0 }}
-                                className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 flex items-center justify-between gap-3"
-                            >
-                                <span>⚠ {actionError}</span>
-                                <button
-                                    onClick={() => setActionError(null)}
-                                    className="text-red-400 hover:text-red-600 shrink-0"
-                                >
-                                    ✕
-                                </button>
-                            </motion.div>
-                        )}
-                    </AnimatePresence>
                     <motion.div
                         initial={{ opacity: 0, y: 15 }}
                         animate={{ opacity: 1, y: 0 }}
