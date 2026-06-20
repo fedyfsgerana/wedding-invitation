@@ -45,12 +45,14 @@ export default function AdminPage() {
 
     useEffect(() => {
         setMounted(true);
-        try {
-            const auth = sessionStorage.getItem("wedding-admin-auth");
-            if (auth === "true") setIsAuthenticated(true);
-        } catch {
-            console.error("Gagal membaca session");
-        }
+        const checkAuth = async () => {
+            try {
+                const res = await fetch("/api/admin/session");
+                if (res.ok) setIsAuthenticated(true);
+            } catch {
+            }
+        };
+        checkAuth();
         const timer = setTimeout(() => setPageLoading(false), 800);
         return () => clearTimeout(timer);
     }, []);
@@ -135,14 +137,13 @@ export default function AdminPage() {
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ password }),
             });
-            if (res.ok) {
+            const data = await res.json();
+            if (res.ok && data.success) {
                 setIsAuthenticated(true);
-                try {
-                    sessionStorage.setItem("wedding-admin-auth", "true");
-                } catch {
-                    console.error("Gagal menyimpan session");
-                }
                 setPasswordError(false);
+            } else if (res.status === 429) {
+                setActionError(data.error || "Terlalu banyak percobaan.");
+                setPassword("");
             } else {
                 setPasswordError(true);
                 setPassword("");
@@ -154,13 +155,12 @@ export default function AdminPage() {
         }
     };
 
-    const handleLogout = () => {
-        setIsAuthenticated(false);
+    const handleLogout = async () => {
         try {
-            sessionStorage.removeItem("wedding-admin-auth");
+            await fetch("/api/admin/login", { method: "DELETE" });
         } catch {
-            console.error("Gagal menghapus session");
         }
+        setIsAuthenticated(false);
     };
 
     const generateLink = (name: string) => {
