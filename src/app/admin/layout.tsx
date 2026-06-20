@@ -23,7 +23,7 @@ const greatVibes = Great_Vibes({
 });
 
 export const metadata: Metadata = {
-    title: "Admin - Fedy & Suci Wedding",
+    title: "Fedy & Suci Wedding",
     description: "Halaman admin Fedy & Suci Wedding",
     robots: "noindex, nofollow",
 };
