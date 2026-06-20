@@ -30,6 +30,7 @@ export default function AdminPage() {
     const [search, setSearch] = useState("");
     const [filterSent, setFilterSent] = useState<"all" | "sent" | "unsent">("all");
     const [mounted, setMounted] = useState(false);
+    const [pageLoading, setPageLoading] = useState(true);
     const [loadingGuests, setLoadingGuests] = useState(false);
     const [actionError, setActionError] = useState<string | null>(null);
 
@@ -41,6 +42,8 @@ export default function AdminPage() {
         } catch {
             console.error("Gagal membaca session");
         }
+        const timer = setTimeout(() => setPageLoading(false), 800);
+        return () => clearTimeout(timer);
     }, []);
 
     useEffect(() => {
@@ -70,7 +73,7 @@ export default function AdminPage() {
     }, [actionError]);
 
     if (!mounted) {
-        return <LoadingScreen isLoading={true} text="Memuat halaman Admin..." />;
+        return <LoadingScreen isLoading={true} text="Memuat Admin..." />;
     }
 
     const handleLogin = async () => {
@@ -187,25 +190,34 @@ export default function AdminPage() {
         }
     };
 
+    const formatTanggal = (date: string) =>
+        new Date(date).toLocaleDateString("id-ID", {
+            weekday: "long",
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+        });
+
     const shareWhatsapp = (guest: Guest) => {
         const pesan =
-            "Kepada Yth.\n" +
-            "Bapak/Ibu/Saudara/i *" + guest.name + "*\n\n" +
-            "Tanpa mengurangi rasa hormat, kami bermaksud mengundang " +
-            "Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu " +
-            "pada hari pernikahan kami.\n\n" +
+            "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n" +
+            "Yth. Bapak/Ibu/Saudara/i\n" +
+            "*" + guest.name + "*\n\n" +
+            "Dengan penuh sukacita dan tanpa mengurangi rasa hormat, " +
+            "kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk berkenan hadir " +
+            "serta memberikan doa restu pada pernikahan kami:\n\n" +
             "*" + weddingData.groom.fullName + "*\n" +
             "& *" + weddingData.bride.fullName + "*\n\n" +
-            "Hari/Tanggal: *" +
-            new Date(weddingData.akad.date).toLocaleDateString("id-ID", {
-                weekday: "long",
-                day: "numeric",
-                month: "long",
-                year: "numeric",
-            }) +
-            "*\n\n" +
-            "Silakan buka undangan digital kami di:\n" +
-            guest.link;
+            "Yang insyaAllah akan diselenggarakan pada:\n" +
+            "Akad: *" + formatTanggal(weddingData.akad.date) + "*\n" +
+            "Resepsi: *" + formatTanggal(weddingData.reception.date) + "*\n\n" +
+            "Untuk informasi lengkap mengenai waktu, lokasi, dan rangkaian acara, " +
+            "silakan membuka undangan digital kami melalui tautan berikut:\n" +
+            guest.link + "\n\n" +
+            "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila " +
+            "Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.\n\n" +
+            "Atas perhatian dan doa restunya, kami ucapkan terima kasih.\n\n" +
+            "Wassalamu'alaikum Warahmatullahi Wabarakatuh";
 
         window.open("https://wa.me/?text=" + encodeURIComponent(pesan), "_blank");
         if (!guest.sent) toggleSent(guest.id);
@@ -224,75 +236,140 @@ export default function AdminPage() {
 
     if (!isAuthenticated) {
         return (
-            <AdminLogin
-                password={password}
-                setPassword={setPassword}
-                passwordError={passwordError}
-                setPasswordError={setPasswordError}
-                loginLoading={loginLoading}
-                handleLogin={handleLogin}
-            />
+            <>
+                <LoadingScreen isLoading={pageLoading} text="Memuat Admin..." />
+                <AdminLogin
+                    password={password}
+                    setPassword={setPassword}
+                    passwordError={passwordError}
+                    setPasswordError={setPasswordError}
+                    loginLoading={loginLoading}
+                    handleLogin={handleLogin}
+                />
+            </>
         );
     }
 
     return (
-        <div className="min-h-screen bg-background">
-            <AdminHeader
-                guestCount={guests.length}
-                totalSent={totalSent}
-                onLogout={handleLogout}
-            />
-            <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
-                <AnimatePresence>
-                    {actionError && (
-                        <motion.div
-                            initial={{ opacity: 0, y: -10 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0 }}
-                            className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 flex items-center justify-between gap-3"
-                        >
-                            <span>⚠ {actionError}</span>
-                            <button
-                                onClick={() => setActionError(null)}
-                                className="text-red-400 hover:text-red-600 shrink-0"
+        <div className="min-h-screen bg-background relative overflow-hidden">
+            <LoadingScreen isLoading={pageLoading} text="Memuat Admin..." />
+
+            {/* Background decorations - konsisten dengan halaman login */}
+            <div className="absolute inset-0 pointer-events-none">
+                <motion.div
+                    animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
+                    transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
+                    className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary"
+                />
+                <motion.div
+                    animate={{ scale: [1, 1.2, 1], opacity: [0.04, 0.09, 0.04] }}
+                    transition={{ repeat: Infinity, duration: 8, ease: "easeInOut", delay: 1 }}
+                    className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-primary"
+                />
+                <motion.div
+                    animate={{ y: [0, -12, 0], opacity: [0.15, 0.3, 0.15] }}
+                    transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+                    className="absolute top-1/4 right-12 w-3 h-3 rounded-full bg-primary"
+                />
+                <motion.div
+                    animate={{ y: [0, 10, 0], opacity: [0.1, 0.25, 0.1] }}
+                    transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.5 }}
+                    className="absolute bottom-1/3 left-16 w-2 h-2 rounded-full bg-primary"
+                />
+            </div>
+
+            <div className="relative z-10">
+                <AdminHeader
+                    guestCount={guests.length}
+                    totalSent={totalSent}
+                    onLogout={handleLogout}
+                />
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
+                    className="max-w-4xl mx-auto px-4 py-6 space-y-6"
+                >
+                    <AnimatePresence>
+                        {actionError && (
+                            <motion.div
+                                initial={{ opacity: 0, y: -10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0 }}
+                                className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 flex items-center justify-between gap-3"
                             >
-                                ✕
-                            </button>
-                        </motion.div>
-                    )}
-                </AnimatePresence>
-                <AdminStats
-                    total={guests.length}
-                    sent={totalSent}
-                    unsent={guests.length - totalSent}
-                />
-                <AdminAddGuest
-                    guestName={guestName}
-                    setGuestName={setGuestName}
-                    onAdd={addGuest}
-                />
-                <AdminGuestFilter
-                    search={search}
-                    setSearch={setSearch}
-                    filterSent={filterSent}
-                    setFilterSent={setFilterSent}
-                />
-                <AdminGuestList
-                    guests={filteredGuests}
-                    allGuestsCount={guests.length}
-                    loadingGuests={loadingGuests}
-                    copiedId={copiedId}
-                    onCopy={copyLink}
-                    onWhatsapp={shareWhatsapp}
-                    onToggleSent={toggleSent}
-                    onDelete={deleteGuest}
-                />
-                <div className="text-center pb-8 pt-2">
-                    <p className="font-script text-2xl text-primary/30 mb-1">F & S</p>
-                    <p className="text-xs text-muted-foreground/40">
-                        Data tersimpan di Google Sheets · /admin
-                    </p>
-                </div>
+                                <span>⚠ {actionError}</span>
+                                <button
+                                    onClick={() => setActionError(null)}
+                                    className="text-red-400 hover:text-red-600 shrink-0"
+                                >
+                                    ✕
+                                </button>
+                            </motion.div>
+                        )}
+                    </AnimatePresence>
+                    <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.1, duration: 0.5 }}
+                    >
+                        <AdminStats
+                            total={guests.length}
+                            sent={totalSent}
+                            unsent={guests.length - totalSent}
+                        />
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.2, duration: 0.5 }}
+                    >
+                        <AdminAddGuest
+                            guestName={guestName}
+                            setGuestName={setGuestName}
+                            onAdd={addGuest}
+                        />
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.3, duration: 0.5 }}
+                    >
+                        <AdminGuestFilter
+                            search={search}
+                            setSearch={setSearch}
+                            filterSent={filterSent}
+                            setFilterSent={setFilterSent}
+                        />
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0, y: 15 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.4, duration: 0.5 }}
+                    >
+                        <AdminGuestList
+                            guests={filteredGuests}
+                            allGuestsCount={guests.length}
+                            loadingGuests={loadingGuests}
+                            copiedId={copiedId}
+                            onCopy={copyLink}
+                            onWhatsapp={shareWhatsapp}
+                            onToggleSent={toggleSent}
+                            onDelete={deleteGuest}
+                        />
+                    </motion.div>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ delay: 0.6 }}
+                        className="text-center pb-8 pt-2"
+                    >
+                        <p className="font-script text-2xl text-primary/30 mb-1">F & S</p>
+                        <p className="text-xs text-muted-foreground/40">
+                            Data tersimpan di Google Sheets · /admin
+                        </p>
+                    </motion.div>
+                </motion.div>
             </div>
         </div>
     );
