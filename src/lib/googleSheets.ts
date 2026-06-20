@@ -83,8 +83,10 @@ export async function readRows(sheetName: string): Promise<string[][]> {
 
 export async function deleteRowById(sheetName: string, id: string, sheetGid: number) {
     const rows = await readRows(sheetName);
-    const rowIndex = rows.findIndex((r) => r[0] === id);
-    if (rowIndex === -1) return;
+    const rowIndex = rows.findIndex((r) => String(r[0]).trim() === String(id).trim());
+    if (rowIndex === -1) {
+        throw new Error("Baris dengan id tersebut tidak ditemukan di Sheets");
+    }
 
     const token = await getAccessToken();
     const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}:batchUpdate`;
@@ -124,7 +126,9 @@ export async function updateCell(
     idColumnIndex = 0
 ) {
     const rows = await readRows(sheetName);
-    const rowIndex = rows.findIndex((r) => r[idColumnIndex] === id);
+    const rowIndex = rows.findIndex(
+        (r) => String(r[idColumnIndex]).trim() === String(id).trim()
+    );
     if (rowIndex === -1) throw new Error("Baris tidak ditemukan");
 
     const token = await getAccessToken();

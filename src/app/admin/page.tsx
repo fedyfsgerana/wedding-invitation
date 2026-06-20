@@ -8,7 +8,7 @@ import { AdminStats } from "./components/AdminStats";
 import { AdminAddGuest } from "./components/AdminAddGuest";
 import { AdminGuestFilter } from "./components/AdminGuestFilter";
 import { AdminGuestList } from "./components/AdminGuestList";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export interface Guest {
     id: string;
@@ -30,6 +30,7 @@ export default function AdminPage() {
     const [filterSent, setFilterSent] = useState<"all" | "sent" | "unsent">("all");
     const [mounted, setMounted] = useState(false);
     const [loadingGuests, setLoadingGuests] = useState(false);
+    const [actionError, setActionError] = useState<string | null>(null);
 
     useEffect(() => {
         setMounted(true);
@@ -48,15 +49,24 @@ export default function AdminPage() {
             try {
                 const res = await fetch("/api/guests");
                 const data = await res.json();
+                if (!res.ok) throw new Error(data.error || "Gagal memuat daftar tamu");
                 setGuests(data.guests || []);
-            } catch {
-                console.error("Gagal memuat daftar tamu");
+            } catch (err) {
+                setActionError(
+                    err instanceof Error ? err.message : "Gagal memuat daftar tamu"
+                );
             } finally {
                 setLoadingGuests(false);
             }
         };
         loadGuests();
     }, [isAuthenticated, mounted]);
+
+    useEffect(() => {
+        if (!actionError) return;
+        const timer = setTimeout(() => setActionError(null), 5000);
+        return () => clearTimeout(timer);
+    }, [actionError]);
 
     if (!mounted) {
         return (
@@ -144,22 +154,31 @@ export default function AdminPage() {
                 body: JSON.stringify({ name, link }),
             });
             const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Gagal menambah tamu");
             if (data.guest) setGuests([data.guest, ...guests]);
-        } catch {
-            console.error("Gagal menambah tamu");
+        } catch (err) {
+            setActionError(
+                err instanceof Error ? err.message : "Gagal menambah tamu ke Google Sheets"
+            );
         }
     };
 
     const deleteGuest = async (id: string) => {
+        const backup = guests;
         setGuests(guests.filter((g) => g.id !== id));
         try {
-            await fetch("/api/guests", {
+            const res = await fetch("/api/guests", {
                 method: "DELETE",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id }),
             });
-        } catch {
-            console.error("Gagal menghapus tamu");
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Gagal menghapus tamu");
+        } catch (err) {
+            setGuests(backup);
+            setActionError(
+                err instanceof Error ? err.message : "Gagal menghapus tamu dari Google Sheets"
+            );
         }
     };
 
@@ -167,15 +186,23 @@ export default function AdminPage() {
         const target = guests.find((g) => g.id === id);
         if (!target) return;
         const newSent = !target.sent;
+        const backup = guests;
         setGuests(guests.map((g) => (g.id === id ? { ...g, sent: newSent } : g)));
         try {
-            await fetch("/api/guests", {
+            const res = await fetch("/api/guests", {
                 method: "PATCH",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ id, sent: newSent }),
             });
-        } catch {
-            console.error("Gagal memperbarui status terkirim");
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || "Gagal memperbarui status terkirim");
+        } catch (err) {
+            setGuests(backup);
+            setActionError(
+                err instanceof Error
+                    ? err.message
+                    : "Gagal menyimpan status terkirim ke Google Sheets"
+            );
         }
     };
 
@@ -190,33 +217,24 @@ export default function AdminPage() {
     };
 
     const shareWhatsapp = (guest: Guest) => {
-        const formatTanggal = (date: string) =>
-            new Date(date).toLocaleDateString("id-ID", {
+        const pesan =
+            "Kepada Yth.\n" +
+            "Bapak/Ibu/Saudara/i *" + guest.name + "*\n\n" +
+            "Tanpa mengurangi rasa hormat, kami bermaksud mengundang " +
+            "Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa restu " +
+            "pada hari pernikahan kami.\n\n" +
+            "*" + weddingData.groom.fullName + "*\n" +
+            "& *" + weddingData.bride.fullName + "*\n\n" +
+            "Hari/Tanggal: *" +
+            new Date(weddingData.akad.date).toLocaleDateString("id-ID", {
                 weekday: "long",
                 day: "numeric",
                 month: "long",
                 year: "numeric",
-            });
-
-        const pesan =
-            "Assalamu'alaikum Warahmatullahi Wabarakatuh\n\n" +
-            "Yth. Bapak/Ibu/Saudara/i\n" +
-            "*" + guest.name + "*\n\n" +
-            "Dengan penuh sukacita dan tanpa mengurangi rasa hormat, " +
-            "kami bermaksud mengundang Bapak/Ibu/Saudara/i untuk berkenan hadir " +
-            "serta memberikan doa restu pada pernikahan kami:\n\n" +
-            "*" + weddingData.groom.fullName + "*\n" +
-            "& *" + weddingData.bride.fullName + "*\n\n" +
-            "Yang insyaAllah akan diselenggarakan pada:\n" +
-            "Akad: *" + formatTanggal(weddingData.akad.date) + "*\n" +
-            "Resepsi: *" + formatTanggal(weddingData.reception.date) + "*\n\n" +
-            "Untuk informasi lengkap mengenai waktu, lokasi, dan rangkaian acara, " +
-            "silakan membuka undangan digital kami melalui tautan berikut:\n" +
-            guest.link + "\n\n" +
-            "Merupakan suatu kehormatan dan kebahagiaan bagi kami apabila " +
-            "Bapak/Ibu/Saudara/i berkenan hadir untuk memberikan doa restu.\n\n" +
-            "Atas perhatian dan doa restunya, kami ucapkan terima kasih.\n\n" +
-            "Wassalamu'alaikum Warahmatullahi Wabarakatuh";
+            }) +
+            "*\n\n" +
+            "Silakan buka undangan digital kami di:\n" +
+            guest.link;
 
         window.open("https://wa.me/?text=" + encodeURIComponent(pesan), "_blank");
         if (!guest.sent) toggleSent(guest.id);
@@ -254,6 +272,24 @@ export default function AdminPage() {
                 onLogout={handleLogout}
             />
             <div className="max-w-4xl mx-auto px-4 py-6 space-y-6">
+                <AnimatePresence>
+                    {actionError && (
+                        <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0 }}
+                            className="bg-red-50 border border-red-200 text-red-600 text-sm rounded-xl px-4 py-3 flex items-center justify-between gap-3"
+                        >
+                            <span>⚠ {actionError}</span>
+                            <button
+                                onClick={() => setActionError(null)}
+                                className="text-red-400 hover:text-red-600 shrink-0"
+                            >
+                                ✕
+                            </button>
+                        </motion.div>
+                    )}
+                </AnimatePresence>
                 <AdminStats
                     total={guests.length}
                     sent={totalSent}
@@ -283,7 +319,7 @@ export default function AdminPage() {
                 <div className="text-center pb-8 pt-2">
                     <p className="font-script text-2xl text-primary/30 mb-1">F & S</p>
                     <p className="text-xs text-muted-foreground/40">
-                        Data tersimpan di Google Sheets·
+                        Data tersimpan di Google Sheets · /admin
                     </p>
                 </div>
             </div>

@@ -26,8 +26,8 @@ export function AdminGuestCard({
     const CopyIcon = getLucideIcon("Copy");
     const CheckIcon = getLucideIcon("Check");
     const TrashIcon = getLucideIcon("Trash2");
-    const SendIcon = getLucideIcon("Send");
-    const WhatsappIcon = getLucideIcon("MessageSquare");
+    const ToggleSentIcon = getLucideIcon("CheckCheck");
+    const WhatsappIcon = getLucideIcon("MessageCircle");
     const EyeIcon = getLucideIcon("Eye");
     const ClockIcon = getLucideIcon("Clock");
 
@@ -44,9 +44,10 @@ export function AdminGuestCard({
                     : "from-card via-card to-primary/5 border-border hover:border-primary/25 hover:from-primary/5 hover:via-card hover:to-primary/10 hover:shadow-md")
             }
         >
-            <div className="grid grid-cols-[1fr_auto] md:grid-cols-[1fr_140px_120px_160px] items-center gap-3">
-                {/* Kolom 1: Avatar + Nama */}
-                <div className="flex items-center gap-3 min-w-0">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                {/* Info */}
+                <div className="flex items-center gap-3 min-w-0 flex-1">
+                    {/* Avatar */}
                     <div className={
                         "w-11 h-11 rounded-full flex items-center justify-center shrink-0 " +
                         "font-bold text-sm border transition-all duration-300 " +
@@ -57,15 +58,10 @@ export function AdminGuestCard({
                         {guest.name.charAt(0).toUpperCase()}
                     </div>
 
-                    <div className="min-w-0">
-                        <p className="text-sm font-semibold text-foreground truncate">
-                            {guest.name}
-                        </p>
-                        {/* Tanggal & status muncul di sini hanya saat mobile */}
-                        <div className="flex items-center gap-2 mt-0.5 md:hidden">
-                            <p className="text-xs text-muted-foreground/60 flex items-center gap-1">
-                                <ClockIcon className="w-3 h-3 shrink-0" />
-                                {guest.createdAt}
+                    <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2">
+                            <p className="text-sm font-semibold text-foreground truncate">
+                                {guest.name}
                             </p>
                             {guest.sent && (
                                 <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 shrink-0">
@@ -73,29 +69,14 @@ export function AdminGuestCard({
                                 </span>
                             )}
                         </div>
+                        <p className="text-xs text-muted-foreground/60 mt-0.5 flex items-center gap-1">
+                            <ClockIcon className="w-3 h-3 shrink-0" />
+                            {guest.createdAt}
+                        </p>
                     </div>
                 </div>
 
-                {/* Kolom 2: Tanggal - desktop saja */}
-                <p className="hidden md:flex items-center gap-1 text-xs text-muted-foreground/60">
-                    <ClockIcon className="w-3 h-3 shrink-0" />
-                    {guest.createdAt}
-                </p>
-
-                {/* Kolom 3: Status - desktop saja */}
-                <div className="hidden md:block">
-                    {guest.sent ? (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200">
-                            ✓ Terkirim
-                        </span>
-                    ) : (
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 border border-amber-200">
-                            Belum kirim
-                        </span>
-                    )}
-                </div>
-
-                {/* Kolom 4: Aksi */}
+                {/* Aksi */}
                 <div className="flex items-center justify-end gap-0.5 shrink-0">
                     <motion.a
                         href={guest.link}
@@ -136,12 +117,12 @@ export function AdminGuestCard({
                         className={
                             "p-2 rounded-xl transition-all duration-200 " +
                             (guest.sent
-                                ? "text-amber-500 hover:bg-amber-50"
+                                ? "text-green-600 hover:bg-green-50"
                                 : "text-muted-foreground hover:bg-primary/10 hover:text-primary")
                         }
                         title={guest.sent ? "Tandai belum terkirim" : "Tandai sudah terkirim"}
                     >
-                        <SendIcon className="w-4 h-4" />
+                        <ToggleSentIcon className="w-4 h-4" />
                     </motion.button>
 
                     <motion.button

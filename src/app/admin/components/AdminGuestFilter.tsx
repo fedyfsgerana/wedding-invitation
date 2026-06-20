@@ -27,7 +27,7 @@ export function AdminGuestFilter({ search, setSearch, filterSent, setFilterSent 
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex gap-2"
+            className="flex flex-col gap-2 sm:flex-row"
         >
             <div className="relative flex-1">
                 <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
@@ -48,7 +48,7 @@ export function AdminGuestFilter({ search, setSearch, filterSent, setFilterSent 
                             whileTap={{ scale: 0.95 }}
                             onClick={() => setFilterSent(f.value)}
                             className={
-                                "px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center gap-1.5 " +
+                                "flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 " +
                                 (filterSent === f.value
                                     ? "bg-background text-foreground shadow-sm"
                                     : "text-muted-foreground hover:text-foreground hover:bg-background/50")

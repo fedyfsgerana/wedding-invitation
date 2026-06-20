@@ -6,7 +6,7 @@ const GUESTS_SHEET_GID = Number(process.env.GOOGLE_GUESTS_SHEET_GID || 0);
 
 function rowToGuest(row: string[]) {
     return {
-        id: row[0] || "",
+        id: String(row[0] || ""),
         name: row[1] || "",
         link: row[2] || "",
         sent: row[3] === "true",
@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
             year: "numeric",
         });
 
-        await appendRow(SHEET_NAME, [id, name, link, "false", createdAt]);
+        await appendRow(SHEET_NAME, ["'" + id, name, link, "false", createdAt]);
 
         return NextResponse.json({
             guest: { id, name, link, sent: false, createdAt },
@@ -47,7 +47,7 @@ export async function POST(req: NextRequest) {
 export async function PATCH(req: NextRequest) {
     try {
         const { id, sent } = await req.json();
-        await updateCell(SHEET_NAME, id, "D", sent ? "true" : "false");
+        await updateCell(SHEET_NAME, String(id), "D", sent ? "true" : "false");
         return NextResponse.json({ success: true });
     } catch (err) {
         return NextResponse.json({ error: String(err) }, { status: 500 });
@@ -57,7 +57,7 @@ export async function PATCH(req: NextRequest) {
 export async function DELETE(req: NextRequest) {
     try {
         const { id } = await req.json();
-        await deleteRowById(SHEET_NAME, id, GUESTS_SHEET_GID);
+        await deleteRowById(SHEET_NAME, String(id), GUESTS_SHEET_GID);
         return NextResponse.json({ success: true });
     } catch (err) {
         return NextResponse.json({ error: String(err) }, { status: 500 });
