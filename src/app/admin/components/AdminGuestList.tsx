@@ -30,24 +30,7 @@ export function AdminGuestList({
 
     if (loadingGuests) {
         return (
-            <div className="bg-linear-to-br from-card via-card to-primary/5 border border-border rounded-2xl p-12 flex flex-col items-center justify-center gap-4">
-                <motion.p
-                    animate={{ opacity: [0.5, 1, 0.5] }}
-                    transition={{ repeat: Infinity, duration: 2 }}
-                    className="font-script text-5xl text-primary"
-                >
-                    F & S
-                </motion.p>
-                <div className="flex items-center justify-center gap-2">
-                    {[0, 1, 2].map((i) => (
-                        <motion.div
-                            key={i}
-                            animate={{ y: [0, -8, 0], opacity: [0.4, 1, 0.4] }}
-                            transition={{ repeat: Infinity, duration: 0.8, delay: i * 0.15, ease: "easeInOut" }}
-                            className="w-2 h-2 rounded-full bg-primary"
-                        />
-                    ))}
-                </div>
+            <div className="bg-linear-to-br from-card via-card to-primary/5 border border-border rounded-2xl p-12 flex items-center justify-center">
                 <p className="text-xs uppercase tracking-widest text-muted-foreground">
                     Memuat data tamu...
                 </p>
