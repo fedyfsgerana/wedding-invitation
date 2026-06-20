@@ -87,8 +87,8 @@ export interface WishItem {
     id: string;
     name: string;
     message: string;
-    attendance: string;
-    guestCount?: number | string;
+    attendance: "hadir" | "tidak_hadir" | "masih_ragu";
+    guestCount: number;
     timestamp: string;
 }
 

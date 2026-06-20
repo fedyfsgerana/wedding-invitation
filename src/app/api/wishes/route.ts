@@ -27,13 +27,22 @@ function checkWishLimit(ip: string): boolean {
     return true;
 }
 
+const VALID_ATTENDANCE = ["hadir", "tidak_hadir", "masih_ragu"] as const;
+type Attendance = typeof VALID_ATTENDANCE[number];
+
+function parseAttendance(val: string): Attendance {
+    return VALID_ATTENDANCE.includes(val as Attendance)
+        ? (val as Attendance)
+        : "masih_ragu";
+}
+
 function rowToWish(row: string[]) {
     return {
         id: row[0] || "",
         name: row[1] || "",
         message: row[2] || "",
-        attendance: row[3] || "",
-        guestCount: row[4] || "1",
+        attendance: parseAttendance(row[3] || ""),
+        guestCount: Math.max(1, parseInt(row[4] || "1", 10) || 1),
         timestamp: row[5] || "",
     };
 }

@@ -2,7 +2,34 @@ const SHEET_ID = process.env.GOOGLE_SHEET_ID!;
 const CLIENT_EMAIL = process.env.GOOGLE_SERVICE_ACCOUNT_EMAIL!;
 const PRIVATE_KEY = (process.env.GOOGLE_PRIVATE_KEY || "").replace(/\\n/g, "\n");
 
+const cache = new Map<string, { data: string[][]; expiresAt: number }>();
+const CACHE_TTL_MS = 30_000;
+
+function getCached(sheetName: string): string[][] | null {
+    const entry = cache.get(sheetName);
+    if (!entry) return null;
+    if (Date.now() > entry.expiresAt) {
+        cache.delete(sheetName);
+        return null;
+    }
+    return entry.data;
+}
+
+function setCache(sheetName: string, data: string[][]): void {
+    cache.set(sheetName, { data, expiresAt: Date.now() + CACHE_TTL_MS });
+}
+
+function invalidateCache(sheetName: string): void {
+    cache.delete(sheetName);
+}
+
+let cachedToken: { value: string; expiresAt: number } | null = null;
+
 async function getAccessToken(): Promise<string> {
+    if (cachedToken && Date.now() < cachedToken.expiresAt - 5 * 60 * 1000) {
+        return cachedToken.value;
+    }
+
     const header = { alg: "RS256", typ: "JWT" };
     const now = Math.floor(Date.now() / 1000);
     const claim = {
@@ -39,7 +66,35 @@ async function getAccessToken(): Promise<string> {
     }
 
     const data = await res.json();
-    return data.access_token as string;
+    cachedToken = {
+        value: data.access_token as string,
+        expiresAt: Date.now() + 3600 * 1000,
+    };
+    return cachedToken.value;
+}
+
+export async function readRows(sheetName: string): Promise<string[][]> {
+    const cached = getCached(sheetName);
+    if (cached) return cached;
+
+    const token = await getAccessToken();
+    const range = `${sheetName}!A:Z`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}`;
+
+    const res = await fetch(url, {
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+    });
+
+    if (!res.ok) {
+        throw new Error("Gagal membaca Google Sheets: " + (await res.text()));
+    }
+
+    const data = await res.json();
+    const rows: string[][] = data.values || [];
+
+    setCache(sheetName, rows);
+    return rows;
 }
 
 export async function appendRow(sheetName: string, values: (string | number)[]) {
@@ -60,25 +115,8 @@ export async function appendRow(sheetName: string, values: (string | number)[]) 
         throw new Error("Gagal menambah baris ke Google Sheets: " + (await res.text()));
     }
 
+    invalidateCache(sheetName);
     return res.json();
-}
-
-export async function readRows(sheetName: string): Promise<string[][]> {
-    const token = await getAccessToken();
-    const range = `${sheetName}!A:Z`;
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${range}`;
-
-    const res = await fetch(url, {
-        headers: { Authorization: `Bearer ${token}` },
-        cache: "no-store",
-    });
-
-    if (!res.ok) {
-        throw new Error("Gagal membaca Google Sheets: " + (await res.text()));
-    }
-
-    const data = await res.json();
-    return data.values || [];
 }
 
 export async function deleteRowById(sheetName: string, id: string, sheetGid: number) {
@@ -116,6 +154,8 @@ export async function deleteRowById(sheetName: string, id: string, sheetGid: num
     if (!res.ok) {
         throw new Error("Gagal menghapus baris: " + (await res.text()));
     }
+
+    invalidateCache(sheetName);
 }
 
 export async function updateCell(
@@ -147,4 +187,6 @@ export async function updateCell(
     if (!res.ok) {
         throw new Error("Gagal memperbarui sel: " + (await res.text()));
     }
+
+    invalidateCache(sheetName);
 }

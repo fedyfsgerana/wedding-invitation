@@ -7,7 +7,7 @@ const GUESTS_SHEET_GID = Number(process.env.GOOGLE_GUESTS_SHEET_GID || 0);
 
 function rowToGuest(row: string[]) {
     return {
-        id: String(row[0] || ""),
+        id: String(row[0] || "").replace(/^'/, ""),
         name: row[1] || "",
         link: row[2] || "",
         sent: String(row[3] || "").toLowerCase() === "true",
