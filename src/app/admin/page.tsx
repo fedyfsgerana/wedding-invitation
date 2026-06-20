@@ -274,7 +274,7 @@ export default function AdminPage() {
                 <div className="text-center pb-8 pt-2">
                     <p className="font-script text-2xl text-primary/30 mb-1">F & S</p>
                     <p className="text-xs text-muted-foreground/40">
-                        Data tersimpan di Google Sheets · /admin
+                        Data tersimpan di Google Sheets·
                     </p>
                 </div>
             </div>
