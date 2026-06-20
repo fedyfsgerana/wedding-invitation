@@ -29,6 +29,8 @@ export default function AdminPage() {
     const [copiedId, setCopiedId] = useState<string | null>(null);
     const [search, setSearch] = useState("");
     const [filterSent, setFilterSent] = useState<"all" | "sent" | "unsent">("all");
+    const [pageSize, setPageSize] = useState(5);
+    const [currentPage, setCurrentPage] = useState(1);
     const [mounted, setMounted] = useState(false);
     const [pageLoading, setPageLoading] = useState(true);
     const [loadingGuests, setLoadingGuests] = useState(false);
@@ -71,6 +73,10 @@ export default function AdminPage() {
         const timer = setTimeout(() => setActionError(null), 5000);
         return () => clearTimeout(timer);
     }, [actionError]);
+
+    useEffect(() => {
+        setCurrentPage(1);
+    }, [search, filterSent, pageSize]);
 
     if (!mounted) {
         return <LoadingScreen isLoading={true} text="Memuat halaman Admin..." />;
@@ -234,6 +240,12 @@ export default function AdminPage() {
 
     const totalSent = guests.filter((g) => g.sent).length;
 
+    const totalPages = Math.max(1, Math.ceil(filteredGuests.length / pageSize));
+    const paginatedGuests = filteredGuests.slice(
+        (currentPage - 1) * pageSize,
+        currentPage * pageSize
+    );
+
     if (!isAuthenticated) {
         return (
             <>
@@ -348,14 +360,20 @@ export default function AdminPage() {
                         transition={{ delay: 0.4, duration: 0.5 }}
                     >
                         <AdminGuestList
-                            guests={filteredGuests}
+                            guests={paginatedGuests}
                             allGuestsCount={guests.length}
+                            filteredCount={filteredGuests.length}
                             loadingGuests={loadingGuests}
                             copiedId={copiedId}
                             onCopy={copyLink}
                             onWhatsapp={shareWhatsapp}
                             onToggleSent={toggleSent}
                             onDelete={deleteGuest}
+                            pageSize={pageSize}
+                            setPageSize={setPageSize}
+                            currentPage={currentPage}
+                            setCurrentPage={setCurrentPage}
+                            totalPages={totalPages}
                         />
                     </motion.div>
                     <motion.div
