@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE, SESSION_VALUE } from "@/lib/auth";
+import { SESSION_COOKIE, SESSION_VALUE, SESSION_MAX_AGE } from "@/lib/auth";
 
 const loginAttempts = new Map<string, { attempts: number; firstAttempt: number }>();
 
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "strict",
-            maxAge: 60 * 60 * 8,
+            maxAge: SESSION_MAX_AGE,
             path: "/",
         });
         return res;

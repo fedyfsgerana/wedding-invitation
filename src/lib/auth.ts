@@ -3,6 +3,7 @@ import { cookies } from "next/headers";
 
 export const SESSION_COOKIE = "wedding-admin-session";
 export const SESSION_VALUE = process.env.ADMIN_SESSION_SECRET || "wedding-admin-secret";
+export const SESSION_MAX_AGE = 60 * 30;
 
 export function isAuthenticated(req: NextRequest): boolean {
     const cookie = req.cookies.get(SESSION_COOKIE);

@@ -1,7 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAuthenticated } from "@/lib/auth";
-
-const SESSION_MAX_AGE_MS = 60 * 60 * 8 * 1000; // 8 jam
+import { isAuthenticated, SESSION_MAX_AGE } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
     if (!isAuthenticated(req)) {
@@ -9,6 +7,6 @@ export async function GET(req: NextRequest) {
     }
     return NextResponse.json({
         authenticated: true,
-        expiresAt: Date.now() + SESSION_MAX_AGE_MS,
+        expiresAt: Date.now() + SESSION_MAX_AGE * 1000,
     });
 }
