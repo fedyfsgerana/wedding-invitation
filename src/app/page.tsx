@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useGuestParam } from "@/hooks/useGuestParam";
 import { AudioProvider } from "@/components/providers/AudioProvider";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
+import { ExpiredScreen } from "@/components/ui/ExpiredScreen";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { Navbar } from "@/components/layout/Navbar";
 import { BackToTop } from "@/components/layout/BackToTop";
@@ -22,6 +23,12 @@ import { RSVPSection } from "@/components/sections/RSVPSection";
 import { GiftSection } from "@/components/sections/GiftSection";
 import { ClosingSection } from "@/components/sections/ClosingSection";
 import { FloatingControls } from "@/components/layout/FloatingControls";
+import { weddingData } from "@/lib/weddingData";
+
+function isInvitationExpired(): boolean {
+  console.log("expired check:", true);
+  return true;
+}
 
 function WeddingPage() {
   const { guestName } = useGuestParam();
@@ -39,6 +46,10 @@ function WeddingPage() {
       window.scrollTo({ top: 0, behavior: "smooth" });
     }, 100);
   };
+
+  if (isInvitationExpired()) {
+    return <ExpiredScreen />;
+  }
 
   return (
     <AudioProvider>
