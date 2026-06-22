@@ -26,8 +26,11 @@ import { FloatingControls } from "@/components/layout/FloatingControls";
 import { weddingData } from "@/lib/weddingData";
 
 function isInvitationExpired(): boolean {
-  console.log("expired check:", true);
-  return true;
+  const receptionDate = new Date(weddingData.reception.date);
+  receptionDate.setHours(0, 0, 0, 0);
+  const expiredDate = new Date(receptionDate);
+  expiredDate.setDate(expiredDate.getDate() + 3);
+  return new Date() > expiredDate;
 }
 
 function WeddingPage() {
