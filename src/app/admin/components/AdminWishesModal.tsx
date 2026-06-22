@@ -25,6 +25,14 @@ export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
     const XIcon = getLucideIcon("X");
     const UserIcon = getLucideIcon("User");
     const MessageIcon = getLucideIcon("MessageCircle");
+    const UsersIcon = getLucideIcon("Users");
+
+    const totalHadir = wishes.filter((w) => w.attendance === "hadir").length;
+    const totalTidakHadir = wishes.filter((w) => w.attendance === "tidak_hadir").length;
+    const totalRagu = wishes.filter((w) => w.attendance === "masih_ragu").length;
+    const totalPerkiraan = wishes
+        .filter((w) => w.attendance === "hadir")
+        .reduce((sum, w) => sum + (w.guestCount || 1), 0);
 
     return (
         <AnimatePresence>
@@ -77,6 +85,31 @@ export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
                                 </button>
                             </div>
                         </div>
+
+                        {/* Statistik RSVP */}
+                        {!loading && wishes.length > 0 && (
+                            <div className="px-5 py-3 border-b border-border shrink-0 grid grid-cols-4 gap-2">
+                                <div className="text-center">
+                                    <p className="text-base font-bold text-green-600">{totalHadir}</p>
+                                    <p className="text-[10px] text-muted-foreground">Hadir</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-base font-bold text-red-500">{totalTidakHadir}</p>
+                                    <p className="text-[10px] text-muted-foreground">Tidak Hadir</p>
+                                </div>
+                                <div className="text-center">
+                                    <p className="text-base font-bold text-yellow-500">{totalRagu}</p>
+                                    <p className="text-[10px] text-muted-foreground">Masih Ragu</p>
+                                </div>
+                                <div className="text-center border-l border-border">
+                                    <div className="flex items-center justify-center gap-1">
+                                        <UsersIcon className="w-3 h-3 text-primary" />
+                                        <p className="text-base font-bold text-primary">{totalPerkiraan}</p>
+                                    </div>
+                                    <p className="text-[10px] text-muted-foreground">Est. Tamu</p>
+                                </div>
+                            </div>
+                        )}
 
                         {/* Body */}
                         <div className="overflow-y-auto px-5 py-4 space-y-3">

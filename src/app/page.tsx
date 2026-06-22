@@ -6,6 +6,7 @@ import { useGuestParam } from "@/hooks/useGuestParam";
 import { AudioProvider } from "@/components/providers/AudioProvider";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { ExpiredScreen } from "@/components/ui/ExpiredScreen";
+import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
 import { ScrollProgress } from "@/components/ui/ScrollProgress";
 import { Navbar } from "@/components/layout/Navbar";
 import { BackToTop } from "@/components/layout/BackToTop";
@@ -91,17 +92,19 @@ function WeddingPage() {
                   className="pb-20 md:pb-0"
                 >
                   <Navbar />
-                  <OpeningSection />
-                  <BrideGroomSection />
-                  <CountdownSection />
-                  <EventSection />
-                  <AgendaSection />
-                  <LoveStorySection />
-                  <GallerySection />
-                  <LocationSection />
-                  <RSVPSection />
-                  <GiftSection />
-                  <ClosingSection />
+                  <ErrorBoundary>
+                    <OpeningSection />
+                    <BrideGroomSection />
+                    <CountdownSection />
+                    <EventSection />
+                    <AgendaSection />
+                    <LoveStorySection />
+                    <GallerySection />
+                    <LocationSection />
+                    <RSVPSection />
+                    <GiftSection />
+                    <ClosingSection />
+                  </ErrorBoundary>
                 </motion.div>
               )}
             </AnimatePresence>

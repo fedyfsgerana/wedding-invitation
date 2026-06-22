@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { siteConfig, weddingData } from "@/lib/weddingData";
+import { SESSION_MAX_AGE } from "@/lib/auth";
 import { WishItem } from "@/types";
 import { AdminLogin } from "./components/AdminLogin";
 import { AdminHeader } from "./components/AdminHeader";
@@ -186,7 +187,7 @@ export default function AdminPage() {
             if (res.ok && data.success) {
                 setIsAuthenticated(true);
                 setPasswordError(false);
-                setSessionExpiresAt(Date.now() + 60 * 60 * 8 * 1000);
+                setSessionExpiresAt(Date.now() + SESSION_MAX_AGE * 1000);
             } else if (res.status === 429) {
                 addToast("error", data.error || "Terlalu banyak percobaan.");
                 setPassword("");

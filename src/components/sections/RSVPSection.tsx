@@ -23,8 +23,6 @@ const ATTENDANCE_OPTIONS = [
     { value: "masih_ragu", label: "Masih Ragu", icon: "HelpCircle" },
 ];
 
-const STORAGE_KEY = "wedding-wishes-fedy-suci";
-
 export function RSVPSection() {
     const [form, setForm] = useState<RSVPData>({
         name: "",
@@ -35,12 +33,14 @@ export function RSVPSection() {
     const [submitted, setSubmitted] = useState(false);
     const [wishes, setWishes] = useState<WishItem[]>([]);
     const [loading, setLoading] = useState(false);
+    const [error, setError] = useState<string | null>(null);
 
     const SendIcon = getLucideIcon("Send");
     const CheckIcon = getLucideIcon("CheckCircle");
     const UserIcon = getLucideIcon("User");
     const UsersIcon = getLucideIcon("Users");
     const MessageIcon = getLucideIcon("MessageCircle");
+    const AlertIcon = getLucideIcon("AlertCircle");
 
     useEffect(() => {
         const loadWishes = async () => {
@@ -58,6 +58,7 @@ export function RSVPSection() {
     const handleSubmit = async () => {
         if (!form.name.trim() || !form.message.trim()) return;
         setLoading(true);
+        setError(null);
 
         try {
             const res = await fetch("/api/wishes", {
@@ -71,10 +72,14 @@ export function RSVPSection() {
                 }),
             });
             const data = await res.json();
+            if (!res.ok) {
+                setError(data.error || "Gagal mengirim ucapan. Silakan coba lagi.");
+                return;
+            }
             if (data.wish) setWishes([data.wish, ...wishes]);
             setSubmitted(true);
         } catch {
-            console.error("Gagal mengirim ucapan");
+            setError("Tidak dapat terhubung ke server. Periksa koneksi internet Anda.");
         } finally {
             setLoading(false);
         }
@@ -83,6 +88,7 @@ export function RSVPSection() {
     const handleReset = () => {
         setForm({ name: "", attendance: "hadir", guestCount: 1, message: "" });
         setSubmitted(false);
+        setError(null);
     };
 
     return (
@@ -135,6 +141,21 @@ export function RSVPSection() {
                                     exit={{ opacity: 0 }}
                                     className="space-y-4"
                                 >
+                                    {/* Error message */}
+                                    <AnimatePresence>
+                                        {error && (
+                                            <motion.div
+                                                initial={{ opacity: 0, y: -8 }}
+                                                animate={{ opacity: 1, y: 0 }}
+                                                exit={{ opacity: 0, y: -8 }}
+                                                className="flex items-start gap-2.5 px-3.5 py-3 rounded-xl bg-red-50 border border-red-200 text-red-600"
+                                            >
+                                                <AlertIcon className="w-4 h-4 mt-0.5 shrink-0" />
+                                                <p className="text-xs leading-relaxed">{error}</p>
+                                            </motion.div>
+                                        )}
+                                    </AnimatePresence>
+
                                     <div>
                                         <label className="text-sm font-medium text-foreground mb-1.5 flex items-center gap-1.5">
                                             <UserIcon className="w-3.5 h-3.5 text-primary" />
