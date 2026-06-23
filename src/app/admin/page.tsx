@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { siteConfig, weddingData } from "@/lib/weddingData";
-import { SESSION_MAX_AGE } from "@/lib/auth";
+import { SESSION_MAX_AGE } from "@/lib/constants";
 import { WishItem } from "@/types";
 import { AdminLogin } from "./components/AdminLogin";
 import { AdminHeader } from "./components/AdminHeader";
