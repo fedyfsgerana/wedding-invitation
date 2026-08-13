@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Plus_Jakarta_Sans, Great_Vibes } from "next/font/google";
+import {
+  Playfair_Display,
+  Plus_Jakarta_Sans,
+  Great_Vibes,
+} from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
@@ -24,20 +28,20 @@ const greatVibes = Great_Vibes({
 
 export const metadata: Metadata = {
   title: "Fedy & Suci Wedding",
-  description: "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
+  description:
+    "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
   metadataBase: new URL("https://wedding-invitation-fedy-suci.vercel.app"),
   openGraph: {
     title: "Fedy & Suci Wedding",
-    description: "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
+    description:
+      "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
     url: "https://wedding-invitation-fedy-suci.vercel.app",
     siteName: "Fedy & Suci Wedding",
     images: [{ url: "/images/og-image.jpg", width: 1200, height: 630 }],
     type: "website",
   },
   icons: {
-    icon: [
-      { url: "/favicon.svg", type: "image/svg+xml" },
-    ],
+    icon: [{ url: "/favicon.svg", type: "image/svg+xml" }],
     apple: "/favicon.svg",
   },
 };
@@ -49,7 +53,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="id" suppressHydrationWarning>
-      <body className={`${playfair.variable} ${jakarta.variable} ${greatVibes.variable} font-sans`}>
+      <body
+        className={`${playfair.variable} ${jakarta.variable} ${greatVibes.variable} font-sans`}
+      >
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>

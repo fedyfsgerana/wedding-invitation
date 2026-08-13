@@ -71,7 +71,6 @@ function WeddingPage() {
             <BackToTop />
             <FloatingControls />
 
-            {/* Cover */}
             <AnimatePresence>
               {!isOpened && (
                 <CoverSection
@@ -82,7 +81,6 @@ function WeddingPage() {
               )}
             </AnimatePresence>
 
-            {/* Main content */}
             <AnimatePresence>
               {isOpened && (
                 <motion.div

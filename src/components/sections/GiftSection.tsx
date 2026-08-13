@@ -8,112 +8,116 @@ import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
 const itemVariants: Variants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
-    },
+  hidden: { opacity: 0, y: 20 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.5, ease: [0.25, 0.1, 0.25, 1] },
+  },
 };
 
 const BANK_COLORS: Record<string, string> = {
-    "Bank Mandiri": "#003d7a",
-    "Bank BCA": "#0066ae",
-    "Bank BRI": "#003f88",
-    "Bank BNI": "#f77f00",
+  "Bank Mandiri": "#003d7a",
+  "Bank BCA": "#0066ae",
+  "Bank BRI": "#003f88",
+  "Bank BNI": "#f77f00",
 };
 
+const CopyIcon = getLucideIcon("Copy");
+const CheckIcon = getLucideIcon("Check");
+const GiftIcon = getLucideIcon("Gift");
+const BuildingIcon = getLucideIcon("Building2");
+
 export function GiftSection() {
-    const { bankAccounts } = weddingData;
-    const [copiedId, setCopiedId] = useState<number | null>(null);
+  const { bankAccounts } = weddingData;
+  const [copiedId, setCopiedId] = useState<number | null>(null);
 
-    const CopyIcon = getLucideIcon("Copy");
-    const CheckIcon = getLucideIcon("Check");
-    const GiftIcon = getLucideIcon("Gift");
-    const BuildingIcon = getLucideIcon("Building2");
+  const copyAccountNumber = async (number: string, id: number) => {
+    try {
+      await navigator.clipboard.writeText(number);
+      setCopiedId(id);
+      setTimeout(() => setCopiedId(null), 2000);
+    } catch {
+      console.error("Gagal menyalin nomor rekening");
+    }
+  };
 
-    const copyAccountNumber = async (number: string, id: number) => {
-        try {
-            await navigator.clipboard.writeText(number);
-            setCopiedId(id);
-            setTimeout(() => setCopiedId(null), 2000);
-        } catch {
-            console.error("Gagal menyalin nomor rekening");
-        }
-    };
+  return (
+    <SectionWrapper id="hadiah" variant="cream">
+      <div className="container-wedding px-4">
+        <SectionTitle
+          decorative="Wedding Gift"
+          title="Hadiah Pernikahan"
+          subtitle="Doa restu Anda adalah hadiah terindah bagi kami. Namun jika ingin memberikan hadiah, berikut informasinya"
+        />
 
-    return (
-        <SectionWrapper id="hadiah" variant="cream">
-            <div className="container-wedding px-4">
-                <SectionTitle
-                    decorative="Wedding Gift"
-                    title="Hadiah Pernikahan"
-                    subtitle="Doa restu Anda adalah hadiah terindah bagi kami. Namun jika ingin memberikan hadiah, berikut informasinya"
-                />
-
-                <div className="max-w-lg mx-auto space-y-4">
-                    {bankAccounts.map((account) => {
-                        const bankColor = BANK_COLORS[account.bank] ?? "#333";
-                        return (
-                            <motion.div
-                                key={account.id}
-                                variants={itemVariants}
-                                initial="hidden"
-                                whileInView="visible"
-                                viewport={{ once: true }}
-                                className="card-wedding p-5"
-                            >
-                                <div className="flex items-center justify-between gap-4">
-                                    <div className="flex items-center gap-3">
-                                        <div
-                                            className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
-                                            style={{ backgroundColor: bankColor }}
-                                        >
-                                            <BuildingIcon className="w-6 h-6 text-white" />
-                                        </div>
-                                        <div>
-                                            <p className="text-xs text-muted-foreground">{account.bank}</p>
-                                            <p className="text-base font-bold text-foreground font-mono tracking-wider">
-                                                {account.accountNumber}
-                                            </p>
-                                            <p className="text-xs text-muted-foreground">
-                                                a.n. {account.accountName}
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <motion.button
-                                        whileHover={{ scale: 1.05 }}
-                                        whileTap={{ scale: 0.95 }}
-                                        onClick={() => copyAccountNumber(account.accountNumber, account.id)}
-                                        className="p-2.5 rounded-xl bg-primary/10 hover:bg-primary/20 transition-colors shrink-0"
-                                        title="Salin nomor rekening"
-                                    >
-                                        {copiedId === account.id ? (
-                                            <CheckIcon className="w-4 h-4 text-green-500" />
-                                        ) : (
-                                            <CopyIcon className="w-4 h-4 text-primary" />
-                                        )}
-                                    </motion.button>
-                                </div>
-                            </motion.div>
-                        );
-                    })}
-
-                    <motion.div
-                        variants={itemVariants}
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        className="flex items-start gap-3 px-4 py-3 rounded-xl bg-primary/5 border border-primary/10"
+        <div className="max-w-lg mx-auto space-y-4">
+          {bankAccounts.map((account) => {
+            const bankColor = BANK_COLORS[account.bank] ?? "#333";
+            return (
+              <motion.div
+                key={account.id}
+                variants={itemVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="card-wedding p-5"
+              >
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div
+                      className="w-12 h-12 rounded-xl flex items-center justify-center shrink-0"
+                      style={{ backgroundColor: bankColor }}
                     >
-                        <GiftIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-                        <p className="text-xs text-muted-foreground leading-relaxed">
-                            Hadiah fisik dapat dititipkan kepada keluarga atau dibawa langsung
-                            saat acara berlangsung. Terima kasih atas kebaikan hati Anda.
-                        </p>
-                    </motion.div>
+                      <BuildingIcon className="w-6 h-6 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-xs text-muted-foreground">
+                        {account.bank}
+                      </p>
+                      <p className="text-base font-bold text-foreground font-mono tracking-wider">
+                        {account.accountNumber}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        a.n. {account.accountName}
+                      </p>
+                    </div>
+                  </div>
+                  <motion.button
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() =>
+                      copyAccountNumber(account.accountNumber, account.id)
+                    }
+                    className="p-2.5 rounded-xl bg-primary/10 hover:bg-primary/20 transition-colors shrink-0"
+                    title="Salin nomor rekening"
+                  >
+                    {copiedId === account.id ? (
+                      <CheckIcon className="w-4 h-4 text-green-500" />
+                    ) : (
+                      <CopyIcon className="w-4 h-4 text-primary" />
+                    )}
+                  </motion.button>
                 </div>
-            </div>
-        </SectionWrapper>
-    );
+              </motion.div>
+            );
+          })}
+
+          <motion.div
+            variants={itemVariants}
+            initial="hidden"
+            whileInView="visible"
+            viewport={{ once: true }}
+            className="flex items-start gap-3 px-4 py-3 rounded-xl bg-primary/5 border border-primary/10"
+          >
+            <GiftIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
+            <p className="text-xs text-muted-foreground leading-relaxed">
+              Hadiah fisik dapat dititipkan kepada keluarga atau dibawa langsung
+              saat acara berlangsung. Terima kasih atas kebaikan hati Anda.
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    </SectionWrapper>
+  );
 }

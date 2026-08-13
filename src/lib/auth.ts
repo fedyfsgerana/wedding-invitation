@@ -5,15 +5,16 @@ import { SESSION_MAX_AGE } from "@/lib/constants";
 export { SESSION_MAX_AGE };
 
 export const SESSION_COOKIE = "wedding-admin-session";
-export const SESSION_VALUE = process.env.ADMIN_SESSION_SECRET || "wedding-admin-secret";
+export const SESSION_VALUE =
+  process.env.ADMIN_SESSION_SECRET || "wedding-admin-secret";
 
 export function isAuthenticated(req: NextRequest): boolean {
-    const cookie = req.cookies.get(SESSION_COOKIE);
-    return cookie?.value === SESSION_VALUE;
+  const cookie = req.cookies.get(SESSION_COOKIE);
+  return cookie?.value === SESSION_VALUE;
 }
 
 export async function isAuthenticatedServer(): Promise<boolean> {
-    const cookieStore = await cookies();
-    const cookie = cookieStore.get(SESSION_COOKIE);
-    return cookie?.value === SESSION_VALUE;
+  const cookieStore = await cookies();
+  const cookie = cookieStore.get(SESSION_COOKIE);
+  return cookie?.value === SESSION_VALUE;
 }

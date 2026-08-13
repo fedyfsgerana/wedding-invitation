@@ -42,7 +42,12 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-serif);
   }
 
@@ -132,10 +137,12 @@
       transform: translateY(-20px) rotate(0deg) translateX(0px);
       opacity: 0.6;
     }
+
     50% {
       transform: translateY(50vh) rotate(180deg) translateX(30px);
       opacity: 0.4;
     }
+
     100% {
       transform: translateY(110vh) rotate(360deg) translateX(-20px);
       opacity: 0;
@@ -143,13 +150,27 @@
   }
 
   @keyframes float {
-    0%, 100% { transform: translateY(0px); }
-    50% { transform: translateY(-12px); }
+
+    0%,
+    100% {
+      transform: translateY(0px);
+    }
+
+    50% {
+      transform: translateY(-12px);
+    }
   }
 
   @keyframes pulse-soft {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0.6;
+    }
   }
 
   .animate-float {
