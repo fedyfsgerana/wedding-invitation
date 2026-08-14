@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 import { Guest } from "../page";
@@ -15,6 +16,7 @@ interface Props {
   onWhatsapp: (guest: Guest) => void;
   onToggleSent: (id: string) => void;
   onDelete: (id: string) => void;
+  onEditName: (id: string, newName: string) => void;
 }
 
 const CopyIcon = getLucideIcon("Copy");
@@ -24,6 +26,8 @@ const ToggleSentIcon = getLucideIcon("CheckCheck");
 const WhatsappIcon = getLucideIcon("MessageCircle");
 const EyeIcon = getLucideIcon("Eye");
 const ClockIcon = getLucideIcon("Clock");
+const PencilIcon = getLucideIcon("Pencil");
+const SaveIcon = getLucideIcon("Check");
 
 export function AdminGuestCard({
   guest,
@@ -35,8 +39,47 @@ export function AdminGuestCard({
   onWhatsapp,
   onToggleSent,
   onDelete,
+  onEditName,
 }: Props) {
   const isStriped = index % 2 === 1;
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState(guest.name);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isEditing) {
+      inputRef.current?.focus();
+      inputRef.current?.select();
+    }
+  }, [isEditing]);
+
+  const startEdit = () => {
+    setEditValue(guest.name);
+    setIsEditing(true);
+  };
+
+  const saveEdit = () => {
+    const trimmed = editValue.trim();
+    if (trimmed && trimmed !== guest.name) {
+      onEditName(guest.id, trimmed);
+    }
+    setIsEditing(false);
+  };
+
+  const cancelEdit = () => {
+    setEditValue(guest.name);
+    setIsEditing(false);
+  };
+
+  const handleEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      saveEdit();
+    } else if (e.key === "Escape") {
+      e.preventDefault();
+      cancelEdit();
+    }
+  };
 
   return (
     <motion.div
@@ -79,17 +122,30 @@ export function AdminGuestCard({
             {guest.name.charAt(0).toUpperCase()}
           </div>
 
-          <div className="min-w-0">
-            <div className="flex items-center gap-2">
-              <p className="text-sm font-semibold text-foreground truncate">
-                {guest.name}
-              </p>
-              {guest.sent && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-success-soft text-success border border-success-border shrink-0">
-                  ✓ Terkirim
-                </span>
-              )}
-            </div>
+          <div className="min-w-0 flex-1">
+            {isEditing ? (
+              <input
+                ref={inputRef}
+                type="text"
+                value={editValue}
+                onChange={(e) => setEditValue(e.target.value)}
+                onKeyDown={handleEditKeyDown}
+                maxLength={100}
+                className="w-full text-sm font-semibold text-foreground bg-card border border-primary/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                aria-label={`Edit nama ${guest.name}`}
+              />
+            ) : (
+              <div className="flex items-center gap-2">
+                <p className="text-sm font-semibold text-foreground truncate">
+                  {guest.name}
+                </p>
+                {guest.sent && (
+                  <span className="text-xs px-2 py-0.5 rounded-full bg-success-soft text-success border border-success-border shrink-0">
+                    ✓ Terkirim
+                  </span>
+                )}
+              </div>
+            )}
             <p className="text-xs text-muted-foreground/60 mt-0.5 flex items-center gap-1">
               <ClockIcon className="w-3 h-3 shrink-0" />
               {guest.createdAt}
@@ -98,6 +154,24 @@ export function AdminGuestCard({
         </div>
 
         <div className="flex items-center justify-end gap-0.5 shrink-0">
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={isEditing ? saveEdit : startEdit}
+            className={
+              "p-2 rounded-xl transition-all duration-200 " +
+              (isEditing
+                ? "text-success hover:bg-success-soft"
+                : "text-muted-foreground hover:bg-primary/10 hover:text-primary")
+            }
+            title={isEditing ? "Simpan nama" : "Edit nama tamu"}
+          >
+            {isEditing ? (
+              <SaveIcon className="w-4 h-4" />
+            ) : (
+              <PencilIcon className="w-4 h-4" />
+            )}
+          </motion.button>
+
           <motion.a
             href={guest.link}
             target="_blank"

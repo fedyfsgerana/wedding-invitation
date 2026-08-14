@@ -80,7 +80,7 @@ export async function PATCH(req: NextRequest) {
   }
   try {
     const body = await req.json();
-    const { sent } = body;
+    const { sent, name } = body;
     const ids: string[] = Array.isArray(body.ids)
       ? body.ids
       : body.id
@@ -89,6 +89,25 @@ export async function PATCH(req: NextRequest) {
     if (ids.length === 0) {
       return NextResponse.json({ error: "ID wajib diisi" }, { status: 400 });
     }
+
+    if (typeof name === "string") {
+      if (ids.length !== 1) {
+        return NextResponse.json(
+          { error: "Edit nama hanya untuk satu tamu" },
+          { status: 400 },
+        );
+      }
+      const trimmed = name.trim();
+      if (!trimmed) {
+        return NextResponse.json(
+          { error: "Nama tidak boleh kosong" },
+          { status: 400 },
+        );
+      }
+      await updateCell(SHEET_NAME, ids[0], "B", trimmed);
+      return NextResponse.json({ success: true, name: trimmed });
+    }
+
     for (const id of ids) {
       await updateCell(SHEET_NAME, String(id), "D", sent ? "true" : "false");
     }

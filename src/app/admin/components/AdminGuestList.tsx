@@ -16,6 +16,7 @@ interface Props {
   onWhatsapp: (guest: Guest) => void;
   onToggleSent: (id: string) => void;
   onDelete: (id: string) => void;
+  onEditName: (id: string, newName: string) => void;
   pageSize: number;
   setPageSize: (v: number) => void;
   currentPage: number;
@@ -36,7 +37,7 @@ interface Props {
 const PAGE_SIZE_MIN = 1;
 const PAGE_SIZE_MAX = 100;
 
-export const GUEST_ROW_GRID_COLS = "24px 1fr 168px";
+export const GUEST_ROW_GRID_COLS = "24px 1fr 204px";
 
 const UsersIcon = getLucideIcon("Users");
 const ChevronLeftIcon = getLucideIcon("ChevronLeft");
@@ -59,6 +60,7 @@ export function AdminGuestList({
   onWhatsapp,
   onToggleSent,
   onDelete,
+  onEditName,
   pageSize,
   setPageSize,
   currentPage,
@@ -266,6 +268,7 @@ export function AdminGuestList({
               onWhatsapp={onWhatsapp}
               onToggleSent={onToggleSent}
               onDelete={onDelete}
+              onEditName={onEditName}
             />
           ))}
         </AnimatePresence>

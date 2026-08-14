@@ -349,6 +349,33 @@ export default function AdminPage() {
     }
   };
 
+  const editGuestName = async (id: string, newName: string) => {
+    const target = guests.find((g) => g.id === id);
+    if (!target) return;
+    const trimmed = newName.trim();
+    if (!trimmed || trimmed === target.name) return;
+    const backup = guests;
+    setGuests(guests.map((g) => (g.id === id ? { ...g, name: trimmed } : g)));
+    try {
+      const res = await fetchWithAuth("/api/guests", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, name: trimmed }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal memperbarui nama tamu");
+      showToast(`Nama tamu berhasil diubah menjadi "${trimmed}"`, "success");
+    } catch (err) {
+      setGuests(backup);
+      showToast(
+        err instanceof Error
+          ? err.message
+          : "Gagal menyimpan nama tamu ke Google Sheets",
+        "error",
+      );
+    }
+  };
+
   const toggleSelectGuest = (id: string) => {
     setSelectedIds((prev) => {
       const next = new Set(prev);
@@ -684,6 +711,7 @@ export default function AdminPage() {
               onWhatsapp={shareWhatsapp}
               onToggleSent={toggleSent}
               onDelete={deleteGuest}
+              onEditName={editGuestName}
               pageSize={pageSize}
               setPageSize={setPageSize}
               currentPage={currentPage}
