@@ -29,32 +29,32 @@ export function ExpiredScreen() {
       />
 
       <div className="relative z-10 max-w-sm w-full">
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
+        <motion.div
+          initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2, duration: 0.7 }}
-          className="font-script text-7xl text-primary mb-2"
+          transition={{ delay: 0.1, duration: 0.6 }}
+          className="relative mx-auto mb-6 w-16 h-16"
+        >
+          <div className="absolute inset-0 rounded-full gradient-primary opacity-20 animate-pulse-soft" />
+          <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
+            <span className="font-serif text-lg text-primary">
+              {groom.nickname.charAt(0)}&amp;{bride.nickname.charAt(0)}
+            </span>
+          </div>
+        </motion.div>
+
+        <motion.h2
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.25, duration: 0.6 }}
+          className="font-serif text-4xl md:text-5xl font-semibold text-foreground tracking-tight mb-6"
         >
           {groom.nickname}
-        </motion.p>
-
-        <motion.p
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.4, duration: 0.5 }}
-          className="text-primary/60 text-lg mb-2"
-        >
-          &amp;
-        </motion.p>
-
-        <motion.p
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5, duration: 0.7 }}
-          className="font-script text-7xl text-primary mb-6"
-        >
+          <span className="font-serif italic text-2xl text-primary/70 mx-2">
+            &amp;
+          </span>
           {bride.nickname}
-        </motion.p>
+        </motion.h2>
 
         <motion.div
           initial={{ opacity: 0, scaleX: 0 }}

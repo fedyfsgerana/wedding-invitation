@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { useAudio } from "@/components/providers/AudioProvider";
 import { getLucideIcon, cn } from "@/lib/utils";
+import { weddingData } from "@/lib/weddingData";
 
 const navItems = [
   { label: "Mempelai", href: "#mempelai", icon: "Heart" },
@@ -12,6 +13,7 @@ const navItems = [
   { label: "Galeri", href: "#galeri", icon: "Image" },
   { label: "RSVP", href: "#rsvp", icon: "MessageCircle" },
   { label: "Hadiah", href: "#hadiah", icon: "Gift" },
+  { label: "Penutup", href: "#penutup", icon: "Sparkles" },
 ];
 
 const SunIcon = getLucideIcon("Sun");
@@ -28,6 +30,7 @@ export function Navbar() {
   const [activeSection, setActiveSection] = useState("");
   const { theme, toggleTheme } = useTheme();
   const { isPlaying, toggleAudio } = useAudio();
+  const { groom, bride } = weddingData;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -66,9 +69,15 @@ export function Navbar() {
         <div className="container-wedding grid grid-cols-3 items-center px-4">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="font-script text-2xl text-primary justify-self-start"
+            className="relative w-10 h-10 justify-self-start"
+            aria-label="Kembali ke atas"
           >
-            F & S
+            <div className="absolute inset-0 rounded-full gradient-primary opacity-20 animate-pulse-soft" />
+            <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
+              <span className="font-serif text-sm text-primary">
+                {groom.nickname.charAt(0)}&amp;{bride.nickname.charAt(0)}
+              </span>
+            </div>
           </button>
           <div className="flex items-center justify-center gap-6">
             {navItems.map((item) => (

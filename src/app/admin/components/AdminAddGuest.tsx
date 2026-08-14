@@ -51,7 +51,7 @@ export function AdminAddGuest({ guestName, setGuestName, onAdd }: Props) {
             placeholder="Nama tamu..."
             className={`w-full pl-10 pr-4 py-2.5 rounded-xl border bg-background text-foreground text-sm focus:outline-none focus:ring-2 transition-all ${
               error
-                ? "border-red-400 focus:ring-red-300/30 focus:border-red-400"
+                ? "border-danger focus:ring-danger/20 focus:border-danger"
                 : "border-border focus:ring-primary/30 focus:border-primary"
             }`}
           />
@@ -72,7 +72,7 @@ export function AdminAddGuest({ guestName, setGuestName, onAdd }: Props) {
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="text-xs text-red-500 mt-2 flex items-center gap-1"
+            className="text-xs text-danger mt-2 flex items-center gap-1"
           >
             ✕ Nama tamu tidak boleh kosong.
           </motion.p>

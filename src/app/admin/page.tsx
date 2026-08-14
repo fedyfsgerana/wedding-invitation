@@ -69,6 +69,8 @@ export default function AdminPage() {
     setIsAuthenticated(false);
     setSessionExpiresAt(null);
     setGuests([]);
+    setPassword("");
+    setPasswordError(false);
     addToast("error", "Sesi telah habis. Silakan login kembali.");
   }, [addToast]);
 
@@ -238,6 +240,9 @@ export default function AdminPage() {
       await fetch("/api/admin/login", { method: "DELETE" });
     } catch {}
     setIsAuthenticated(false);
+    setSessionExpiresAt(null);
+    setPassword("");
+    setPasswordError(false);
   };
 
   const generateLink = (name: string) => {
@@ -432,8 +437,8 @@ export default function AdminPage() {
               className={
                 "text-sm rounded-xl px-4 py-3 flex items-center justify-between gap-3 shadow-lg border backdrop-blur-sm " +
                 (toast.type === "success"
-                  ? "bg-green-50/95 border-green-200 text-green-700"
-                  : "bg-red-50/95 border-red-200 text-red-600")
+                  ? "bg-success-soft/95 border-success-border text-success"
+                  : "bg-danger-soft/95 border-danger-border text-danger")
               }
             >
               <span className="flex items-center gap-2">
@@ -445,8 +450,8 @@ export default function AdminPage() {
                 className={
                   "shrink-0 " +
                   (toast.type === "success"
-                    ? "text-green-400 hover:text-green-600"
-                    : "text-red-400 hover:text-red-600")
+                    ? "text-success/60 hover:text-success"
+                    : "text-danger/60 hover:text-danger")
                 }
               >
                 ✕
@@ -457,36 +462,21 @@ export default function AdminPage() {
       </div>
 
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <motion.div
-          animate={{ scale: [1, 1.15, 1], opacity: [0.06, 0.12, 0.06] }}
-          transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-          className="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-primary"
-        />
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], opacity: [0.04, 0.09, 0.04] }}
-          transition={{
-            repeat: Infinity,
-            duration: 8,
-            ease: "easeInOut",
-            delay: 1,
-          }}
-          className="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-primary"
-        />
-        <motion.div
-          animate={{ y: [0, -12, 0], opacity: [0.15, 0.3, 0.15] }}
-          transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-          className="absolute top-1/4 right-12 w-3 h-3 rounded-full bg-primary"
-        />
-        <motion.div
-          animate={{ y: [0, 10, 0], opacity: [0.1, 0.25, 0.1] }}
-          transition={{
-            repeat: Infinity,
-            duration: 5,
-            ease: "easeInOut",
-            delay: 0.5,
-          }}
-          className="absolute bottom-1/3 left-16 w-2 h-2 rounded-full bg-primary"
-        />
+        <div className="absolute inset-0 opacity-[0.05]">
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage: `radial-gradient(circle at 10% 10%, var(--color-gold) 0%, transparent 40%),
+                             radial-gradient(circle at 90% 90%, var(--color-gold) 0%, transparent 40%)`,
+            }}
+          />
+        </div>
+        <div className="absolute top-10 left-10 w-32 h-32 rounded-full border border-primary/20 animate-pulse-soft" />
+        <div className="absolute top-16 left-16 w-20 h-20 rounded-full border border-primary/10" />
+        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full border border-primary/20 animate-pulse-soft" />
+        <div className="absolute bottom-16 right-16 w-24 h-24 rounded-full border border-primary/10" />
+        <div className="absolute top-1/2 -translate-y-1/2 left-6 w-1.5 h-1.5 rounded-full bg-primary/40" />
+        <div className="absolute top-1/2 -translate-y-1/2 right-6 w-1.5 h-1.5 rounded-full bg-primary/40" />
       </div>
 
       <div className="relative z-10">
@@ -563,7 +553,15 @@ export default function AdminPage() {
             transition={{ delay: 0.6 }}
             className="text-center pb-8 pt-2"
           >
-            <p className="font-script text-2xl text-primary/30 mb-1">F & S</p>
+            <div className="relative w-12 h-12 mx-auto mb-3 opacity-40">
+              <div className="absolute inset-0 rounded-full gradient-primary opacity-20" />
+              <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
+                <span className="font-serif text-base text-primary">
+                  {weddingData.groom.nickname.charAt(0)}&amp;
+                  {weddingData.bride.nickname.charAt(0)}
+                </span>
+              </div>
+            </div>
             <p className="text-xs text-muted-foreground/40">
               Data tersimpan di Google Sheets · /admin
             </p>

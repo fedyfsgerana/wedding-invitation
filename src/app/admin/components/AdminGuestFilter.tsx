@@ -32,7 +32,7 @@ export function AdminGuestFilter({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="flex flex-col gap-2 sm:flex-row"
+      className="bg-linear-to-br from-card via-card to-primary/5 border border-border hover:border-primary/20 rounded-2xl p-4 shadow-sm transition-all duration-300 flex flex-col gap-2 sm:flex-row"
     >
       <div className="relative flex-1">
         <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />

@@ -19,31 +19,28 @@ export function AdminStats({ total, sent, unsent }: Props) {
       label: "Total Tamu",
       value: total,
       icon: UsersIcon,
-      color: "text-primary",
-      gradient: "from-primary/10 via-primary/5 to-transparent",
+      accent: "text-primary",
+      badge: "bg-primary/10",
       border: "border-primary/15",
-      hover:
-        "hover:from-primary/20 hover:via-primary/10 hover:to-transparent hover:border-primary/30",
+      hoverBorder: "hover:border-primary/30",
     },
     {
       label: "Terkirim",
       value: sent,
       icon: SendIcon,
-      color: "text-green-600",
-      gradient: "from-green-100 via-green-50 to-transparent",
-      border: "border-green-100",
-      hover:
-        "hover:from-green-200 hover:via-green-100 hover:to-transparent hover:border-green-200",
+      accent: "text-success",
+      badge: "bg-success-soft",
+      border: "border-success-border",
+      hoverBorder: "hover:border-success",
     },
     {
       label: "Belum Kirim",
       value: unsent,
       icon: ClockIcon,
-      color: "text-amber-600",
-      gradient: "from-amber-100 via-amber-50 to-transparent",
-      border: "border-amber-100",
-      hover:
-        "hover:from-amber-200 hover:via-amber-100 hover:to-transparent hover:border-amber-200",
+      accent: "text-warning",
+      badge: "bg-warning-soft",
+      border: "border-warning-border",
+      hoverBorder: "hover:border-warning",
     },
   ];
 
@@ -58,26 +55,21 @@ export function AdminStats({ total, sent, unsent }: Props) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
             className={
-              "relative rounded-2xl border p-4 text-center cursor-default " +
-              "bg-linear-to-br transition-all duration-300 " +
-              stat.gradient +
-              " " +
+              "flex flex-col items-center justify-center gap-2 rounded-2xl border bg-card p-4 text-center shadow-sm transition-all duration-300 cursor-default " +
               stat.border +
               " " +
-              stat.hover
+              stat.hoverBorder
             }
           >
-            <div className="flex justify-center mb-2">
-              <div
-                className={
-                  "w-8 h-8 rounded-full bg-white/60 flex items-center justify-center " +
-                  stat.color
-                }
-              >
-                <Icon className="w-4 h-4" />
-              </div>
+            <div
+              className={
+                "w-9 h-9 rounded-full flex items-center justify-center " +
+                stat.badge
+              }
+            >
+              <Icon className={"w-4 h-4 " + stat.accent} />
             </div>
-            <p className={"text-2xl font-bold mb-0.5 " + stat.color}>
+            <p className={"text-2xl font-bold leading-none " + stat.accent}>
               {stat.value}
             </p>
             <p className="text-xs text-muted-foreground">{stat.label}</p>

@@ -40,7 +40,7 @@ export function AdminGuestCard({
       className={
         "group relative rounded-2xl border p-4 transition-all duration-300 bg-linear-to-br " +
         (guest.sent
-          ? "from-green-50 via-green-50/50 to-transparent border-green-100 opacity-80"
+          ? "from-success-soft via-success-soft/50 to-transparent border-success-border opacity-80"
           : "from-card via-card to-primary/5 border-border hover:border-primary/25 hover:from-primary/5 hover:via-card hover:to-primary/10 hover:shadow-md")
       }
     >
@@ -51,7 +51,7 @@ export function AdminGuestCard({
               "w-11 h-11 rounded-full flex items-center justify-center shrink-0 " +
               "font-bold text-sm border transition-all duration-300 " +
               (guest.sent
-                ? "bg-green-100 text-green-700 border-green-200"
+                ? "bg-success-soft text-success border-success-border"
                 : "bg-primary/10 text-primary border-primary/20 group-hover:bg-primary/20 group-hover:border-primary/30")
             }
           >
@@ -64,7 +64,7 @@ export function AdminGuestCard({
                 {guest.name}
               </p>
               {guest.sent && (
-                <span className="text-xs px-2 py-0.5 rounded-full bg-green-100 text-green-700 border border-green-200 shrink-0">
+                <span className="text-xs px-2 py-0.5 rounded-full bg-success-soft text-success border border-success-border shrink-0">
                   ✓ Terkirim
                 </span>
               )}
@@ -95,7 +95,7 @@ export function AdminGuestCard({
             title="Salin link"
           >
             {copiedId === guest.id ? (
-              <CheckIcon className="w-4 h-4 text-green-500" />
+              <CheckIcon className="w-4 h-4 text-success" />
             ) : (
               <CopyIcon className="w-4 h-4" />
             )}
@@ -104,7 +104,7 @@ export function AdminGuestCard({
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => onWhatsapp(guest)}
-            className="p-2 rounded-xl hover:bg-green-50 hover:text-green-600 transition-all duration-200 text-muted-foreground"
+            className="p-2 rounded-xl hover:bg-success-soft hover:text-success transition-all duration-200 text-muted-foreground"
             title="Kirim via WhatsApp"
           >
             <WhatsappIcon className="w-4 h-4" />
@@ -116,7 +116,7 @@ export function AdminGuestCard({
             className={
               "p-2 rounded-xl transition-all duration-200 " +
               (guest.sent
-                ? "text-green-600 hover:bg-green-50"
+                ? "text-success hover:bg-success-soft"
                 : "text-muted-foreground hover:bg-primary/10 hover:text-primary")
             }
             title={
@@ -129,7 +129,7 @@ export function AdminGuestCard({
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => onDelete(guest.id)}
-            className="p-2 rounded-xl hover:bg-red-50 hover:text-red-500 transition-all duration-200 text-muted-foreground"
+            className="p-2 rounded-xl hover:bg-danger-soft hover:text-danger transition-all duration-200 text-muted-foreground"
             title="Hapus tamu"
           >
             <TrashIcon className="w-4 h-4" />

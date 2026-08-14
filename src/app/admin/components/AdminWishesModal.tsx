@@ -18,12 +18,12 @@ const UsersIcon = getLucideIcon("Users");
 
 function attendanceBadge(attendance: string) {
   if (attendance === "hadir") {
-    return { label: "Hadir", className: "bg-green-100 text-green-700" };
+    return { label: "Hadir", className: "bg-success-soft text-success" };
   }
   if (attendance === "tidak_hadir") {
-    return { label: "Tidak Hadir", className: "bg-red-100 text-red-700" };
+    return { label: "Tidak Hadir", className: "bg-danger-soft text-danger" };
   }
-  return { label: "Masih Ragu", className: "bg-yellow-100 text-yellow-700" };
+  return { label: "Masih Ragu", className: "bg-warning-soft text-warning" };
 }
 
 export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
@@ -68,12 +68,12 @@ export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-green-50 border border-green-100">
+                <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success-soft border border-success-border">
                   <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500" />
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
                   </span>
-                  <span className="text-[10px] text-green-600 font-medium">
+                  <span className="text-[10px] text-success font-medium">
                     Live
                   </span>
                 </div>
@@ -89,13 +89,13 @@ export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
             {!loading && wishes.length > 0 && (
               <div className="px-5 py-3 border-b border-border shrink-0 grid grid-cols-4 gap-2">
                 <div className="text-center">
-                  <p className="text-base font-bold text-green-600">
+                  <p className="text-base font-bold text-success">
                     {totalHadir}
                   </p>
                   <p className="text-[10px] text-muted-foreground">Hadir</p>
                 </div>
                 <div className="text-center">
-                  <p className="text-base font-bold text-red-500">
+                  <p className="text-base font-bold text-danger">
                     {totalTidakHadir}
                   </p>
                   <p className="text-[10px] text-muted-foreground">
@@ -103,7 +103,7 @@ export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
                   </p>
                 </div>
                 <div className="text-center">
-                  <p className="text-base font-bold text-yellow-500">
+                  <p className="text-base font-bold text-warning">
                     {totalRagu}
                   </p>
                   <p className="text-[10px] text-muted-foreground">

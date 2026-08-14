@@ -2,12 +2,12 @@
 
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { SectionWrapper, SectionTitle } from "@/components/ui/SectionWrapper";
+import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
 const itemVariants: Variants = {
-  hidden: { opacity: 0, x: -20 },
+  hidden: { opacity: 0, x: -16 },
   visible: {
     opacity: 1,
     x: 0,
@@ -22,60 +22,101 @@ const containerVariants: Variants = {
   },
 };
 
+function CornerOrnament({ className }: { className: string }) {
+  return (
+    <svg
+      className={className}
+      viewBox="0 0 40 40"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="0.75"
+    >
+      <path d="M4 4 Q4 16 16 16 Q4 16 4 28" strokeLinecap="round" />
+      <circle cx="16" cy="16" r="1.6" fill="currentColor" stroke="none" />
+      <path d="M9 9 Q13 11 12 16 Q10 12 6 13" strokeLinecap="round" />
+      <path d="M9 9 Q11 13 16 12 Q12 10 13 6" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 export function AgendaSection() {
   const { agenda } = weddingData;
 
   return (
-    <SectionWrapper id="agenda" variant="muted">
+    <SectionWrapper id="agenda" variant="cream">
       <div className="container-wedding px-4">
-        <SectionTitle
-          decorative="Rundown"
-          title="Susunan Acara"
-          subtitle="Rangkaian acara yang akan berlangsung pada hari bahagia kami"
-        />
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true }}
-          className="max-w-lg mx-auto space-y-4"
-        >
-          {agenda.map((item, index) => {
-            const Icon = getLucideIcon(item.icon);
-            const isLast = index === agenda.length - 1;
-            return (
-              <motion.div
-                key={item.id}
-                variants={itemVariants}
-                className="relative flex items-start gap-3"
-              >
-                {!isLast && (
-                  <div className="absolute left-5 top-10 w-px h-full bg-primary/15" />
-                )}
-                <div className="relative z-10 w-10 h-10 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
-                  <Icon className="w-4 h-4 text-primary" />
-                </div>
-                <div className="flex-1 card-wedding p-3 md:p-4 min-w-0">
-                  <div className="flex items-start justify-between gap-2 flex-wrap">
-                    <div className="min-w-0">
-                      <h4 className="font-serif text-sm md:text-base font-bold text-foreground mb-0.5">
-                        {item.title}
-                      </h4>
-                      {item.description && (
-                        <p className="text-xs md:text-sm text-muted-foreground">
-                          {item.description}
-                        </p>
-                      )}
+        <div className="relative max-w-lg mx-auto border border-primary/20 rounded-[1.75rem] px-2 py-2">
+          <CornerOrnament className="absolute top-3 left-3 w-9 h-9 text-primary/40" />
+          <CornerOrnament className="absolute top-3 right-3 w-9 h-9 text-primary/40 -scale-x-100" />
+          <CornerOrnament className="absolute bottom-3 left-3 w-9 h-9 text-primary/40 -scale-y-100" />
+          <CornerOrnament className="absolute bottom-3 right-3 w-9 h-9 text-primary/40 -scale-x-100 -scale-y-100" />
+
+          <div className="px-6 py-12">
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-10"
+            >
+              <p className="text-[11px] uppercase tracking-[0.4em] text-primary mb-3 font-sans font-medium">
+                Rundown
+              </p>
+              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground tracking-tight">
+                Susunan Acara
+              </h2>
+              <p className="text-muted-foreground text-sm font-sans mt-3 max-w-sm mx-auto">
+                Rangkaian acara yang akan berlangsung pada hari bahagia kami
+              </p>
+            </motion.div>
+
+            <motion.div
+              variants={containerVariants}
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true }}
+              className="space-y-4"
+            >
+              {agenda.map((item, index) => {
+                const Icon = getLucideIcon(item.icon);
+                const isLast = index === agenda.length - 1;
+                return (
+                  <motion.div
+                    key={item.id}
+                    variants={itemVariants}
+                    className="relative flex items-start gap-3"
+                  >
+                    {!isLast && (
+                      <div className="absolute left-5 top-10 w-px h-full bg-primary/15" />
+                    )}
+                    <div className="relative z-10 w-10 h-10 shrink-0">
+                      <div className="absolute inset-0 rounded-full gradient-primary opacity-15" />
+                      <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
+                        <Icon className="w-4 h-4 text-primary" />
+                      </div>
                     </div>
-                    <span className="text-xs font-medium text-primary bg-primary/10 px-2 py-1 rounded-full whitespace-nowrap shrink-0">
-                      {item.time}
-                    </span>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </motion.div>
+                    <div className="flex-1 rounded-2xl border border-primary/15 bg-card p-3 md:p-4 min-w-0">
+                      <div className="flex items-start justify-between gap-2 flex-wrap">
+                        <div className="min-w-0">
+                          <h4 className="font-serif text-sm md:text-base font-semibold text-foreground mb-0.5">
+                            {item.title}
+                          </h4>
+                          {item.description && (
+                            <p className="text-xs md:text-sm text-muted-foreground font-sans">
+                              {item.description}
+                            </p>
+                          )}
+                        </div>
+                        <span className="text-[10px] uppercase tracking-widest font-sans font-medium text-primary bg-primary/5 border border-primary/15 px-2.5 py-1 rounded-full whitespace-nowrap shrink-0">
+                          {item.time}
+                        </span>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </motion.div>
+          </div>
+        </div>
       </div>
     </SectionWrapper>
   );

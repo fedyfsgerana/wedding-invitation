@@ -1,6 +1,7 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { weddingData } from "@/lib/weddingData";
 
 interface LoadingScreenProps {
   isLoading: boolean;
@@ -11,6 +12,8 @@ export function LoadingScreen({
   isLoading,
   text = "Memuat Undangan...",
 }: LoadingScreenProps) {
+  const { groom, bride } = weddingData;
+
   return (
     <AnimatePresence>
       {isLoading && (
@@ -42,13 +45,14 @@ export function LoadingScreen({
             />
           </div>
           <div className="relative z-10 text-center">
-            <motion.p
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ repeat: Infinity, duration: 2 }}
-              className="font-script text-6xl text-primary mb-4"
-            >
-              F & S
-            </motion.p>
+            <motion.div className="relative mx-auto mb-6 w-16 h-16">
+              <div className="absolute inset-0 rounded-full gradient-primary opacity-20 animate-pulse-soft" />
+              <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
+                <span className="font-serif text-lg text-primary">
+                  {groom.nickname.charAt(0)}&amp;{bride.nickname.charAt(0)}
+                </span>
+              </div>
+            </motion.div>
             <motion.p
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
