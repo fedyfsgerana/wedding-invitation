@@ -50,7 +50,7 @@ export function AdminWishesModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-100 flex items-end sm:items-center justify-center p-0 sm:p-4"
+          className="fixed inset-0 z-100 flex"
         >
           <motion.div
             onClick={onClose}
@@ -58,11 +58,11 @@ export function AdminWishesModal({
           />
 
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 40 }}
-            transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative bg-card w-full sm:max-w-lg sm:rounded-2xl rounded-t-2xl border border-border shadow-xl max-h-[85vh] flex flex-col"
+            initial={{ x: "-100%" }}
+            animate={{ x: 0 }}
+            exit={{ x: "-100%" }}
+            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            className="relative bg-card w-full max-w-sm h-full border-r border-border shadow-xl flex flex-col"
           >
             <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
               <div className="flex items-center gap-2">
@@ -129,7 +129,7 @@ export function AdminWishesModal({
               </div>
             )}
 
-            <div className="overflow-y-auto px-5 py-4 space-y-3">
+            <div className="overflow-y-auto flex-1 px-5 py-4 space-y-3">
               {loading ? (
                 <p className="text-xs uppercase tracking-widest text-muted-foreground text-center py-10">
                   Memuat ucapan...
