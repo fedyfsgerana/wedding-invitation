@@ -385,19 +385,6 @@ export default function AdminPage() {
     });
   };
 
-  const toggleSelectPage = () => {
-    const pageIds = paginatedGuests.map((g) => g.id);
-    const allSelected = pageIds.every((id) => selectedIds.has(id));
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      pageIds.forEach((id) => {
-        if (allSelected) next.delete(id);
-        else next.add(id);
-      });
-      return next;
-    });
-  };
-
   const selectAllFiltered = () => {
     setSelectedIds(new Set(filteredGuests.map((g) => g.id)));
   };
@@ -722,7 +709,6 @@ export default function AdminPage() {
               onSort={handleSort}
               selectedIds={selectedIds}
               onToggleSelect={toggleSelectGuest}
-              onToggleSelectPage={toggleSelectPage}
               onSelectAllFiltered={selectAllFiltered}
               onClearSelection={clearSelection}
               onBulkDelete={bulkDeleteGuests}

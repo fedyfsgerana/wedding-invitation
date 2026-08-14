@@ -27,7 +27,6 @@ interface Props {
   onSort: (field: "name" | "createdAt") => void;
   selectedIds: Set<string>;
   onToggleSelect: (id: string) => void;
-  onToggleSelectPage: () => void;
   onSelectAllFiltered: () => void;
   onClearSelection: () => void;
   onBulkDelete: () => void;
@@ -71,7 +70,6 @@ export function AdminGuestList({
   onSort,
   selectedIds,
   onToggleSelect,
-  onToggleSelectPage,
   onSelectAllFiltered,
   onClearSelection,
   onBulkDelete,
@@ -79,16 +77,23 @@ export function AdminGuestList({
 }: Props) {
   const selectAllRef = useRef<HTMLInputElement>(null);
 
-  const pageIds = guests.map((g) => g.id);
-  const allPageSelected =
-    pageIds.length > 0 && pageIds.every((id) => selectedIds.has(id));
-  const somePageSelected = pageIds.some((id) => selectedIds.has(id));
+  const allFilteredSelected =
+    filteredCount > 0 && selectedIds.size === filteredCount;
+  const someFilteredSelected = selectedIds.size > 0 && !allFilteredSelected;
 
   useEffect(() => {
     if (selectAllRef.current) {
-      selectAllRef.current.indeterminate = somePageSelected && !allPageSelected;
+      selectAllRef.current.indeterminate = someFilteredSelected;
     }
-  }, [somePageSelected, allPageSelected]);
+  }, [someFilteredSelected]);
+
+  const handleToggleSelectAll = () => {
+    if (allFilteredSelected) {
+      onClearSelection();
+    } else {
+      onSelectAllFiltered();
+    }
+  };
 
   if (loadingGuests) {
     return (
@@ -225,16 +230,20 @@ export function AdminGuestList({
       </AnimatePresence>
 
       <div
-        className="hidden sm:grid items-center gap-3 px-4 py-2.5 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground"
+        className="grid items-center gap-3 px-4 py-2.5 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground"
         style={{ gridTemplateColumns: GUEST_ROW_GRID_COLS }}
       >
         <input
           ref={selectAllRef}
           type="checkbox"
-          checked={allPageSelected}
-          onChange={onToggleSelectPage}
+          checked={allFilteredSelected}
+          onChange={handleToggleSelectAll}
           className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
-          aria-label="Pilih semua tamu di halaman ini"
+          aria-label={
+            allFilteredSelected
+              ? "Batalkan pilih semua tamu"
+              : `Pilih semua ${filteredCount} tamu`
+          }
         />
         <button
           onClick={() => onSort("name")}
