@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 import { WishItem } from "@/types";
@@ -34,6 +35,15 @@ export function AdminWishesOffcanvas({
   loading,
   onDelete,
 }: Props) {
+  useEffect(() => {
+    if (!open) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [open]);
+
   const totalHadir = wishes.filter((w) => w.attendance === "hadir").length;
   const totalTidakHadir = wishes.filter(
     (w) => w.attendance === "tidak_hadir",

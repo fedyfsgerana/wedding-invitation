@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 
@@ -32,6 +33,15 @@ export function AdminConfirmModal({
   onCancel,
 }: Props) {
   const isDanger = variant === "danger";
+
+  useEffect(() => {
+    if (!open) return;
+    const originalOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = originalOverflow;
+    };
+  }, [open]);
 
   return (
     <AnimatePresence>
