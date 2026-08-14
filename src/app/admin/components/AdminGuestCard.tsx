@@ -3,11 +3,14 @@
 import { motion } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 import { Guest } from "../page";
+import { GUEST_ROW_GRID_COLS } from "./AdminGuestList";
 
 interface Props {
   guest: Guest;
   index: number;
   copiedId: string | null;
+  selected: boolean;
+  onToggleSelect: (id: string) => void;
   onCopy: (guest: Guest) => void;
   onWhatsapp: (guest: Guest) => void;
   onToggleSent: (id: string) => void;
@@ -26,6 +29,8 @@ export function AdminGuestCard({
   guest,
   index,
   copiedId,
+  selected,
+  onToggleSelect,
   onCopy,
   onWhatsapp,
   onToggleSent,
@@ -41,15 +46,27 @@ export function AdminGuestCard({
       transition={{ delay: index * 0.03 }}
       className={
         "group relative px-4 py-3.5 transition-colors duration-200 " +
-        (guest.sent
-          ? "bg-success-soft/40 hover:bg-success-soft/60"
-          : isStriped
-            ? "bg-muted/40 hover:bg-primary/5"
-            : "bg-transparent hover:bg-primary/5")
+        (selected
+          ? "bg-primary/10 hover:bg-primary/15"
+          : guest.sent
+            ? "bg-success-soft/40 hover:bg-success-soft/60"
+            : isStriped
+              ? "bg-muted/40 hover:bg-primary/5"
+              : "bg-transparent hover:bg-primary/5")
       }
     >
-      <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
-        <div className="flex items-center gap-3 min-w-0 flex-1">
+      <div
+        className="flex flex-col gap-3 sm:grid sm:items-center sm:gap-3"
+        style={{ gridTemplateColumns: GUEST_ROW_GRID_COLS }}
+      >
+        <input
+          type="checkbox"
+          checked={selected}
+          onChange={() => onToggleSelect(guest.id)}
+          className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+          aria-label={`Pilih ${guest.name}`}
+        />
+        <div className="flex items-center gap-3 min-w-0">
           <div
             className={
               "w-11 h-11 rounded-full flex items-center justify-center shrink-0 " +
@@ -62,7 +79,7 @@ export function AdminGuestCard({
             {guest.name.charAt(0).toUpperCase()}
           </div>
 
-          <div className="min-w-0 flex-1">
+          <div className="min-w-0">
             <div className="flex items-center gap-2">
               <p className="text-sm font-semibold text-foreground truncate">
                 {guest.name}

@@ -9,12 +9,13 @@ interface Props {
   onClose: () => void;
   wishes: WishItem[];
   loading: boolean;
+  onDelete: (id: string) => void;
 }
 
 const XIcon = getLucideIcon("X");
-const UserIcon = getLucideIcon("User");
 const MessageIcon = getLucideIcon("MessageCircle");
 const UsersIcon = getLucideIcon("Users");
+const TrashIcon = getLucideIcon("Trash2");
 
 function attendanceBadge(attendance: string) {
   if (attendance === "hadir") {
@@ -26,7 +27,13 @@ function attendanceBadge(attendance: string) {
   return { label: "Masih Ragu", className: "bg-warning-soft text-warning" };
 }
 
-export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
+export function AdminWishesModal({
+  open,
+  onClose,
+  wishes,
+  loading,
+  onDelete,
+}: Props) {
   const totalHadir = wishes.filter((w) => w.attendance === "hadir").length;
   const totalTidakHadir = wishes.filter(
     (w) => w.attendance === "tidak_hadir",
@@ -152,22 +159,32 @@ export function AdminWishesModal({ open, onClose, wishes, loading }: Props) {
                         className="rounded-xl border border-border bg-background p-3.5"
                       >
                         <div className="flex items-start gap-3">
-                          <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                            <UserIcon className="w-4 h-4 text-primary" />
+                          <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-bold text-sm border bg-primary/10 text-primary border-primary/20">
+                            {wish.name.charAt(0).toUpperCase()}
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
                               <p className="text-sm font-medium text-foreground truncate">
                                 {wish.name}
                               </p>
-                              <span
-                                className={
-                                  "text-[10px] px-2 py-0.5 rounded-full shrink-0 font-medium " +
-                                  badge.className
-                                }
-                              >
-                                {badge.label}
-                              </span>
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <span
+                                  className={
+                                    "text-[10px] px-2 py-0.5 rounded-full font-medium " +
+                                    badge.className
+                                  }
+                                >
+                                  {badge.label}
+                                </span>
+                                <motion.button
+                                  whileTap={{ scale: 0.9 }}
+                                  onClick={() => onDelete(wish.id)}
+                                  className="p-1.5 rounded-lg text-muted-foreground hover:bg-danger-soft hover:text-danger transition-all duration-200"
+                                  title="Hapus ucapan"
+                                >
+                                  <TrashIcon className="w-3.5 h-3.5" />
+                                </motion.button>
+                              </div>
                             </div>
                             <p className="text-sm text-muted-foreground leading-relaxed wrap-break-word">
                               {wish.message}

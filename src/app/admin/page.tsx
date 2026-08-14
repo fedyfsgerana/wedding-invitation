@@ -11,6 +11,7 @@ import { AdminAddGuest } from "./components/AdminAddGuest";
 import { AdminGuestFilter } from "./components/AdminGuestFilter";
 import { AdminGuestList } from "./components/AdminGuestList";
 import { AdminWishesModal } from "./components/AdminWishesModal";
+import { AdminConfirmModal } from "./components/AdminConfirmModal";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { useToast } from "@/components/providers/ToastProvider";
 import { motion } from "framer-motion";
@@ -30,6 +31,7 @@ export default function AdminPage() {
   const [passwordError, setPasswordError] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [guests, setGuests] = useState<Guest[]>([]);
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [guestName, setGuestName] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
@@ -38,6 +40,8 @@ export default function AdminPage() {
   );
   const [pageSize, setPageSize] = useState(5);
   const [currentPage, setCurrentPage] = useState(1);
+  const [sortBy, setSortBy] = useState<"name" | "createdAt">("createdAt");
+  const [sortDir, setSortDir] = useState<"asc" | "desc">("desc");
   const [wishes, setWishes] = useState<WishItem[]>([]);
   const [wishesCount, setWishesCount] = useState(0);
   const [loadingWishes, setLoadingWishes] = useState(false);
@@ -45,12 +49,26 @@ export default function AdminPage() {
   const [mounted, setMounted] = useState(false);
   const [pageLoading, setPageLoading] = useState(true);
   const [loadingGuests, setLoadingGuests] = useState(false);
+  const [confirmModal, setConfirmModal] = useState<{
+    open: boolean;
+    title: string;
+    description: string;
+    loading: boolean;
+    onConfirm: () => void;
+  }>({
+    open: false,
+    title: "",
+    description: "",
+    loading: false,
+    onConfirm: () => {},
+  });
   const { showToast } = useToast();
 
   const handleSessionExpired = useCallback(() => {
     setIsAuthenticated(false);
     setSessionExpiresAt(null);
     setGuests([]);
+    setSelectedIds(new Set());
     setPassword("");
     setPasswordError(false);
     showToast("Sesi telah habis. Silakan login kembali.", "error");
@@ -184,6 +202,7 @@ export default function AdminPage() {
   ) {
     setPrevFilters({ search, filterSent, pageSize });
     setCurrentPage(1);
+    setSelectedIds(new Set());
   }
 
   if (!mounted) {
@@ -224,6 +243,7 @@ export default function AdminPage() {
     } catch {}
     setIsAuthenticated(false);
     setSessionExpiresAt(null);
+    setSelectedIds(new Set());
     setPassword("");
     setPasswordError(false);
   };
@@ -257,7 +277,7 @@ export default function AdminPage() {
     }
   };
 
-  const deleteGuest = async (id: string) => {
+  const deleteGuestConfirmed = async (id: string) => {
     const backup = guests;
     const target = guests.find((g) => g.id === id);
     setGuests(guests.filter((g) => g.id !== id));
@@ -286,6 +306,23 @@ export default function AdminPage() {
     }
   };
 
+  const deleteGuest = (id: string) => {
+    const target = guests.find((g) => g.id === id);
+    setConfirmModal({
+      open: true,
+      title: "Hapus tamu ini?",
+      description: target
+        ? `Tamu "${target.name}" akan dihapus secara permanen dari daftar dan Google Sheets. Tindakan ini tidak bisa dibatalkan.`
+        : "Tamu ini akan dihapus secara permanen. Tindakan ini tidak bisa dibatalkan.",
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, loading: true }));
+        await deleteGuestConfirmed(id);
+        setConfirmModal((prev) => ({ ...prev, open: false, loading: false }));
+      },
+    });
+  };
+
   const toggleSent = async (id: string) => {
     const target = guests.find((g) => g.id === id);
     if (!target) return;
@@ -312,6 +349,108 @@ export default function AdminPage() {
     }
   };
 
+  const toggleSelectGuest = (id: string) => {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
+  };
+
+  const toggleSelectPage = () => {
+    const pageIds = paginatedGuests.map((g) => g.id);
+    const allSelected = pageIds.every((id) => selectedIds.has(id));
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      pageIds.forEach((id) => {
+        if (allSelected) next.delete(id);
+        else next.add(id);
+      });
+      return next;
+    });
+  };
+
+  const selectAllFiltered = () => {
+    setSelectedIds(new Set(filteredGuests.map((g) => g.id)));
+  };
+
+  const clearSelection = () => setSelectedIds(new Set());
+
+  const bulkDeleteGuestsConfirmed = async () => {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+
+    const backup = guests;
+    setGuests(guests.filter((g) => !selectedIds.has(g.id)));
+    clearSelection();
+    try {
+      const res = await fetchWithAuth("/api/guests", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal menghapus tamu");
+      showToast(`${ids.length} tamu berhasil dihapus`, "success");
+    } catch (err) {
+      setGuests(backup);
+      showToast(
+        err instanceof Error
+          ? err.message
+          : "Gagal menghapus tamu dari Google Sheets",
+        "error",
+      );
+    }
+  };
+
+  const bulkDeleteGuests = () => {
+    const count = selectedIds.size;
+    if (count === 0) return;
+    setConfirmModal({
+      open: true,
+      title: `Hapus ${count} tamu terpilih?`,
+      description:
+        "Semua tamu yang dipilih akan dihapus secara permanen dari daftar dan Google Sheets. Tindakan ini tidak bisa dibatalkan.",
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, loading: true }));
+        await bulkDeleteGuestsConfirmed();
+        setConfirmModal((prev) => ({ ...prev, open: false, loading: false }));
+      },
+    });
+  };
+
+  const bulkMarkSent = async (sent: boolean) => {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    const backup = guests;
+    setGuests(guests.map((g) => (selectedIds.has(g.id) ? { ...g, sent } : g)));
+    clearSelection();
+    try {
+      const res = await fetchWithAuth("/api/guests", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids, sent }),
+      });
+      const data = await res.json();
+      if (!res.ok)
+        throw new Error(data.error || "Gagal memperbarui status terkirim");
+      showToast(
+        `${ids.length} tamu ditandai ${sent ? "terkirim" : "belum terkirim"}`,
+        "success",
+      );
+    } catch (err) {
+      setGuests(backup);
+      showToast(
+        err instanceof Error
+          ? err.message
+          : "Gagal menyimpan status terkirim ke Google Sheets",
+        "error",
+      );
+    }
+  };
+
   const copyLink = async (guest: Guest) => {
     try {
       await navigator.clipboard.writeText(guest.link);
@@ -325,6 +464,45 @@ export default function AdminPage() {
   const openWishesModal = async () => {
     setShowWishesModal(true);
     await fetchWishes(true);
+  };
+
+  const deleteWishConfirmed = async (id: string) => {
+    const backup = wishes;
+    const nextWishes = wishes.filter((w) => w.id !== id);
+    setWishes(nextWishes);
+    setWishesCount(nextWishes.length);
+    try {
+      const res = await fetchWithAuth("/api/wishes", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal menghapus ucapan");
+      showToast("Ucapan berhasil dihapus", "success");
+    } catch (err) {
+      setWishes(backup);
+      setWishesCount(backup.length);
+      showToast(
+        err instanceof Error ? err.message : "Gagal menghapus ucapan",
+        "error",
+      );
+    }
+  };
+
+  const deleteWish = (id: string) => {
+    setConfirmModal({
+      open: true,
+      title: "Hapus ucapan ini?",
+      description:
+        "Ucapan ini akan dihapus secara permanen. Tindakan ini tidak bisa dibatalkan.",
+      loading: false,
+      onConfirm: async () => {
+        setConfirmModal((prev) => ({ ...prev, loading: true }));
+        await deleteWishConfirmed(id);
+        setConfirmModal((prev) => ({ ...prev, open: false, loading: false }));
+      },
+    });
   };
 
   const formatTanggal = (date: string) =>
@@ -382,8 +560,27 @@ export default function AdminPage() {
 
   const totalSent = guests.filter((g) => g.sent).length;
 
-  const totalPages = Math.max(1, Math.ceil(filteredGuests.length / pageSize));
-  const paginatedGuests = filteredGuests.slice(
+  const sortedGuests = [...filteredGuests].sort((a, b) => {
+    let cmp = 0;
+    if (sortBy === "name") {
+      cmp = a.name.localeCompare(b.name, "id");
+    } else {
+      cmp = new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+    }
+    return sortDir === "asc" ? cmp : -cmp;
+  });
+
+  const handleSort = (field: "name" | "createdAt") => {
+    if (sortBy === field) {
+      setSortDir((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortBy(field);
+      setSortDir("asc");
+    }
+  };
+
+  const totalPages = Math.max(1, Math.ceil(sortedGuests.length / pageSize));
+  const paginatedGuests = sortedGuests.slice(
     (currentPage - 1) * pageSize,
     currentPage * pageSize,
   );
@@ -492,6 +689,16 @@ export default function AdminPage() {
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               totalPages={totalPages}
+              sortBy={sortBy}
+              sortDir={sortDir}
+              onSort={handleSort}
+              selectedIds={selectedIds}
+              onToggleSelect={toggleSelectGuest}
+              onToggleSelectPage={toggleSelectPage}
+              onSelectAllFiltered={selectAllFiltered}
+              onClearSelection={clearSelection}
+              onBulkDelete={bulkDeleteGuests}
+              onBulkMarkSent={bulkMarkSent}
             />
           </motion.div>
           <motion.div
@@ -521,6 +728,16 @@ export default function AdminPage() {
         onClose={() => setShowWishesModal(false)}
         wishes={wishes}
         loading={loadingWishes}
+        onDelete={deleteWish}
+      />
+
+      <AdminConfirmModal
+        open={confirmModal.open}
+        title={confirmModal.title}
+        description={confirmModal.description}
+        loading={confirmModal.loading}
+        onConfirm={confirmModal.onConfirm}
+        onCancel={() => setConfirmModal((prev) => ({ ...prev, open: false }))}
       />
     </div>
   );

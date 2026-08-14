@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { appendRow, readRows } from "@/lib/googleSheets";
+import { appendRow, readRows, deleteRowById } from "@/lib/googleSheets";
+import { isAuthenticated } from "@/lib/auth";
 
 const SHEET_NAME = "Wishes";
+const WISHES_SHEET_GID = Number(process.env.GOOGLE_WISHES_SHEET_GID || 0);
 
 const wishAttempts = new Map<string, { count: number; firstAttempt: number }>();
 const WISH_MAX = 3;
@@ -127,6 +129,29 @@ export async function POST(req: NextRequest) {
         timestamp,
       },
     });
+  } catch (err) {
+    return NextResponse.json({ error: String(err) }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  if (!isAuthenticated(req)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    const body = await req.json();
+    const ids: string[] = Array.isArray(body.ids)
+      ? body.ids
+      : body.id
+        ? [body.id]
+        : [];
+    if (ids.length === 0) {
+      return NextResponse.json({ error: "ID wajib diisi" }, { status: 400 });
+    }
+    for (const id of ids) {
+      await deleteRowById(SHEET_NAME, String(id), WISHES_SHEET_GID);
+    }
+    return NextResponse.json({ success: true, deleted: ids.length });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }

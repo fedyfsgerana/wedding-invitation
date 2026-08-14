@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 import { Guest } from "../page";
@@ -20,14 +21,33 @@ interface Props {
   currentPage: number;
   setCurrentPage: (v: number) => void;
   totalPages: number;
+  sortBy: "name" | "createdAt";
+  sortDir: "asc" | "desc";
+  onSort: (field: "name" | "createdAt") => void;
+  selectedIds: Set<string>;
+  onToggleSelect: (id: string) => void;
+  onToggleSelectPage: () => void;
+  onSelectAllFiltered: () => void;
+  onClearSelection: () => void;
+  onBulkDelete: () => void;
+  onBulkMarkSent: (sent: boolean) => void;
 }
 
 const PAGE_SIZE_MIN = 1;
 const PAGE_SIZE_MAX = 100;
 
+export const GUEST_ROW_GRID_COLS = "24px 1fr 168px";
+
 const UsersIcon = getLucideIcon("Users");
 const ChevronLeftIcon = getLucideIcon("ChevronLeft");
 const ChevronRightIcon = getLucideIcon("ChevronRight");
+const CheckCheckIcon = getLucideIcon("CheckCheck");
+const ClockIcon = getLucideIcon("Clock");
+const TrashIcon = getLucideIcon("Trash2");
+const XIcon = getLucideIcon("X");
+const ArrowUpIcon = getLucideIcon("ArrowUp");
+const ArrowDownIcon = getLucideIcon("ArrowDown");
+const ArrowUpDownIcon = getLucideIcon("ArrowUpDown");
 
 export function AdminGuestList({
   guests,
@@ -44,7 +64,30 @@ export function AdminGuestList({
   currentPage,
   setCurrentPage,
   totalPages,
+  sortBy,
+  sortDir,
+  onSort,
+  selectedIds,
+  onToggleSelect,
+  onToggleSelectPage,
+  onSelectAllFiltered,
+  onClearSelection,
+  onBulkDelete,
+  onBulkMarkSent,
 }: Props) {
+  const selectAllRef = useRef<HTMLInputElement>(null);
+
+  const pageIds = guests.map((g) => g.id);
+  const allPageSelected =
+    pageIds.length > 0 && pageIds.every((id) => selectedIds.has(id));
+  const somePageSelected = pageIds.some((id) => selectedIds.has(id));
+
+  useEffect(() => {
+    if (selectAllRef.current) {
+      selectAllRef.current.indeterminate = somePageSelected && !allPageSelected;
+    }
+  }, [somePageSelected, allPageSelected]);
+
   if (loadingGuests) {
     return (
       <div className="bg-linear-to-br from-card via-card to-primary/5 border border-border rounded-2xl p-12 flex items-center justify-center">
@@ -115,6 +158,100 @@ export function AdminGuestList({
         </div>
       </div>
 
+      <AnimatePresence initial={false}>
+        {selectedIds.size > 0 && (
+          <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: "auto" }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            className="overflow-hidden"
+          >
+            <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-2.5 border-b border-border bg-primary/5">
+              <div className="flex items-center gap-3 text-xs flex-wrap">
+                <span className="font-medium text-foreground">
+                  {selectedIds.size} tamu dipilih
+                </span>
+                {selectedIds.size < filteredCount && (
+                  <button
+                    onClick={onSelectAllFiltered}
+                    className="text-primary hover:underline font-medium"
+                  >
+                    Pilih semua {filteredCount} tamu
+                  </button>
+                )}
+                <button
+                  onClick={onClearSelection}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  <XIcon className="w-3 h-3" />
+                  Batal
+                </button>
+              </div>
+              <div className="flex items-center gap-1.5">
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onBulkMarkSent(true)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-success hover:bg-success-soft transition-all"
+                  title="Tandai terkirim"
+                >
+                  <CheckCheckIcon className="w-3.5 h-3.5" />
+                  Tandai Terkirim
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={() => onBulkMarkSent(false)}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:bg-muted transition-all"
+                  title="Tandai belum terkirim"
+                >
+                  <ClockIcon className="w-3.5 h-3.5" />
+                  Tandai Belum
+                </motion.button>
+                <motion.button
+                  whileTap={{ scale: 0.95 }}
+                  onClick={onBulkDelete}
+                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-danger hover:bg-danger-soft transition-all"
+                  title="Hapus tamu terpilih"
+                >
+                  <TrashIcon className="w-3.5 h-3.5" />
+                  Hapus
+                </motion.button>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <div
+        className="hidden sm:grid items-center gap-3 px-4 py-2.5 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground"
+        style={{ gridTemplateColumns: GUEST_ROW_GRID_COLS }}
+      >
+        <input
+          ref={selectAllRef}
+          type="checkbox"
+          checked={allPageSelected}
+          onChange={onToggleSelectPage}
+          className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+          aria-label="Pilih semua tamu di halaman ini"
+        />
+        <button
+          onClick={() => onSort("name")}
+          className="flex items-center justify-center gap-1 hover:text-foreground transition-colors text-center"
+        >
+          Nama Tamu
+          {sortBy === "name" ? (
+            sortDir === "asc" ? (
+              <ArrowUpIcon className="w-3.5 h-3.5" />
+            ) : (
+              <ArrowDownIcon className="w-3.5 h-3.5" />
+            )
+          ) : (
+            <ArrowUpDownIcon className="w-3.5 h-3.5 opacity-40" />
+          )}
+        </button>
+        <div className="text-center">Aksi</div>
+      </div>
+
       <div className="divide-y divide-border">
         <AnimatePresence>
           {guests.map((guest, index) => (
@@ -123,6 +260,8 @@ export function AdminGuestList({
               guest={guest}
               index={index}
               copiedId={copiedId}
+              selected={selectedIds.has(guest.id)}
+              onToggleSelect={onToggleSelect}
               onCopy={onCopy}
               onWhatsapp={onWhatsapp}
               onToggleSent={onToggleSent}

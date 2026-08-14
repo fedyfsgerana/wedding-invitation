@@ -79,11 +79,20 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
-    const { id, sent } = await req.json();
-    if (!id)
+    const body = await req.json();
+    const { sent } = body;
+    const ids: string[] = Array.isArray(body.ids)
+      ? body.ids
+      : body.id
+        ? [body.id]
+        : [];
+    if (ids.length === 0) {
       return NextResponse.json({ error: "ID wajib diisi" }, { status: 400 });
-    await updateCell(SHEET_NAME, String(id), "D", sent ? "true" : "false");
-    return NextResponse.json({ success: true });
+    }
+    for (const id of ids) {
+      await updateCell(SHEET_NAME, String(id), "D", sent ? "true" : "false");
+    }
+    return NextResponse.json({ success: true, updated: ids.length });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
@@ -94,11 +103,19 @@ export async function DELETE(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
   try {
-    const { id } = await req.json();
-    if (!id)
+    const body = await req.json();
+    const ids: string[] = Array.isArray(body.ids)
+      ? body.ids
+      : body.id
+        ? [body.id]
+        : [];
+    if (ids.length === 0) {
       return NextResponse.json({ error: "ID wajib diisi" }, { status: 400 });
-    await deleteRowById(SHEET_NAME, String(id), GUESTS_SHEET_GID);
-    return NextResponse.json({ success: true });
+    }
+    for (const id of ids) {
+      await deleteRowById(SHEET_NAME, String(id), GUESTS_SHEET_GID);
+    }
+    return NextResponse.json({ success: true, deleted: ids.length });
   } catch (err) {
     return NextResponse.json({ error: String(err) }, { status: 500 });
   }
