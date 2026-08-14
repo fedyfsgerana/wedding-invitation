@@ -46,17 +46,29 @@ interface CountdownBoxProps {
 }
 
 function CountdownBox({ value, label }: CountdownBoxProps) {
+  const display = String(value).padStart(2, "0");
+  const isLong = display.length > 2;
+
   return (
-    <motion.div variants={itemVariants} className="flex flex-col items-center">
-      <div className="relative w-16 h-16 md:w-20 md:h-20">
-        <div className="absolute inset-0 rounded-2xl gradient-primary opacity-15" />
-        <div className="absolute inset-0.75 rounded-2xl border border-primary/25 bg-card flex items-center justify-center">
-          <span className="text-2xl md:text-3xl font-serif font-semibold text-primary">
-            {String(value).padStart(2, "0")}
+    <motion.div
+      variants={itemVariants}
+      className="flex flex-col items-center min-w-0"
+    >
+      <div className="relative w-12 h-12 xs:w-16 xs:h-16 sm:w-18 sm:h-18 md:w-20 md:h-20 shrink-0">
+        <div className="absolute inset-0 rounded-xl xs:rounded-2xl gradient-primary opacity-15" />
+        <div className="absolute inset-0.75 rounded-xl xs:rounded-2xl border border-primary/25 bg-card flex items-center justify-center px-1">
+          <span
+            className={`font-serif font-semibold text-primary tabular-nums leading-none ${
+              isLong
+                ? "text-base xs:text-xl sm:text-2xl md:text-3xl"
+                : "text-xl xs:text-2xl md:text-3xl"
+            }`}
+          >
+            {display}
           </span>
         </div>
       </div>
-      <span className="text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-sans mt-2">
+      <span className="text-[8px] xs:text-[9px] md:text-[10px] text-muted-foreground uppercase tracking-widest font-sans mt-2 whitespace-nowrap">
         {label}
       </span>
     </motion.div>
@@ -88,7 +100,7 @@ export function CountdownSection() {
           <CornerOrnament className="absolute bottom-3 left-3 w-9 h-9 text-primary/40 -scale-y-100" />
           <CornerOrnament className="absolute bottom-3 right-3 w-9 h-9 text-primary/40 -scale-x-100 -scale-y-100" />
 
-          <div className="px-6 py-12 text-center">
+          <div className="px-3 xs:px-5 sm:px-6 py-12 text-center">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -165,26 +177,26 @@ export function CountdownSection() {
                 initial="hidden"
                 whileInView="visible"
                 viewport={{ once: true }}
-                className="flex items-center justify-center gap-2 md:gap-4"
+                className="flex items-center justify-center gap-1 xs:gap-2 sm:gap-3 md:gap-4"
               >
                 <CountdownBox value={days} label="Hari" />
                 <motion.span
                   variants={itemVariants}
-                  className="text-xl font-serif text-primary/30 mb-6"
+                  className="text-base xs:text-xl font-serif text-primary/30 mb-6 shrink-0"
                 >
                   :
                 </motion.span>
                 <CountdownBox value={hours} label="Jam" />
                 <motion.span
                   variants={itemVariants}
-                  className="text-xl font-serif text-primary/30 mb-6"
+                  className="text-base xs:text-xl font-serif text-primary/30 mb-6 shrink-0"
                 >
                   :
                 </motion.span>
                 <CountdownBox value={minutes} label="Menit" />
                 <motion.span
                   variants={itemVariants}
-                  className="text-xl font-serif text-primary/30 mb-6"
+                  className="text-base xs:text-xl font-serif text-primary/30 mb-6 shrink-0"
                 >
                   :
                 </motion.span>

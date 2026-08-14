@@ -128,18 +128,18 @@ export function GallerySection() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-4"
+            className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center p-3 xs:p-4"
             onClick={() => setSelected(null)}
           >
             <button
-              className="absolute top-4 right-4 w-9 h-9 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center"
+              className="absolute top-3 right-3 xs:top-4 xs:right-4 w-8 h-8 xs:w-9 xs:h-9 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center z-10"
               onClick={() => setSelected(null)}
             >
               <XIcon className="w-4 h-4" />
             </button>
 
             <button
-              className="absolute left-4 w-9 h-9 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center"
+              className="absolute left-1.5 xs:left-3 sm:left-4 w-8 h-8 xs:w-9 xs:h-9 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center z-10 shrink-0"
               onClick={(e) => {
                 e.stopPropagation();
                 goPrev();
@@ -154,7 +154,7 @@ export function GallerySection() {
               animate={{ opacity: 1, scale: 1 }}
               exit={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3 }}
-              className="relative max-w-3xl max-h-[80vh] w-full h-full"
+              className="relative max-w-3xl max-h-[80vh] w-full h-full px-10 xs:px-12 sm:px-14"
               onClick={(e) => e.stopPropagation()}
             >
               <Image
@@ -170,7 +170,7 @@ export function GallerySection() {
             </motion.div>
 
             <button
-              className="absolute right-4 w-9 h-9 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center"
+              className="absolute right-1.5 xs:right-3 sm:right-4 w-8 h-8 xs:w-9 xs:h-9 rounded-full border border-white/20 bg-white/10 hover:bg-white/20 text-white transition-colors flex items-center justify-center z-10 shrink-0"
               onClick={(e) => {
                 e.stopPropagation();
                 goNext();
@@ -179,7 +179,7 @@ export function GallerySection() {
               <ChevronRightIcon className="w-4 h-4" />
             </button>
 
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white text-[11px] uppercase tracking-widest font-sans">
+            <div className="absolute bottom-3 xs:bottom-4 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full border border-white/20 bg-white/10 text-white text-[10px] xs:text-[11px] uppercase tracking-widest font-sans whitespace-nowrap">
               {selected + 1} / {gallery.length}
             </div>
           </motion.div>

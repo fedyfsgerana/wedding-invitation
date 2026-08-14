@@ -39,7 +39,7 @@ function CornerOrnament({ className }: { className: string }) {
 }
 
 export function OpeningSection() {
-  const { verse, groom, bride, groomParents, brideParents } = weddingData;
+  const { verse } = weddingData;
 
   return (
     <SectionWrapper id="pembuka" variant="cream">
@@ -57,6 +57,13 @@ export function OpeningSection() {
           <CornerOrnament className="absolute bottom-3 right-3 w-9 h-9 text-primary/40 -scale-x-100 -scale-y-100" />
 
           <div className="px-6 py-12 text-center">
+            <motion.p
+              variants={itemVariants}
+              className="text-[11px] uppercase tracking-[0.4em] text-primary mb-3 font-sans font-medium"
+            >
+              Assalamu&apos;alaikum Wr. Wb.
+            </motion.p>
+
             <motion.div
               variants={itemVariants}
               className="relative mx-auto mb-8 w-14 h-14"
@@ -83,40 +90,13 @@ export function OpeningSection() {
 
             <motion.p
               variants={itemVariants}
-              className="text-muted-foreground text-sm leading-relaxed mb-10 max-w-sm mx-auto font-sans"
+              className="text-muted-foreground text-sm leading-relaxed max-w-sm mx-auto font-sans"
             >
               Tanpa mengurangi rasa hormat, dengan memohon rahmat dan ridho
-              Allah SWT, kami bermaksud melangsungkan pernikahan kami
+              Allah SWT, kami bermaksud melangsungkan pernikahan kami. Berikut
+              kami sampaikan undangan ini sebagai tanda kasih dan doa restu dari
+              Bapak/Ibu/Saudara/i sekalian.
             </motion.p>
-
-            <motion.div variants={itemVariants} className="mb-2">
-              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground tracking-tight wrap-break-word">
-                {groom.fullName}
-              </h2>
-              <p className="text-muted-foreground text-xs md:text-sm font-sans mt-2">
-                Putra dari {groomParents.father} &amp; {groomParents.mother}
-              </p>
-            </motion.div>
-
-            <motion.div
-              variants={itemVariants}
-              className="flex items-center justify-center gap-4 my-6"
-            >
-              <div className="h-px w-10 bg-primary/30" />
-              <span className="font-serif italic text-xl text-primary/70">
-                &amp;
-              </span>
-              <div className="h-px w-10 bg-primary/30" />
-            </motion.div>
-
-            <motion.div variants={itemVariants}>
-              <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground tracking-tight wrap-break-word">
-                {bride.fullName}
-              </h2>
-              <p className="text-muted-foreground text-xs md:text-sm font-sans mt-2">
-                Putri dari {brideParents.father} &amp; {brideParents.mother}
-              </p>
-            </motion.div>
           </div>
         </div>
       </motion.div>

@@ -3,6 +3,8 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
+  --breakpoint-xs: 25rem;
+
   --color-background: hsl(45 40% 97%);
   --color-foreground: hsl(30 15% 15%);
   --color-card: hsl(45 35% 99%);

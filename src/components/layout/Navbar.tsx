@@ -8,6 +8,7 @@ import { getLucideIcon, cn } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
 const navItems = [
+  { label: "Pembuka", href: "#pembuka", icon: "BookOpen" },
   { label: "Mempelai", href: "#mempelai", icon: "Heart" },
   { label: "Acara", href: "#acara", icon: "Calendar" },
   { label: "Galeri", href: "#galeri", icon: "Image" },
@@ -35,6 +36,15 @@ export function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       setScrolled(window.scrollY > 50);
+
+      const atBottom =
+        window.innerHeight + window.scrollY >=
+        document.documentElement.scrollHeight - 2;
+      if (atBottom) {
+        setActiveSection(navItems[navItems.length - 1].href.replace("#", ""));
+        return;
+      }
+
       const sections = [...navItems].map((item) => item.href.replace("#", ""));
       for (const section of sections.reverse()) {
         const el = document.getElementById(section);
@@ -66,10 +76,10 @@ export function Navbar() {
             : "bg-transparent py-5",
         )}
       >
-        <div className="container-wedding grid grid-cols-3 items-center px-4">
+        <div className="container-wedding flex items-center justify-between gap-2 px-4">
           <button
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="relative w-10 h-10 justify-self-start"
+            className="relative w-10 h-10 shrink-0"
             aria-label="Kembali ke atas"
           >
             <div className="absolute inset-0 rounded-full gradient-primary opacity-20 animate-pulse-soft" />
@@ -79,23 +89,27 @@ export function Navbar() {
               </span>
             </div>
           </button>
-          <div className="flex items-center justify-center gap-6">
-            {navItems.map((item) => (
-              <button
-                key={item.href}
-                onClick={() => handleNavClick(item.href)}
-                className={cn(
-                  "text-sm font-medium transition-colors whitespace-nowrap",
-                  activeSection === item.href.replace("#", "")
-                    ? "text-primary"
-                    : "text-foreground/70 hover:text-primary",
-                )}
-              >
-                {item.label}
-              </button>
-            ))}
+          <div className="flex flex-1 min-w-0 items-center justify-center gap-3 lg:gap-6">
+            {navItems.map((item) => {
+              const Icon = navIconMap[item.icon];
+              return (
+                <button
+                  key={item.href}
+                  onClick={() => handleNavClick(item.href)}
+                  className={cn(
+                    "flex items-center gap-1.5 text-xs lg:text-sm font-medium transition-colors whitespace-nowrap shrink-0",
+                    activeSection === item.href.replace("#", "")
+                      ? "text-primary"
+                      : "text-foreground/70 hover:text-primary",
+                  )}
+                >
+                  <Icon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                  {item.label}
+                </button>
+              );
+            })}
           </div>
-          <div className="flex items-center justify-end gap-2">
+          <div className="flex items-center justify-end gap-2 shrink-0">
             <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.9 }}

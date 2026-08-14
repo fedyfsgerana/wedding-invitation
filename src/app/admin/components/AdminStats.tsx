@@ -45,7 +45,7 @@ export function AdminStats({ total, sent, unsent }: Props) {
   ];
 
   return (
-    <div className="grid grid-cols-3 gap-3">
+    <div className="grid grid-cols-3 gap-2 xs:gap-3">
       {stats.map((stat, i) => {
         const Icon = stat.icon;
         return (
@@ -55,7 +55,7 @@ export function AdminStats({ total, sent, unsent }: Props) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
             className={
-              "flex flex-col items-center justify-center gap-2 rounded-2xl border bg-card p-4 text-center shadow-sm transition-all duration-300 cursor-default " +
+              "flex flex-col items-center justify-center gap-1.5 xs:gap-2 rounded-2xl border bg-card p-2.5 xs:p-4 text-center shadow-sm transition-all duration-300 cursor-default " +
               stat.border +
               " " +
               stat.hoverBorder
@@ -63,16 +63,22 @@ export function AdminStats({ total, sent, unsent }: Props) {
           >
             <div
               className={
-                "w-9 h-9 rounded-full flex items-center justify-center " +
+                "w-7 h-7 xs:w-9 xs:h-9 rounded-full flex items-center justify-center shrink-0 " +
                 stat.badge
               }
             >
-              <Icon className={"w-4 h-4 " + stat.accent} />
+              <Icon className={"w-3.5 h-3.5 xs:w-4 xs:h-4 " + stat.accent} />
             </div>
-            <p className={"text-2xl font-bold leading-none " + stat.accent}>
+            <p
+              className={
+                "text-lg xs:text-2xl font-bold leading-none " + stat.accent
+              }
+            >
               {stat.value}
             </p>
-            <p className="text-xs text-muted-foreground">{stat.label}</p>
+            <p className="text-[10px] xs:text-xs text-muted-foreground leading-tight">
+              {stat.label}
+            </p>
           </motion.div>
         );
       })}
