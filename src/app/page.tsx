@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useGuestParam } from "@/hooks/useGuestParam";
 import { AudioProvider } from "@/components/providers/AudioProvider";
+import { ToastProvider } from "@/components/providers/ToastProvider";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { ExpiredScreen } from "@/components/ui/ExpiredScreen";
 import { ErrorBoundary } from "@/components/ui/ErrorBoundary";
@@ -57,58 +58,60 @@ function WeddingPage() {
 
   return (
     <AudioProvider>
-      <LoadingScreen isLoading={isLoading} />
+      <ToastProvider>
+        <LoadingScreen isLoading={isLoading} />
 
-      <AnimatePresence>
-        {!isLoading && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 0.5 }}
-          >
-            <ScrollProgress />
-            <FloatingPetals />
-            <BackToTop />
-            <FloatingControls />
+        <AnimatePresence>
+          {!isLoading && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5 }}
+            >
+              <ScrollProgress />
+              <FloatingPetals />
+              <BackToTop />
+              <FloatingControls />
 
-            <AnimatePresence>
-              {!isOpened && (
-                <CoverSection
-                  guestName={guestName}
-                  onOpen={handleOpen}
-                  isOpened={isOpened}
-                />
-              )}
-            </AnimatePresence>
+              <AnimatePresence>
+                {!isOpened && (
+                  <CoverSection
+                    guestName={guestName}
+                    onOpen={handleOpen}
+                    isOpened={isOpened}
+                  />
+                )}
+              </AnimatePresence>
 
-            <AnimatePresence>
-              {isOpened && (
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.6 }}
-                  className="pb-20 md:pb-0"
-                >
-                  <Navbar />
-                  <ErrorBoundary>
-                    <OpeningSection />
-                    <BrideGroomSection />
-                    <CountdownSection />
-                    <EventSection />
-                    <AgendaSection />
-                    <LoveStorySection />
-                    <GallerySection />
-                    <LocationSection />
-                    <RSVPSection />
-                    <GiftSection />
-                    <ClosingSection />
-                  </ErrorBoundary>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <AnimatePresence>
+                {isOpened && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                    className="pb-20 md:pb-0"
+                  >
+                    <Navbar />
+                    <ErrorBoundary>
+                      <OpeningSection />
+                      <BrideGroomSection />
+                      <CountdownSection />
+                      <EventSection />
+                      <AgendaSection />
+                      <LoveStorySection />
+                      <GallerySection />
+                      <LocationSection />
+                      <RSVPSection />
+                      <GiftSection />
+                      <ClosingSection />
+                    </ErrorBoundary>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </ToastProvider>
     </AudioProvider>
   );
 }

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { getLucideIcon } from "@/lib/utils";
+import { useToast } from "@/components/providers/ToastProvider";
 import { weddingData } from "@/lib/weddingData";
 
 const itemVariants: Variants = {
@@ -55,11 +56,13 @@ function CornerOrnament({ className }: { className: string }) {
 export function GiftSection() {
   const { bankAccounts } = weddingData;
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const { showToast } = useToast();
 
   const copyAccountNumber = async (number: string, id: number) => {
     try {
       await navigator.clipboard.writeText(number);
       setCopiedId(id);
+      showToast("Nomor rekening berhasil disalin");
       setTimeout(() => setCopiedId(null), 2000);
     } catch {
       console.error("Gagal menyalin nomor rekening");

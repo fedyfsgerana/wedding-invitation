@@ -5,6 +5,7 @@ import type React from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
+import { useToast } from "@/components/providers/ToastProvider";
 import { weddingData, siteConfig } from "@/lib/weddingData";
 
 const itemVariants: Variants = {
@@ -47,11 +48,13 @@ function CornerOrnament({ className }: { className: string }) {
 export function ClosingSection() {
   const { groom, bride } = weddingData;
   const [copied, setCopied] = useState(false);
+  const { showToast } = useToast();
 
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(siteConfig.url);
       setCopied(true);
+      showToast("Link undangan berhasil disalin");
       setTimeout(() => setCopied(false), 2000);
     } catch {
       console.error("Gagal menyalin link");

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ToastProvider } from "@/components/providers/ToastProvider";
 
 export const metadata: Metadata = {
   title: "Fedy & Suci Wedding",
@@ -11,5 +12,5 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <ToastProvider>{children}</ToastProvider>;
 }
