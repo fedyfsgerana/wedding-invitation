@@ -32,38 +32,43 @@ export function AdminGuestFilter({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.2 }}
-      className="bg-linear-to-br from-card via-card to-primary/5 border border-border hover:border-primary/20 rounded-2xl p-4 shadow-sm transition-all duration-300 flex flex-col gap-2 sm:flex-row"
+      className="bg-linear-to-br from-card via-card to-primary/5 border border-border hover:border-primary/20 rounded-2xl p-4 shadow-sm transition-all duration-300"
     >
-      <div className="relative flex-1">
-        <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-        <input
-          type="text"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          placeholder="Cari nama tamu..."
-          className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-        />
-      </div>
-      <div className="flex items-center gap-1 bg-muted rounded-xl p-1 shrink-0">
-        {filters.map((f) => {
-          const Icon = f.icon;
-          return (
-            <motion.button
-              key={f.value}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => setFilterSent(f.value)}
-              className={
-                "flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 " +
-                (filterSent === f.value
-                  ? "bg-background text-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-background/50")
-              }
-            >
-              <Icon className="w-3 h-3" />
-              {f.label}
-            </motion.button>
-          );
-        })}
+      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
+        Cari &amp; Filter Tamu
+      </p>
+      <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="relative flex-1">
+          <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            placeholder="Cari nama tamu..."
+            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
+          />
+        </div>
+        <div className="flex items-center gap-1 bg-muted rounded-xl p-1 shrink-0">
+          {filters.map((f) => {
+            const Icon = f.icon;
+            return (
+              <motion.button
+                key={f.value}
+                whileTap={{ scale: 0.95 }}
+                onClick={() => setFilterSent(f.value)}
+                className={
+                  "flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 " +
+                  (filterSent === f.value
+                    ? "bg-background text-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-background/50")
+                }
+              >
+                <Icon className="w-3 h-3" />
+                {f.label}
+              </motion.button>
+            );
+          })}
+        </div>
       </div>
     </motion.div>
   );
