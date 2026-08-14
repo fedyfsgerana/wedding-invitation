@@ -10,7 +10,7 @@ import { AdminStats } from "./components/AdminStats";
 import { AdminAddGuest } from "./components/AdminAddGuest";
 import { AdminGuestFilter } from "./components/AdminGuestFilter";
 import { AdminGuestList } from "./components/AdminGuestList";
-import { AdminWishesModal } from "./components/AdminWishesModal";
+import { AdminWishesOffcanvas } from "./components/AdminWishesOffcanvas";
 import { AdminConfirmModal } from "./components/AdminConfirmModal";
 import { LoadingScreen } from "@/components/ui/LoadingScreen";
 import { useToast } from "@/components/providers/ToastProvider";
@@ -751,7 +751,7 @@ export default function AdminPage() {
         </motion.div>
       </div>
 
-      <AdminWishesModal
+      <AdminWishesOffcanvas
         open={showWishesModal}
         onClose={() => setShowWishesModal(false)}
         wishes={wishes}

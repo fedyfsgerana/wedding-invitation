@@ -27,7 +27,7 @@ function attendanceBadge(attendance: string) {
   return { label: "Masih Ragu", className: "bg-warning-soft text-warning" };
 }
 
-export function AdminWishesModal({
+export function AdminWishesOffcanvas({
   open,
   onClose,
   wishes,
