@@ -80,51 +80,53 @@ export function AdminGuestList({
 
   return (
     <div className="space-y-3">
-      <div className="flex items-center justify-between flex-wrap gap-2">
-        <p className="text-xs text-muted-foreground">
-          Menampilkan {startItem}-{endItem} dari {filteredCount} tamu
-        </p>
-        <div className="flex items-center gap-2 text-xs">
-          <span className="text-muted-foreground">Tampilkan</span>
-          <input
-            type="number"
-            min={PAGE_SIZE_MIN}
-            max={PAGE_SIZE_MAX}
-            value={pageSize}
-            onChange={(e) => {
-              const raw = e.target.value;
-              if (raw === "") return;
-              const num = Number(raw);
-              if (Number.isNaN(num)) return;
-              const clamped = Math.min(
-                Math.max(Math.floor(num), PAGE_SIZE_MIN),
-                PAGE_SIZE_MAX,
-              );
-              setPageSize(clamped);
-            }}
-            onBlur={(e) => {
-              if (e.target.value === "") setPageSize(PAGE_SIZE_MIN);
-            }}
-            className="w-14 px-2 py-1 rounded-lg bg-muted text-center font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
-          />
-        </div>
-      </div>
-
-      <div className="space-y-2.5">
-        <AnimatePresence>
-          {guests.map((guest, index) => (
-            <AdminGuestCard
-              key={guest.id}
-              guest={guest}
-              index={index}
-              copiedId={copiedId}
-              onCopy={onCopy}
-              onWhatsapp={onWhatsapp}
-              onToggleSent={onToggleSent}
-              onDelete={onDelete}
+      <div className="rounded-2xl border border-border overflow-hidden bg-card">
+        <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-3 border-b border-border bg-muted/30">
+          <p className="text-xs text-muted-foreground">
+            Menampilkan {startItem}-{endItem} dari {filteredCount} tamu
+          </p>
+          <div className="flex items-center gap-2 text-xs">
+            <span className="text-muted-foreground">Tampilkan</span>
+            <input
+              type="number"
+              min={PAGE_SIZE_MIN}
+              max={PAGE_SIZE_MAX}
+              value={pageSize}
+              onChange={(e) => {
+                const raw = e.target.value;
+                if (raw === "") return;
+                const num = Number(raw);
+                if (Number.isNaN(num)) return;
+                const clamped = Math.min(
+                  Math.max(Math.floor(num), PAGE_SIZE_MIN),
+                  PAGE_SIZE_MAX,
+                );
+                setPageSize(clamped);
+              }}
+              onBlur={(e) => {
+                if (e.target.value === "") setPageSize(PAGE_SIZE_MIN);
+              }}
+              className="w-14 px-2 py-1 rounded-lg bg-card text-center font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
             />
-          ))}
-        </AnimatePresence>
+          </div>
+        </div>
+
+        <div className="divide-y divide-border">
+          <AnimatePresence>
+            {guests.map((guest, index) => (
+              <AdminGuestCard
+                key={guest.id}
+                guest={guest}
+                index={index}
+                copiedId={copiedId}
+                onCopy={onCopy}
+                onWhatsapp={onWhatsapp}
+                onToggleSent={onToggleSent}
+                onDelete={onDelete}
+              />
+            ))}
+          </AnimatePresence>
+        </div>
       </div>
 
       {totalPages > 1 && (

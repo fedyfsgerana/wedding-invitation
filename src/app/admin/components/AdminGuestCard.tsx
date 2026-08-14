@@ -31,6 +31,8 @@ export function AdminGuestCard({
   onToggleSent,
   onDelete,
 }: Props) {
+  const isStriped = index % 2 === 1;
+
   return (
     <motion.div
       initial={{ opacity: 0, y: -8 }}
@@ -38,10 +40,12 @@ export function AdminGuestCard({
       exit={{ opacity: 0, x: -20 }}
       transition={{ delay: index * 0.03 }}
       className={
-        "group relative rounded-2xl border p-4 transition-all duration-300 bg-linear-to-br " +
+        "group relative px-4 py-3.5 transition-colors duration-200 " +
         (guest.sent
-          ? "from-success-soft via-success-soft/50 to-transparent border-success-border opacity-80"
-          : "from-card via-card to-primary/5 border-border hover:border-primary/25 hover:from-primary/5 hover:via-card hover:to-primary/10 hover:shadow-md")
+          ? "bg-success-soft/40 hover:bg-success-soft/60"
+          : isStriped
+            ? "bg-muted/40 hover:bg-primary/5"
+            : "bg-transparent hover:bg-primary/5")
       }
     >
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
