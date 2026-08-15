@@ -106,10 +106,17 @@ export function AdminGuestCard({
           type="checkbox"
           checked={selected}
           onChange={() => onToggleSelect(guest.id)}
-          className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+          className="hidden sm:block w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
           aria-label={`Pilih ${guest.name}`}
         />
         <div className="flex items-center gap-3 min-w-0">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={() => onToggleSelect(guest.id)}
+            className="sm:hidden w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+            aria-label={`Pilih ${guest.name}`}
+          />
           <div
             className={
               "w-11 h-11 rounded-full flex items-center justify-center shrink-0 " +

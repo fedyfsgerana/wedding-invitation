@@ -5,30 +5,6 @@ import { isAuthenticated } from "@/lib/auth";
 const SHEET_NAME = "Wishes";
 const WISHES_SHEET_GID = Number(process.env.GOOGLE_WISHES_SHEET_GID || 0);
 
-const wishAttempts = new Map<string, { count: number; firstAttempt: number }>();
-const WISH_MAX = 3;
-const WISH_WINDOW_MS = 60 * 60 * 1000;
-
-function checkWishLimit(ip: string): boolean {
-  const now = Date.now();
-  const record = wishAttempts.get(ip);
-
-  if (!record) {
-    wishAttempts.set(ip, { count: 1, firstAttempt: now });
-    return true;
-  }
-
-  if (now - record.firstAttempt > WISH_WINDOW_MS) {
-    wishAttempts.set(ip, { count: 1, firstAttempt: now });
-    return true;
-  }
-
-  if (record.count >= WISH_MAX) return false;
-
-  record.count += 1;
-  return true;
-}
-
 const VALID_ATTENDANCE = ["hadir", "tidak_hadir", "masih_ragu"] as const;
 type Attendance = (typeof VALID_ATTENDANCE)[number];
 
@@ -60,18 +36,6 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const ip =
-    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
-    req.headers.get("x-real-ip") ||
-    "unknown";
-
-  if (!checkWishLimit(ip)) {
-    return NextResponse.json(
-      { error: "Terlalu banyak ucapan dikirim. Coba lagi nanti." },
-      { status: 429 },
-    );
-  }
-
   try {
     const { name, message, attendance, guestCount } = await req.json();
 

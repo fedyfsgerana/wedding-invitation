@@ -174,22 +174,6 @@ export default function AdminPage() {
     };
   }, [isAuthenticated, mounted, fetchWishes, showToast, fetchWithAuth]);
 
-  useEffect(() => {
-    if (!isAuthenticated) return;
-    const interval = setInterval(() => {
-      fetchWishes(false);
-    }, 15000);
-    return () => clearInterval(interval);
-  }, [isAuthenticated, fetchWishes]);
-
-  useEffect(() => {
-    if (!showWishesModal || !isAuthenticated) return;
-    const interval = setInterval(() => {
-      fetchWishes(false);
-    }, 5000);
-    return () => clearInterval(interval);
-  }, [showWishesModal, isAuthenticated, fetchWishes]);
-
   const [prevFilters, setPrevFilters] = useState({
     search,
     filterSent,
@@ -539,8 +523,7 @@ export default function AdminPage() {
       "serta memberikan doa restu pada pernikahan kami:\n\n" +
       "*" +
       weddingData.groom.fullName +
-      "*\n" +
-      "& *" +
+      "* & *" +
       weddingData.bride.fullName +
       "*\n\n" +
       "Yang insyaAllah akan diselenggarakan pada:\n" +
@@ -743,6 +726,7 @@ export default function AdminPage() {
         wishes={wishes}
         loading={loadingWishes}
         onDelete={deleteWish}
+        onRefresh={() => fetchWishes(true)}
       />
 
       <AdminConfirmModal

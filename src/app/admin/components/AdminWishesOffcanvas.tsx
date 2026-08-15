@@ -11,12 +11,14 @@ interface Props {
   wishes: WishItem[];
   loading: boolean;
   onDelete: (id: string) => void;
+  onRefresh: () => void;
 }
 
 const XIcon = getLucideIcon("X");
 const MessageIcon = getLucideIcon("MessageCircle");
 const UsersIcon = getLucideIcon("Users");
 const TrashIcon = getLucideIcon("Trash2");
+const RefreshIcon = getLucideIcon("RefreshCw");
 
 function attendanceBadge(attendance: string) {
   if (attendance === "hadir") {
@@ -34,6 +36,7 @@ export function AdminWishesOffcanvas({
   wishes,
   loading,
   onDelete,
+  onRefresh,
 }: Props) {
   useEffect(() => {
     if (!open) return;
@@ -85,15 +88,18 @@ export function AdminWishesOffcanvas({
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="flex items-center gap-1.5 px-2 py-1 rounded-full bg-success-soft border border-success-border">
-                  <span className="relative flex h-1.5 w-1.5">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-75" />
-                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-success" />
-                  </span>
-                  <span className="text-[10px] text-success font-medium">
-                    Live
-                  </span>
-                </div>
+                <motion.button
+                  whileTap={{ scale: 0.9 }}
+                  onClick={onRefresh}
+                  disabled={loading}
+                  className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 disabled:opacity-50 transition-all"
+                  title="Muat ulang ucapan"
+                  aria-label="Muat ulang ucapan"
+                >
+                  <RefreshIcon
+                    className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
+                  />
+                </motion.button>
                 <button
                   onClick={onClose}
                   className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all"

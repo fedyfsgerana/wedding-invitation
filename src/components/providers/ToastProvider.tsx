@@ -49,14 +49,14 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ showToast }}>
       {children}
 
-      <div className="fixed bottom-4 right-4 z-100 flex flex-col items-end gap-2 px-4 md:px-0 w-full max-w-xs pointer-events-none">
+      <div className="fixed top-20 right-4 z-100 flex flex-col items-end gap-2 px-4 md:px-0 w-full max-w-xs pointer-events-none">
         <AnimatePresence>
           {toasts.map((toast) => (
             <motion.div
               key={toast.id}
-              initial={{ opacity: 0, y: 12, scale: 0.95 }}
+              initial={{ opacity: 0, y: -12, scale: 0.95 }}
               animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 8, scale: 0.95 }}
+              exit={{ opacity: 0, y: -8, scale: 0.95 }}
               transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
               className={cn(
                 "flex items-center gap-2.5 w-full px-4 py-3 rounded-full border shadow-lg pointer-events-auto",
