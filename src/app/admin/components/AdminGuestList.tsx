@@ -76,6 +76,7 @@ export function AdminGuestList({
   onBulkMarkSent,
 }: Props) {
   const selectAllRef = useRef<HTMLInputElement>(null);
+  const selectAllRefMobile = useRef<HTMLInputElement>(null);
 
   const allFilteredSelected =
     filteredCount > 0 && selectedIds.size === filteredCount;
@@ -84,6 +85,9 @@ export function AdminGuestList({
   useEffect(() => {
     if (selectAllRef.current) {
       selectAllRef.current.indeterminate = someFilteredSelected;
+    }
+    if (selectAllRefMobile.current) {
+      selectAllRefMobile.current.indeterminate = someFilteredSelected;
     }
   }, [someFilteredSelected]);
 
@@ -230,7 +234,7 @@ export function AdminGuestList({
       </AnimatePresence>
 
       <div
-        className="grid items-center gap-3 px-4 py-2.5 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground"
+        className="hidden sm:grid items-center gap-3 px-4 py-2.5 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground"
         style={{ gridTemplateColumns: GUEST_ROW_GRID_COLS }}
       >
         <input
@@ -261,6 +265,39 @@ export function AdminGuestList({
           )}
         </button>
         <div className="text-center">Aksi</div>
+      </div>
+
+      <div className="flex sm:hidden items-center justify-between gap-2 px-4 py-2 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground">
+        <label className="flex items-center gap-2 cursor-pointer">
+          <input
+            ref={selectAllRefMobile}
+            type="checkbox"
+            checked={allFilteredSelected}
+            onChange={handleToggleSelectAll}
+            className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+            aria-label={
+              allFilteredSelected
+                ? "Batalkan pilih semua tamu"
+                : `Pilih semua ${filteredCount} tamu`
+            }
+          />
+          Pilih Semua
+        </label>
+        <button
+          onClick={() => onSort("name")}
+          className="flex items-center gap-1 hover:text-foreground transition-colors"
+        >
+          Nama Tamu
+          {sortBy === "name" ? (
+            sortDir === "asc" ? (
+              <ArrowUpIcon className="w-3.5 h-3.5" />
+            ) : (
+              <ArrowDownIcon className="w-3.5 h-3.5" />
+            )
+          ) : (
+            <ArrowUpDownIcon className="w-3.5 h-3.5 opacity-40" />
+          )}
+        </button>
       </div>
 
       <div className="divide-y divide-border">
