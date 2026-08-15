@@ -459,9 +459,8 @@ export default function AdminPage() {
     }
   };
 
-  const openWishesModal = async () => {
+  const openWishesModal = () => {
     setShowWishesModal(true);
-    await fetchWishes(true);
   };
 
   const deleteWishConfirmed = async (id: string) => {

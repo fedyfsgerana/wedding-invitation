@@ -46,10 +46,13 @@ export async function POST(req: NextRequest) {
       );
     }
     const id = Date.now().toString();
-    const createdAt = new Date().toLocaleDateString("id-ID", {
+    const createdAt = new Date().toLocaleString("id-ID", {
       day: "numeric",
       month: "short",
       year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+      timeZone: "Asia/Jakarta",
     });
 
     await appendRow(SHEET_NAME, [
