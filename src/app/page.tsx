@@ -20,7 +20,6 @@ import { EventSection } from "@/components/sections/EventSection";
 import { AgendaSection } from "@/components/sections/AgendaSection";
 import { LoveStorySection } from "@/components/sections/LoveStorySection";
 import { GallerySection } from "@/components/sections/GallerySection";
-import { LocationSection } from "@/components/sections/LocationSection";
 import { RSVPSection } from "@/components/sections/RSVPSection";
 import { GiftSection } from "@/components/sections/GiftSection";
 import { ClosingSection } from "@/components/sections/ClosingSection";
@@ -100,7 +99,6 @@ function WeddingPage() {
                       <AgendaSection />
                       <LoveStorySection />
                       <GallerySection />
-                      <LocationSection />
                       <RSVPSection />
                       <GiftSection />
                       <ClosingSection />

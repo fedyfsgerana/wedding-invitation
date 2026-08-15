@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
@@ -24,6 +25,8 @@ const cardVariants: Variants = {
 const ClockIcon = getLucideIcon("Clock");
 const MapPinIcon = getLucideIcon("MapPin");
 const CalendarIcon = getLucideIcon("Calendar");
+const CopyIcon = getLucideIcon("Copy");
+const CheckIcon = getLucideIcon("Check");
 
 const EVENT_ICONS = {
   BookOpen: getLucideIcon("BookOpen"),
@@ -63,6 +66,17 @@ function EventCard({
   index,
 }: EventCardProps) {
   const Icon = EVENT_ICONS[icon];
+  const [copied, setCopied] = useState(false);
+
+  const copyAddress = async () => {
+    try {
+      await navigator.clipboard.writeText(event.address);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      console.error("Gagal menyalin alamat");
+    }
+  };
 
   const handleAppleCalendar = () => {
     const url = generateAppleCalendarUrl(event, calendarTitle);
@@ -116,13 +130,26 @@ function EventCard({
           </div>
           <div className="flex items-start gap-2.5">
             <MapPinIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-            <div>
-              <p className="text-sm font-medium text-foreground font-sans">
-                {event.venue}
-              </p>
-              <p className="text-xs text-muted-foreground mt-0.5 font-sans">
-                {event.address}
-              </p>
+            <div className="flex-1 flex items-start justify-between gap-2">
+              <div>
+                <p className="text-sm font-medium text-foreground font-sans">
+                  {event.venue}
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5 font-sans">
+                  {event.address}
+                </p>
+              </div>
+              <button
+                onClick={copyAddress}
+                className="shrink-0 w-7 h-7 rounded-full border border-primary/20 hover:bg-primary/5 transition-colors flex items-center justify-center"
+                title="Salin alamat"
+              >
+                {copied ? (
+                  <CheckIcon className="w-3 h-3 text-primary" />
+                ) : (
+                  <CopyIcon className="w-3 h-3 text-primary" />
+                )}
+              </button>
             </div>
           </div>
         </div>
