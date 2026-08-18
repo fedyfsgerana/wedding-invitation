@@ -17,7 +17,6 @@ import { BrideGroomSection } from "@/components/sections/BrideGroomSection";
 import { CountdownSection } from "@/components/sections/CountdownSection";
 import { EventSection } from "@/components/sections/EventSection";
 import { AgendaSection } from "@/components/sections/AgendaSection";
-import { LoveStorySection } from "@/components/sections/LoveStorySection";
 import { GallerySection } from "@/components/sections/GallerySection";
 import { RSVPSection } from "@/components/sections/RSVPSection";
 import { GiftSection } from "@/components/sections/GiftSection";
@@ -99,7 +98,6 @@ export function WeddingApp({ guestName }: WeddingAppProps) {
                       <CountdownSection />
                       <EventSection />
                       <AgendaSection />
-                      <LoveStorySection />
                       <GallerySection />
                       <RSVPSection />
                       <GiftSection />

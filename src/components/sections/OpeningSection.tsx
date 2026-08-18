@@ -50,6 +50,18 @@ export function OpeningSection() {
         viewport={{ once: true }}
         className="container-wedding px-4"
       >
+        <motion.div variants={itemVariants} className="text-center mb-12">
+          <p className="text-[11px] uppercase tracking-[0.4em] text-primary mb-3 font-sans font-medium">
+            Pembuka
+          </p>
+          <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground tracking-tight">
+            Kata Pembuka
+          </h2>
+          <p className="text-muted-foreground text-sm font-sans mt-3 max-w-sm mx-auto">
+            Sepenggal doa dan salam sebelum memulai kisah kami
+          </p>
+        </motion.div>
+
         <div className="relative max-w-lg mx-auto border border-primary/20 rounded-[1.75rem] px-2 py-2">
           <CornerOrnament className="absolute top-3 left-3 w-9 h-9 text-primary/40" />
           <CornerOrnament className="absolute top-3 right-3 w-9 h-9 text-primary/40 -scale-x-100" />

@@ -14,6 +14,7 @@ interface ButtonProps {
   icon?: string;
   iconPosition?: "left" | "right";
   disabled?: boolean;
+  loading?: boolean;
   className?: string;
   fullWidth?: boolean;
   target?: "_blank" | "_self";
@@ -28,24 +29,28 @@ export function Button({
   icon,
   iconPosition = "left",
   disabled = false,
+  loading = false,
   className,
   fullWidth = false,
   target = "_self",
 }: ButtonProps) {
   const Icon = useMemo(() => {
+    if (loading) return LucideIcons.Loader2;
     if (!icon) return null;
     const Resolved = LucideIcons[icon as keyof typeof LucideIcons];
     return typeof Resolved === "function" ||
       (typeof Resolved === "object" && Resolved !== null)
       ? (Resolved as React.ElementType)
       : LucideIcons.Circle;
-  }, [icon]);
+  }, [icon, loading]);
+
+  const isDisabled = disabled || loading;
 
   const baseClass = cn(
     "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 cursor-pointer select-none",
     {
       "w-full": fullWidth,
-      "opacity-50 pointer-events-none": disabled,
+      "opacity-50 pointer-events-none": isDisabled,
     },
     {
       "bg-primary text-primary-foreground hover:opacity-90 shadow-md hover:shadow-lg":
@@ -68,10 +73,12 @@ export function Button({
 
   const content = (
     <>
-      {Icon && iconPosition === "left" && <Icon className="w-4 h-4 shrink-0" />}
+      {Icon && iconPosition === "left" && (
+        <Icon className={cn("w-4 h-4 shrink-0", loading && "animate-spin")} />
+      )}
       {children}
       {Icon && iconPosition === "right" && (
-        <Icon className="w-4 h-4 shrink-0" />
+        <Icon className={cn("w-4 h-4 shrink-0", loading && "animate-spin")} />
       )}
     </>
   );
@@ -94,7 +101,8 @@ export function Button({
   return (
     <motion.button
       onClick={onClick}
-      disabled={disabled}
+      disabled={isDisabled}
+      aria-busy={loading}
       className={baseClass}
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}

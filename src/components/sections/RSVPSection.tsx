@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
@@ -73,6 +73,16 @@ export function RSVPSection() {
   const [wishes, setWishes] = useState<WishItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const errorRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (error) {
+      errorRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "center",
+      });
+    }
+  }, [error]);
 
   useEffect(() => {
     const loadWishes = async () => {
@@ -203,6 +213,7 @@ export function RSVPSection() {
                     <AnimatePresence>
                       {error && (
                         <motion.div
+                          ref={errorRef}
                           initial={{ opacity: 0, y: -8 }}
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -8 }}
@@ -228,7 +239,8 @@ export function RSVPSection() {
                           setForm({ ...form, name: e.target.value })
                         }
                         placeholder="Masukkan nama Anda"
-                        className="w-full px-4 py-2.5 rounded-2xl border border-primary/20 bg-card text-foreground text-sm font-sans focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors"
+                        disabled={loading}
+                        className="w-full px-4 py-2.5 rounded-2xl border border-primary/20 bg-card text-foreground text-sm font-sans focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
 
@@ -250,7 +262,8 @@ export function RSVPSection() {
                                     option.value as RSVPData["attendance"],
                                 })
                               }
-                              className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-[11px] font-sans font-medium transition-all ${
+                              disabled={loading}
+                              className={`flex flex-col items-center gap-1.5 p-3 rounded-2xl border text-[11px] font-sans font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
                                 active
                                   ? "border-primary bg-primary/10 text-primary"
                                   : "border-primary/15 bg-card text-muted-foreground hover:border-primary/40"
@@ -278,7 +291,8 @@ export function RSVPSection() {
                                 guestCount: Math.max(1, form.guestCount - 1),
                               })
                             }
-                            className="w-9 h-9 rounded-full border border-primary/20 flex items-center justify-center hover:bg-primary/5 transition-colors text-foreground font-medium"
+                            disabled={loading}
+                            className="w-9 h-9 rounded-full border border-primary/20 flex items-center justify-center hover:bg-primary/5 transition-colors text-foreground font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             -
                           </button>
@@ -292,7 +306,8 @@ export function RSVPSection() {
                                 guestCount: Math.min(10, form.guestCount + 1),
                               })
                             }
-                            className="w-9 h-9 rounded-full border border-primary/20 flex items-center justify-center hover:bg-primary/5 transition-colors text-foreground font-medium"
+                            disabled={loading}
+                            className="w-9 h-9 rounded-full border border-primary/20 flex items-center justify-center hover:bg-primary/5 transition-colors text-foreground font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                           >
                             +
                           </button>
@@ -312,7 +327,8 @@ export function RSVPSection() {
                         }
                         placeholder="Tuliskan ucapan dan doa terbaik Anda..."
                         rows={4}
-                        className="w-full px-4 py-2.5 rounded-2xl border border-primary/20 bg-card text-foreground text-sm font-sans focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none"
+                        disabled={loading}
+                        className="w-full px-4 py-2.5 rounded-2xl border border-primary/20 bg-card text-foreground text-sm font-sans focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-colors resize-none disabled:opacity-50 disabled:cursor-not-allowed"
                       />
                     </div>
 
@@ -323,9 +339,8 @@ export function RSVPSection() {
                       icon="Send"
                       iconPosition="right"
                       fullWidth
-                      disabled={
-                        !form.name.trim() || !form.message.trim() || loading
-                      }
+                      loading={loading}
+                      disabled={!form.name.trim() || !form.message.trim()}
                       className="rounded-full! text-[11px]! uppercase! tracking-widest! font-sans!"
                     >
                       {loading ? "Mengirim..." : "Kirim Ucapan"}
