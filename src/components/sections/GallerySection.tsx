@@ -65,23 +65,28 @@ export function GallerySection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mx-auto grid max-w-xl grid-cols-6 gap-2 md:gap-3"
+          className="mx-auto grid max-w-md grid-cols-6 gap-2 md:gap-2.5"
         >
           {gallery.map((item, index) => {
             const wideImage = item.width > item.height;
             const shape = item.shape ?? (wideImage ? "landscape" : "portrait");
-            const wideCard = shape === "landscape";
-            const sizes = wideCard
-              ? "(min-width: 768px) 560px, 90vw"
-              : wideImage
-                ? "(min-width: 768px) 520px, 80vw"
-                : "(min-width: 768px) 280px, 45vw";
+            const layout = {
+              wide: "col-span-6 aspect-video",
+              landscape: "col-span-4",
+              portrait: "col-span-2 aspect-3/4",
+            }[shape];
+            const sizes =
+              shape === "portrait"
+                ? wideImage
+                  ? "(min-width: 768px) 400px, 70vw"
+                  : "(min-width: 768px) 220px, 40vw"
+                : "(min-width: 768px) 460px, 90vw";
 
             return (
               <motion.li
                 key={item.id}
                 variants={itemVariants}
-                className={wideCard ? "col-span-4" : "col-span-2 aspect-3/4"}
+                className={layout}
               >
                 <button
                   type="button"

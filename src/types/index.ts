@@ -54,7 +54,7 @@ export interface GalleryItem {
   width: number;
   height: number;
   focus?: string;
-  shape?: "portrait" | "landscape";
+  shape?: "portrait" | "landscape" | "wide";
 }
 
 export interface AgendaItem {
