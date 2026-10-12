@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 
 interface Props {
@@ -11,14 +10,11 @@ interface Props {
 }
 
 const SearchIcon = getLucideIcon("Search");
-const CheckIcon = getLucideIcon("Check");
-const ClockIcon = getLucideIcon("Clock");
-const ListIcon = getLucideIcon("List");
 
 const filters = [
-  { value: "all", label: "Semua", icon: ListIcon },
-  { value: "sent", label: "Terkirim", icon: CheckIcon },
-  { value: "unsent", label: "Belum", icon: ClockIcon },
+  { value: "all", label: "Semua", icon: getLucideIcon("List") },
+  { value: "sent", label: "Terkirim", icon: getLucideIcon("Check") },
+  { value: "unsent", label: "Belum", icon: getLucideIcon("Clock") },
 ] as const;
 
 export function AdminGuestFilter({
@@ -28,48 +24,49 @@ export function AdminGuestFilter({
   setFilterSent,
 }: Props) {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.2 }}
-      className="bg-linear-to-br from-card via-card to-primary/5 border border-border hover:border-primary/20 rounded-2xl p-4 shadow-sm transition-all duration-300"
-    >
-      <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">
-        Cari &amp; Filter Tamu
-      </p>
-      <div className="flex flex-col gap-2 sm:flex-row">
-        <div className="relative flex-1">
-          <SearchIcon className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-          <input
-            type="text"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            placeholder="Cari nama tamu..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-border bg-background text-foreground text-sm focus:outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-all"
-          />
-        </div>
-        <div className="flex items-center gap-1 bg-muted rounded-xl p-1 shrink-0">
-          {filters.map((f) => {
-            const Icon = f.icon;
-            return (
-              <motion.button
-                key={f.value}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setFilterSent(f.value)}
-                className={
-                  "flex-1 sm:flex-none px-3 py-1.5 rounded-lg text-xs font-medium transition-all duration-200 flex items-center justify-center gap-1.5 " +
-                  (filterSent === f.value
-                    ? "bg-background text-foreground shadow-sm"
-                    : "text-muted-foreground hover:text-foreground hover:bg-background/50")
-                }
-              >
-                <Icon className="w-3 h-3" />
-                {f.label}
-              </motion.button>
-            );
-          })}
-        </div>
+    <div className="flex flex-col gap-2.5 sm:flex-row sm:items-center">
+      <div className="relative flex-1">
+        <label htmlFor="guest-search" className="sr-only">
+          Cari tamu
+        </label>
+        <SearchIcon className="absolute top-1/2 left-3.5 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <input
+          id="guest-search"
+          type="search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="Cari nama tamu"
+          className="h-11.5 w-full rounded-xl border border-border bg-card pr-3.5 pl-10 text-sm text-foreground transition placeholder:text-muted-foreground/70 focus:border-gold focus:ring-2 focus:ring-gold/25 focus:outline-none"
+        />
       </div>
-    </motion.div>
+
+      <div
+        role="group"
+        aria-label="Filter status kirim"
+        className="grid shrink-0 grid-cols-3 gap-1 rounded-xl border border-border bg-card p-1"
+      >
+        {filters.map((f) => {
+          const Icon = f.icon;
+          const active = filterSent === f.value;
+          return (
+            <button
+              key={f.value}
+              type="button"
+              aria-pressed={active}
+              onClick={() => setFilterSent(f.value)}
+              className={
+                "flex h-9.5 items-center justify-center gap-1.5 rounded-lg px-3 text-[13px] font-semibold transition " +
+                (active
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:bg-accent hover:text-primary")
+              }
+            >
+              <Icon className="h-3.5 w-3.5" />
+              {f.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
   );
 }

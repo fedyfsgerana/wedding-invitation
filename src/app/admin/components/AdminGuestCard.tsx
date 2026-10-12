@@ -103,14 +103,12 @@ export function AdminGuestCard({
       exit={{ opacity: 0, x: -20 }}
       transition={{ delay: index * 0.03 }}
       className={
-        "group relative px-4 py-3.5 transition-colors duration-200 " +
+        "group relative px-4.5 py-3.5 transition-colors duration-200 " +
         (selected
-          ? "bg-primary/10 hover:bg-primary/15"
-          : guest.sent
-            ? "bg-success-soft/40 hover:bg-success-soft/60"
-            : isStriped
-              ? "bg-muted/40 hover:bg-primary/5"
-              : "bg-transparent hover:bg-primary/5")
+          ? "bg-accent"
+          : isStriped
+            ? "bg-cream/50 hover:bg-accent/60"
+            : "bg-transparent hover:bg-accent/60")
       }
     >
       <div
@@ -121,7 +119,7 @@ export function AdminGuestCard({
           type="checkbox"
           checked={selected}
           onChange={() => onToggleSelect(guest.id)}
-          className="hidden sm:block w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+          className="hidden sm:block w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-gold/30 shrink-0 cursor-pointer"
           aria-label={`Pilih ${guest.name}`}
         />
         <div className="flex items-center gap-3 min-w-0">
@@ -129,16 +127,15 @@ export function AdminGuestCard({
             type="checkbox"
             checked={selected}
             onChange={() => onToggleSelect(guest.id)}
-            className="sm:hidden w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+            className="sm:hidden w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-gold/30 shrink-0 cursor-pointer"
             aria-label={`Pilih ${guest.name}`}
           />
           <div
             className={
-              "w-11 h-11 rounded-full flex items-center justify-center shrink-0 " +
-              "font-bold text-sm border transition-all duration-300 " +
+              "flex h-11 w-11 shrink-0 items-center justify-center rounded-full border font-serif text-lg font-semibold transition-colors " +
               (guest.sent
-                ? "bg-success-soft text-success border-success-border"
-                : "bg-primary/10 text-primary border-primary/20 group-hover:bg-primary/20 group-hover:border-primary/30")
+                ? "border-success-border bg-success-soft text-success"
+                : "border-gold-line bg-accent text-primary")
             }
           >
             {guest.name.charAt(0).toUpperCase()}
@@ -154,7 +151,7 @@ export function AdminGuestCard({
                   onChange={(e) => setEditValue(e.target.value)}
                   onKeyDown={handleEditKeyDown}
                   maxLength={100}
-                  className="w-full min-w-0 text-sm font-semibold text-foreground bg-card border border-primary/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="h-9 w-full min-w-0 rounded-lg border border-gold bg-card px-2.5 text-sm font-semibold text-foreground focus:ring-2 focus:ring-gold/30 focus:outline-none"
                   aria-label={`Edit nama ${guest.name}`}
                 />
                 <input
@@ -164,24 +161,25 @@ export function AdminGuestCard({
                   value={quotaValue}
                   onChange={(e) => setQuotaValue(e.target.value)}
                   onKeyDown={handleEditKeyDown}
-                  className="w-16 shrink-0 text-sm text-center text-foreground bg-card border border-primary/40 rounded-lg px-1 py-1 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  className="h-9 w-16 shrink-0 rounded-lg border border-gold bg-card px-1 text-center text-sm text-foreground focus:ring-2 focus:ring-gold/30 focus:outline-none"
                   aria-label={`Edit kuota ${guest.name}`}
                   title="Kuota ucapan"
                 />
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <p className="text-sm font-semibold text-foreground truncate">
+                <p className="truncate text-[15px] font-semibold text-foreground">
                   {guest.name}
                 </p>
                 {guest.sent && (
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-success-soft text-success border border-success-border shrink-0">
-                    ✓ Terkirim
+                  <span className="inline-flex shrink-0 items-center gap-1 rounded-full bg-success-soft px-2 py-0.5 text-xs font-semibold text-success">
+                    <CheckIcon className="h-3 w-3" />
+                    Terkirim
                   </span>
                 )}
               </div>
             )}
-            <p className="text-xs text-muted-foreground/60 mt-0.5 flex items-center gap-1 flex-wrap">
+            <p className="mt-1 flex flex-wrap items-center gap-1 text-xs text-muted-foreground">
               <ClockIcon className="w-3 h-3 shrink-0" />
               {guest.createdAt}
               <span
@@ -189,7 +187,7 @@ export function AdminGuestCard({
                   "ml-1 px-1.5 py-0.5 rounded-md border " +
                   (quotaFull
                     ? "bg-danger-soft text-danger border-danger-border"
-                    : "bg-muted text-muted-foreground border-border")
+                    : "border-border bg-cream text-muted-foreground")
                 }
                 title="Ucapan terpakai / kuota"
               >
@@ -204,10 +202,10 @@ export function AdminGuestCard({
             whileTap={{ scale: 0.9 }}
             onClick={isEditing ? saveEdit : startEdit}
             className={
-              "p-2 rounded-xl transition-all duration-200 " +
+              "flex h-9 w-9 items-center justify-center rounded-lg transition-colors " +
               (isEditing
                 ? "text-success hover:bg-success-soft"
-                : "text-muted-foreground hover:bg-primary/10 hover:text-primary")
+                : "text-muted-foreground hover:bg-accent hover:text-primary")
             }
             title={isEditing ? "Simpan" : "Edit nama dan kuota"}
           >
@@ -223,7 +221,7 @@ export function AdminGuestCard({
             target="_blank"
             rel="noopener noreferrer"
             whileTap={{ scale: 0.9 }}
-            className="p-2 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-200 text-muted-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
             title="Preview undangan"
           >
             <EyeIcon className="w-4 h-4" />
@@ -232,7 +230,7 @@ export function AdminGuestCard({
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => onCopy(guest)}
-            className="p-2 rounded-xl hover:bg-primary/10 hover:text-primary transition-all duration-200 text-muted-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-accent hover:text-primary"
             title="Salin link"
           >
             {copiedId === guest.id ? (
@@ -245,7 +243,7 @@ export function AdminGuestCard({
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => onWhatsapp(guest)}
-            className="p-2 rounded-xl hover:bg-success-soft hover:text-success transition-all duration-200 text-muted-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-success-soft hover:text-success"
             title="Kirim via WhatsApp"
           >
             <WhatsappIcon className="w-4 h-4" />
@@ -255,10 +253,10 @@ export function AdminGuestCard({
             whileTap={{ scale: 0.9 }}
             onClick={() => onToggleSent(guest.id)}
             className={
-              "p-2 rounded-xl transition-all duration-200 " +
+              "flex h-9 w-9 items-center justify-center rounded-lg transition-colors " +
               (guest.sent
                 ? "text-success hover:bg-success-soft"
-                : "text-muted-foreground hover:bg-primary/10 hover:text-primary")
+                : "text-muted-foreground hover:bg-accent hover:text-primary")
             }
             title={
               guest.sent ? "Tandai belum terkirim" : "Tandai sudah terkirim"
@@ -270,7 +268,7 @@ export function AdminGuestCard({
           <motion.button
             whileTap={{ scale: 0.9 }}
             onClick={() => onDelete(guest.id)}
-            className="p-2 rounded-xl hover:bg-danger-soft hover:text-danger transition-all duration-200 text-muted-foreground"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-danger-soft hover:text-danger"
             title="Hapus tamu"
           >
             <TrashIcon className="w-4 h-4" />

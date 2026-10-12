@@ -4,6 +4,7 @@ import { useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 import { Guest } from "../page";
+import { Spinner } from "@/components/ui/Spinner";
 import { AdminGuestCard } from "./AdminGuestCard";
 
 interface Props {
@@ -37,7 +38,7 @@ interface Props {
 const PAGE_SIZE_MIN = 1;
 const PAGE_SIZE_MAX = 100;
 
-export const GUEST_ROW_GRID_COLS = "24px 1fr 204px";
+export const GUEST_ROW_GRID_COLS = "24px 1fr 232px";
 
 const UsersIcon = getLucideIcon("Users");
 const ChevronLeftIcon = getLucideIcon("ChevronLeft");
@@ -103,19 +104,18 @@ export function AdminGuestList({
 
   if (loadingGuests) {
     return (
-      <div className="bg-linear-to-br from-card via-card to-primary/5 border border-border rounded-2xl p-12 flex items-center justify-center">
-        <p className="text-xs uppercase tracking-widest text-muted-foreground">
-          Memuat data tamu...
-        </p>
+      <div className="card-wedding flex items-center justify-center gap-2.5 p-12 text-sm text-muted-foreground">
+        <Spinner className="text-primary" />
+        Memuat data tamu...
       </div>
     );
   }
 
   if (guests.length === 0) {
     return (
-      <div className="bg-linear-to-br from-card via-card to-primary/5 border border-border rounded-2xl p-12 text-center">
-        <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
-          <UsersIcon className="w-6 h-6 text-muted-foreground/40" />
+      <div className="card-wedding p-12 text-center">
+        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-accent">
+          <UsersIcon className="h-6 w-6 text-gold" />
         </div>
         <p className="text-sm text-muted-foreground">
           {allGuestsCount === 0
@@ -135,17 +135,17 @@ export function AdminGuestList({
   };
 
   return (
-    <div className="rounded-2xl border border-border overflow-hidden bg-card">
-      <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-3 border-b border-border bg-muted/30">
+    <div className="card-wedding overflow-hidden">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4.5 py-3.5">
         <div>
-          <p className="text-xs uppercase tracking-widest text-muted-foreground/70 mb-0.5">
-            Daftar Tamu
+          <p className="font-serif text-lg font-semibold text-foreground">
+            Tamu
           </p>
           <p className="text-xs text-muted-foreground">
             Menampilkan {startItem}-{endItem} dari {filteredCount} tamu
           </p>
         </div>
-        <div className="flex items-center gap-2 text-xs">
+        <label className="flex items-center gap-2 text-xs">
           <span className="text-muted-foreground">Tampilkan</span>
           <input
             type="number"
@@ -166,9 +166,9 @@ export function AdminGuestList({
             onBlur={(e) => {
               if (e.target.value === "") setPageSize(PAGE_SIZE_MIN);
             }}
-            className="w-14 px-2 py-1 rounded-lg bg-card text-center font-medium text-foreground focus:outline-none focus:ring-2 focus:ring-primary/30"
+            className="h-9 w-16 rounded-lg border border-border bg-card px-2 text-center font-semibold text-foreground focus:border-gold focus:ring-2 focus:ring-gold/25 focus:outline-none"
           />
-        </div>
+        </label>
       </div>
 
       <AnimatePresence initial={false}>
@@ -180,7 +180,7 @@ export function AdminGuestList({
             transition={{ duration: 0.2 }}
             className="overflow-hidden"
           >
-            <div className="flex items-center justify-between flex-wrap gap-2 px-4 py-2.5 border-b border-border bg-primary/5">
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border bg-accent px-4.5 py-2.5">
               <div className="flex items-center gap-3 text-xs flex-wrap">
                 <span className="font-medium text-foreground">
                   {selectedIds.size} tamu dipilih
@@ -205,7 +205,7 @@ export function AdminGuestList({
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onBulkMarkSent(true)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-success hover:bg-success-soft transition-all"
+                  className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-success transition hover:bg-success-soft"
                   title="Tandai terkirim"
                 >
                   <CheckCheckIcon className="w-3.5 h-3.5" />
@@ -214,7 +214,7 @@ export function AdminGuestList({
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={() => onBulkMarkSent(false)}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-muted-foreground hover:bg-muted transition-all"
+                  className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-muted-foreground transition hover:bg-card"
                   title="Tandai belum terkirim"
                 >
                   <ClockIcon className="w-3.5 h-3.5" />
@@ -223,7 +223,7 @@ export function AdminGuestList({
                 <motion.button
                   whileTap={{ scale: 0.95 }}
                   onClick={onBulkDelete}
-                  className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium text-danger hover:bg-danger-soft transition-all"
+                  className="flex h-9 items-center gap-1.5 rounded-lg px-2.5 text-xs font-semibold text-danger transition hover:bg-danger-soft"
                   title="Hapus tamu terpilih"
                 >
                   <TrashIcon className="w-3.5 h-3.5" />
@@ -236,7 +236,7 @@ export function AdminGuestList({
       </AnimatePresence>
 
       <div
-        className="hidden sm:grid items-center gap-3 px-4 py-2.5 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground"
+        className="hidden items-center gap-3 border-b border-border bg-cream px-4.5 py-2.5 text-xs font-semibold text-muted-foreground sm:grid"
         style={{ gridTemplateColumns: GUEST_ROW_GRID_COLS }}
       >
         <input
@@ -244,7 +244,7 @@ export function AdminGuestList({
           type="checkbox"
           checked={allFilteredSelected}
           onChange={handleToggleSelectAll}
-          className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+          className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-gold/30 shrink-0 cursor-pointer"
           aria-label={
             allFilteredSelected
               ? "Batalkan pilih semua tamu"
@@ -269,14 +269,14 @@ export function AdminGuestList({
         <div className="text-center">Aksi</div>
       </div>
 
-      <div className="flex sm:hidden items-center justify-between gap-2 px-4 py-2 border-b border-border bg-muted/20 text-xs font-medium text-muted-foreground">
+      <div className="flex items-center justify-between gap-2 border-b border-border bg-cream px-4.5 py-2.5 text-xs font-semibold text-muted-foreground sm:hidden">
         <label className="flex items-center gap-2 cursor-pointer">
           <input
             ref={selectAllRefMobile}
             type="checkbox"
             checked={allFilteredSelected}
             onChange={handleToggleSelectAll}
-            className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-primary/30 shrink-0 cursor-pointer"
+            className="w-4 h-4 rounded border-border text-primary accent-primary focus:outline-none focus:ring-2 focus:ring-gold/30 shrink-0 cursor-pointer"
             aria-label={
               allFilteredSelected
                 ? "Batalkan pilih semua tamu"
@@ -324,12 +324,12 @@ export function AdminGuestList({
       </div>
 
       {totalPages > 1 && (
-        <div className="flex items-center justify-center gap-1.5 px-4 py-3 border-t border-border bg-muted/30">
+        <div className="flex items-center justify-center gap-1.5 border-t border-border px-4 py-3">
           <motion.button
             whileTap={{ scale: 0.95 }}
             onClick={() => goToPage(currentPage - 1)}
             disabled={currentPage === 1}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-background disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-accent hover:text-primary disabled:opacity-30 disabled:hover:bg-transparent"
           >
             <ChevronLeftIcon className="w-4 h-4" />
           </motion.button>
@@ -352,10 +352,10 @@ export function AdminGuestList({
                   whileTap={{ scale: 0.95 }}
                   onClick={() => goToPage(page)}
                   className={
-                    "w-8 h-8 rounded-lg text-xs font-medium transition-all duration-200 " +
+                    "h-9 w-9 rounded-lg text-xs font-semibold transition " +
                     (page === currentPage
-                      ? "bg-primary text-primary-foreground shadow-sm"
-                      : "text-muted-foreground hover:text-foreground hover:bg-background")
+                      ? "bg-primary text-primary-foreground"
+                      : "text-muted-foreground hover:bg-accent hover:text-primary")
                   }
                 >
                   {page}
@@ -367,7 +367,7 @@ export function AdminGuestList({
             whileTap={{ scale: 0.95 }}
             onClick={() => goToPage(currentPage + 1)}
             disabled={currentPage === totalPages}
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-background disabled:opacity-30 disabled:hover:bg-transparent transition-all"
+            className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground transition hover:bg-accent hover:text-primary disabled:opacity-30 disabled:hover:bg-transparent"
           >
             <ChevronRightIcon className="w-4 h-4" />
           </motion.button>
