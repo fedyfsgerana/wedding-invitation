@@ -32,12 +32,8 @@ export function SectionWrapper({
   ornaments = [],
 }: SectionWrapperProps) {
   return (
-    <motion.section
+    <section
       id={id}
-      initial="hidden"
-      whileInView="visible"
-      viewport={{ once: true, margin: "-80px" }}
-      variants={sectionVariants}
       className={cn(
         "relative w-full scroll-mt-20 md:scroll-mt-24",
         ornaments.length > 0 && "overflow-hidden",
@@ -49,8 +45,16 @@ export function SectionWrapper({
       {ornaments.map((item) => (
         <CornerFloral key={`${item.corner}-${item.variant}`} {...item} />
       ))}
-      <div className="relative">{children}</div>
-    </motion.section>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.05 }}
+        variants={sectionVariants}
+        className="relative"
+      >
+        {children}
+      </motion.div>
+    </section>
   );
 }
 

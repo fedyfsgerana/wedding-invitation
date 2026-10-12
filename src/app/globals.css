@@ -267,7 +267,7 @@
   --color-gold-line: #6b5a36;
   --color-ivory: #1c1814;
   --color-warm: #2f281d;
-  --color-cream: #1f1b16;
+  --color-cream: #221d17;
   --color-blush: #2a2419;
 
   --color-success: #6fcf97;
@@ -295,4 +295,8 @@
   .petal {
     display: none;
   }
+}
+
+.dark .petal {
+  filter: brightness(0.55) saturate(0.8);
 }
