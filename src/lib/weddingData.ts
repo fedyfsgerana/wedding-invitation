@@ -177,10 +177,10 @@ export const weddingData: WeddingData = {
     },
     {
       id: 2,
-      bank: "Bank Mandiri",
-      accountNumber: "1110021996646",
+      bank: "Bank Syariah Indonesia (BSI)",
+      accountNumber: "7189494631",
       accountName: "Suci Venitasya",
-      logo: "/images/mandiri-logo.png",
+      logo: "/images/bsi-logo.png",
     },
   ],
   verse: {
