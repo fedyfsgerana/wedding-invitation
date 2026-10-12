@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+import { FloralSprig } from "@/components/ui/Ornament";
 import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
@@ -15,7 +16,7 @@ const containerVariants: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.15 },
+    transition: { staggerChildren: 0.12, delayChildren: 0.15 },
   },
 };
 
@@ -24,11 +25,21 @@ const itemVariants: Variants = {
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.55, ease: [0.25, 0.1, 0.25, 1] },
+    transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
   },
 };
 
-const MailOpenIcon = getLucideIcon("MailOpen");
+const MailIcon = getLucideIcon("Mail");
+
+function coverDate(value: string) {
+  const date = new Date(`${value}T00:00:00`);
+  const weekday = date
+    .toLocaleDateString("id-ID", { weekday: "long" })
+    .toUpperCase();
+  const day = String(date.getDate()).padStart(2, "0");
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  return `${weekday}, ${day}.${month}.${date.getFullYear()}`;
+}
 
 export function CoverSection({
   guestName,
@@ -41,208 +52,98 @@ export function CoverSection({
 
   return (
     <motion.section
-      className="fixed inset-0 z-40 overflow-y-auto bg-background"
+      className="fixed inset-0 z-40 overflow-y-auto bg-[radial-gradient(90%_50%_at_50%_46%,var(--color-card)_0%,var(--color-ivory)_60%,var(--color-warm)_100%)]"
       initial={{ opacity: 1 }}
       exit={{
         opacity: 0,
         transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
       }}
     >
-      <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `radial-gradient(circle at 10% 10%, var(--color-gold) 0%, transparent 40%),
-                             radial-gradient(circle at 90% 90%, var(--color-gold) 0%, transparent 40%)`,
-          }}
-        />
-      </div>
+      <div className="pointer-events-none fixed inset-3.5 rounded-[30px] border border-gold-line/60" />
 
-      <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full border border-primary/15 animate-pulse-soft pointer-events-none" />
-      <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full border border-primary/15 animate-pulse-soft pointer-events-none" />
-      <div className="absolute top-1/4 right-6 w-1.5 h-1.5 rounded-full bg-primary/40 pointer-events-none" />
-      <div className="absolute bottom-1/4 left-6 w-1.5 h-1.5 rounded-full bg-primary/40 pointer-events-none" />
-
-      <div className="relative z-10 min-h-full flex items-center justify-center p-4 py-10 xs:p-6 md:p-10">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.98 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.7, ease: [0.25, 0.1, 0.25, 1] }}
-          className="relative w-full max-w-md mx-auto"
+      <motion.div
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="relative mx-auto flex min-h-full w-full max-w-md flex-col items-center px-9 pt-16 pb-14 text-center"
+      >
+        <motion.p
+          variants={itemVariants}
+          className="text-[11px] font-semibold uppercase tracking-[0.38em] text-primary"
         >
-          <div className="relative border border-primary/20 rounded-[1.75rem] px-2 py-2">
-            <svg
-              className="absolute top-3 left-3 w-9 h-9 text-primary/40"
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="0.75"
-            >
-              <path d="M4 4 Q4 16 16 16 Q4 16 4 28" strokeLinecap="round" />
-              <circle
-                cx="16"
-                cy="16"
-                r="1.6"
-                fill="currentColor"
-                stroke="none"
-              />
-              <path d="M9 9 Q13 11 12 16 Q10 12 6 13" strokeLinecap="round" />
-              <path d="M9 9 Q11 13 16 12 Q12 10 13 6" strokeLinecap="round" />
-            </svg>
-            <svg
-              className="absolute top-3 right-3 w-9 h-9 text-primary/40 -scale-x-100"
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="0.75"
-            >
-              <path d="M4 4 Q4 16 16 16 Q4 16 4 28" strokeLinecap="round" />
-              <circle
-                cx="16"
-                cy="16"
-                r="1.6"
-                fill="currentColor"
-                stroke="none"
-              />
-              <path d="M9 9 Q13 11 12 16 Q10 12 6 13" strokeLinecap="round" />
-              <path d="M9 9 Q11 13 16 12 Q12 10 13 6" strokeLinecap="round" />
-            </svg>
-            <svg
-              className="absolute bottom-3 left-3 w-9 h-9 text-primary/40 -scale-y-100"
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="0.75"
-            >
-              <path d="M4 4 Q4 16 16 16 Q4 16 4 28" strokeLinecap="round" />
-              <circle
-                cx="16"
-                cy="16"
-                r="1.6"
-                fill="currentColor"
-                stroke="none"
-              />
-              <path d="M9 9 Q13 11 12 16 Q10 12 6 13" strokeLinecap="round" />
-              <path d="M9 9 Q11 13 16 12 Q12 10 13 6" strokeLinecap="round" />
-            </svg>
-            <svg
-              className="absolute bottom-3 right-3 w-9 h-9 text-primary/40 -scale-x-100 -scale-y-100"
-              viewBox="0 0 40 40"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="0.75"
-            >
-              <path d="M4 4 Q4 16 16 16 Q4 16 4 28" strokeLinecap="round" />
-              <circle
-                cx="16"
-                cy="16"
-                r="1.6"
-                fill="currentColor"
-                stroke="none"
-              />
-              <path d="M9 9 Q13 11 12 16 Q10 12 6 13" strokeLinecap="round" />
-              <path d="M9 9 Q11 13 16 12 Q12 10 13 6" strokeLinecap="round" />
-            </svg>
+          The Wedding Of
+        </motion.p>
 
-            <motion.div
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              className="flex flex-col items-center px-4 xs:px-6 py-10 xs:py-12 text-center"
-            >
-              <motion.div
-                variants={itemVariants}
-                className="relative mx-auto mb-8 w-16 h-16"
-              >
-                <div className="absolute inset-0 rounded-full gradient-primary opacity-20 animate-pulse-soft" />
-                <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
-                  <span className="font-serif text-lg text-primary">
-                    {groom.nickname.charAt(0)}&amp;{bride.nickname.charAt(0)}
-                  </span>
-                </div>
-              </motion.div>
+        <div className="flex w-full flex-1 flex-col items-center justify-center gap-7 py-8">
+          <motion.span
+            variants={itemVariants}
+            aria-hidden="true"
+            className="h-14 w-px bg-linear-to-b from-transparent to-gold-line"
+          />
 
-              <motion.p
-                variants={itemVariants}
-                className="text-[11px] uppercase tracking-[0.4em] text-primary mb-6 font-sans font-medium"
-              >
-                Undangan Pernikahan
-              </motion.p>
+          <motion.div
+            variants={itemVariants}
+            className="relative flex aspect-square w-[min(268px,74vw)] flex-col items-center justify-center rounded-full border border-gold-line/70"
+          >
+            <FloralSprig
+              size={118}
+              className="absolute -bottom-5.5 -left-8.5"
+            />
+            <FloralSprig
+              size={88}
+              className="absolute -top-4.5 -right-6.5 rotate-180"
+            />
+            <h1 className="flex flex-col items-center">
+              <span className="font-serif text-[44px] xs:text-[52px] font-medium leading-none text-gold-gradient">
+                {groom.nickname}
+              </span>
+              <span className="font-script text-[44px] xs:text-[48px] leading-[1.15] text-gold">
+                &amp;
+              </span>
+              <span className="font-serif text-[44px] xs:text-[52px] font-medium leading-none text-gold-gradient">
+                {bride.nickname}
+              </span>
+            </h1>
+          </motion.div>
 
-              <motion.div variants={itemVariants} className="mb-2 relative">
-                <h1 className="font-serif text-4xl xs:text-5xl md:text-6xl font-semibold text-foreground tracking-tight leading-[0.95]">
-                  {groom.nickname}
-                </h1>
-              </motion.div>
+          <motion.p
+            variants={itemVariants}
+            className="flex items-center gap-3.5 text-[13px] font-semibold tracking-[0.24em] text-muted-foreground"
+          >
+            <span aria-hidden="true" className="h-px w-7 bg-gold-line" />
+            {coverDate(akad.date)}
+            <span aria-hidden="true" className="h-px w-7 bg-gold-line" />
+          </motion.p>
+        </div>
 
-              <motion.div
-                variants={itemVariants}
-                className="flex items-center gap-4 my-2"
-              >
-                <div className="h-px w-10 bg-primary/30" />
-                <span className="font-serif italic text-2xl text-primary/70">
-                  &amp;
-                </span>
-                <div className="h-px w-10 bg-primary/30" />
-              </motion.div>
-
-              <motion.div variants={itemVariants} className="mb-8 relative">
-                <h1 className="font-serif text-4xl xs:text-5xl md:text-6xl font-semibold text-foreground tracking-tight leading-[0.95]">
-                  {bride.nickname}
-                </h1>
-              </motion.div>
-
-              <motion.div variants={itemVariants} className="mb-8">
-                <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-primary/20 bg-primary/5">
-                  <p className="text-xs text-muted-foreground tracking-widest font-sans uppercase">
-                    {new Date(akad.date).toLocaleDateString("id-ID", {
-                      weekday: "long",
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </p>
-                </div>
-              </motion.div>
-
-              <motion.div
-                variants={itemVariants}
-                className="w-full mb-8 rounded-2xl border border-primary/15 bg-card px-5 py-5 shadow-[0_2px_12px_rgba(180,140,60,0.06)]"
-              >
-                <p className="text-[10px] uppercase tracking-[0.25em] text-muted-foreground mb-2 font-sans">
-                  Kepada Yth.
-                </p>
-                {guestName ? (
-                  <p className="text-base font-serif text-foreground font-medium mb-2">
-                    Bapak/Ibu/Saudara/i {guestName}
-                  </p>
-                ) : (
-                  <p className="text-base font-serif text-foreground font-medium mb-2">
-                    Bapak/Ibu/Saudara/i Tamu Undangan
-                  </p>
-                )}
-                <p className="text-[11px] text-muted-foreground leading-relaxed font-sans">
-                  Tanpa mengurangi rasa hormat, kami bermaksud mengundang
-                  Bapak/Ibu/Saudara/i untuk berkenan hadir dan memberikan doa
-                  restu pada hari bahagia kami.
-                </p>
-              </motion.div>
-
-              <motion.div variants={itemVariants} className="w-full">
-                <motion.button
-                  onClick={onOpen}
-                  className="w-full inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-full bg-primary text-primary-foreground text-xs uppercase tracking-[0.25em] font-sans font-medium shadow-lg hover:shadow-xl transition-shadow"
-                  whileHover={{ scale: 1.02 }}
-                  whileTap={{ scale: 0.97 }}
-                >
-                  <MailOpenIcon className="w-3.5 h-3.5" />
-                  <span>Buka Undangan</span>
-                </motion.button>
-              </motion.div>
-            </motion.div>
+        <motion.div
+          variants={itemVariants}
+          className="flex w-full flex-col items-center gap-4.5"
+        >
+          <div className="flex flex-col items-center gap-1.5">
+            <span className="text-xs text-muted-foreground">
+              Kepada Yth. Bapak/Ibu/Saudara/i
+            </span>
+            <span className="font-serif text-[23px] font-semibold text-foreground">
+              {guestName ?? "Tamu Undangan"}
+            </span>
           </div>
+
+          <motion.button
+            type="button"
+            onClick={onOpen}
+            whileTap={{ scale: 0.97 }}
+            className="inline-flex h-13 items-center justify-center gap-2 rounded-full bg-primary px-7.5 text-[15px] font-semibold text-primary-foreground shadow-[0_12px_24px_-14px_rgba(148,113,42,0.55)] transition hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
+          >
+            <MailIcon className="h-4.5 w-4.5" />
+            Buka Undangan
+          </motion.button>
+
+          <span className="text-[11px] text-muted-foreground">
+            Mohon maaf bila ada kesalahan penulisan nama
+          </span>
         </motion.div>
-      </div>
+      </motion.div>
     </motion.section>
   );
 }
