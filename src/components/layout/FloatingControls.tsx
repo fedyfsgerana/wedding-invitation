@@ -3,11 +3,11 @@
 import { motion } from "framer-motion";
 import { useAudio } from "@/components/providers/AudioProvider";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { MusicBars } from "@/components/ui/MusicBars";
 import { getLucideIcon } from "@/lib/utils";
 
 const SunIcon = getLucideIcon("Sun");
 const MoonIcon = getLucideIcon("Moon");
-const MusicIcon = getLucideIcon("Music");
 const MusicOffIcon = getLucideIcon("VolumeX");
 
 const buttonClass =
@@ -30,11 +30,7 @@ export function FloatingControls() {
         className={buttonClass}
         aria-label={isPlaying ? "Jeda musik" : "Putar musik"}
       >
-        {isPlaying ? (
-          <MusicIcon className="h-4.5 w-4.5" />
-        ) : (
-          <MusicOffIcon className="h-4.5 w-4.5" />
-        )}
+        {isPlaying ? <MusicBars /> : <MusicOffIcon className="h-4.5 w-4.5" />}
       </button>
       <button
         type="button"

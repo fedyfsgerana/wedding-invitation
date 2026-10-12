@@ -138,8 +138,9 @@ function EventCard({ title, event, index }: EventCardProps) {
         </div>
       </div>
 
-      <div className="mx-4.5 h-36 overflow-hidden rounded-2xl border border-border">
+      <div className="group mx-4.5 h-36 overflow-hidden rounded-2xl border border-border bg-accent">
         <iframe
+          className="sepia-25 saturate-70 brightness-103 contrast-95 transition duration-500 group-focus-within:filter-none group-hover:filter-none dark:brightness-80 dark:sepia-40"
           src={event.embedUrl}
           width="100%"
           height="100%"

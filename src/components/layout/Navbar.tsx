@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAudio } from "@/components/providers/AudioProvider";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { MusicBars } from "@/components/ui/MusicBars";
 import { Monogram } from "@/components/ui/Monogram";
 import { cn, getLucideIcon } from "@/lib/utils";
 import { siteConfig, weddingData } from "@/lib/weddingData";
@@ -42,7 +43,6 @@ const SECTION_TITLES: Record<string, string> = {
 
 const SunIcon = getLucideIcon("Sun");
 const MoonIcon = getLucideIcon("Moon");
-const MusicIcon = getLucideIcon("Music");
 const MusicOffIcon = getLucideIcon("VolumeX");
 
 const iconButton =
@@ -111,11 +111,7 @@ export function Navbar() {
         className={iconButton}
         aria-label={isPlaying ? "Jeda musik" : "Putar musik"}
       >
-        {isPlaying ? (
-          <MusicIcon className="h-4.5 w-4.5" />
-        ) : (
-          <MusicOffIcon className="h-4.5 w-4.5" />
-        )}
+        {isPlaying ? <MusicBars /> : <MusicOffIcon className="h-4.5 w-4.5" />}
       </button>
       <button
         type="button"
