@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { useAudio } from "@/components/providers/AudioProvider";
 import { useTheme } from "@/components/providers/ThemeProvider";
+import { Monogram } from "@/components/ui/Monogram";
 import { cn, getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
@@ -116,10 +117,10 @@ export function Navbar() {
     <button
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="font-script text-[32px] leading-none text-primary"
-      aria-label="Kembali ke atas"
+      className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
+      aria-label={`${groom.nickname} & ${bride.nickname}, kembali ke atas`}
     >
-      {groom.nickname} &amp; {bride.nickname}
+      <Monogram size={40} />
     </button>
   );
 

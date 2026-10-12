@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion } from "framer-motion";
+import { Monogram } from "@/components/ui/Monogram";
 import { weddingData } from "@/lib/weddingData";
 
 interface LoadingScreenProps {
@@ -38,9 +39,10 @@ export function LoadingScreen({
               }}
               className="absolute inset-0 rounded-full border border-gold-line"
             />
-            <span className="font-script text-6xl leading-none text-primary">
-              {groom.nickname.charAt(0)}&amp;{bride.nickname.charAt(0)}
-            </span>
+            <Monogram
+              size={104}
+              title={`${groom.nickname} & ${bride.nickname}`}
+            />
           </div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">
             {text}
