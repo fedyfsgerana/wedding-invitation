@@ -1,6 +1,5 @@
 import { useCallback, useRef, useState } from "react";
-
-const wait = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+import { withMinDuration } from "@/lib/withMinDuration";
 
 export function usePending(minDuration = 500) {
   const [pending, setPending] = useState(false);
@@ -11,12 +10,9 @@ export function usePending(minDuration = 500) {
       if (busy.current) return;
       busy.current = true;
       setPending(true);
-      const started = Date.now();
       try {
-        await action?.();
+        await withMinDuration(() => action?.(), minDuration);
       } finally {
-        const rest = minDuration - (Date.now() - started);
-        if (rest > 0) await wait(rest);
         busy.current = false;
         setPending(false);
       }
