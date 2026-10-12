@@ -24,7 +24,7 @@ export function AgendaSection() {
   const { agenda } = weddingData;
 
   return (
-    <SectionWrapper id="agenda" variant="cream">
+    <SectionWrapper id="agenda">
       <div className="mx-auto max-w-lg">
         <SectionTitle
           eyebrow="Agenda"

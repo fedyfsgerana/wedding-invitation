@@ -45,7 +45,7 @@ export function GallerySection() {
   };
 
   return (
-    <SectionWrapper id="galeri">
+    <SectionWrapper id="galeri" variant="cream">
       <div className="container-wedding">
         <SectionTitle
           eyebrow="Galeri"
@@ -58,25 +58,25 @@ export function GallerySection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid auto-rows-30 grid-cols-2 gap-2.5 md:auto-rows-50 md:grid-cols-3 md:gap-4"
+          className="grid grid-cols-3 gap-2 md:gap-4"
         >
           {gallery.map((item, index) => (
             <motion.li
               key={item.id}
               variants={itemVariants}
-              className={index % 3 === 0 ? "row-span-2" : undefined}
+              className="aspect-square"
             >
               <button
                 type="button"
                 onClick={() => setSelected(index)}
                 aria-label={`Lihat ${item.alt}`}
-                className="group relative block h-full w-full overflow-hidden rounded-2xl border border-border bg-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
+                className="group relative block h-full w-full overflow-hidden rounded-xl border border-border bg-accent md:rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
               >
                 <Image
                   src={item.src}
                   alt={item.alt}
                   fill
-                  sizes="(min-width: 768px) 33vw, 50vw"
+                  sizes="(min-width: 768px) 300px, 33vw"
                   className="object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </button>

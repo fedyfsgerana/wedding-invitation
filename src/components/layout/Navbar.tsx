@@ -9,13 +9,13 @@ import { cn, getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
 const desktopItems = [
-  { label: "Pembuka", id: "pembuka" },
-  { label: "Mempelai", id: "mempelai" },
-  { label: "Acara", id: "acara" },
-  { label: "Galeri", id: "galeri" },
-  { label: "Ucapan", id: "rsvp" },
-  { label: "Hadiah", id: "hadiah" },
-  { label: "Penutup", id: "penutup" },
+  { label: "Pembuka", id: "pembuka", icon: getLucideIcon("BookOpen") },
+  { label: "Mempelai", id: "mempelai", icon: getLucideIcon("Heart") },
+  { label: "Acara", id: "acara", icon: getLucideIcon("CalendarDays") },
+  { label: "Galeri", id: "galeri", icon: getLucideIcon("Image") },
+  { label: "Ucapan", id: "rsvp", icon: getLucideIcon("MessageCircle") },
+  { label: "Hadiah", id: "hadiah", icon: getLucideIcon("Gift") },
+  { label: "Penutup", id: "penutup", icon: getLucideIcon("Sparkles") },
 ];
 
 const mobileItems = [
@@ -144,23 +144,29 @@ export function Navbar() {
 
           <nav aria-label="Navigasi undangan" className="hidden md:block">
             <ul className="flex items-center gap-1 lg:gap-2">
-              {desktopItems.map((item) => (
-                <li key={item.id}>
-                  <button
-                    type="button"
-                    onClick={() => goTo(item.id)}
-                    aria-current={active === item.id ? "true" : undefined}
-                    className={cn(
-                      "rounded-full px-3 py-2 text-sm font-medium transition-colors",
-                      active === item.id
-                        ? "bg-accent text-primary"
-                        : "text-muted-foreground hover:text-primary",
-                    )}
-                  >
-                    {item.label}
-                  </button>
-                </li>
-              ))}
+              {desktopItems.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <li key={item.id}>
+                    <button
+                      type="button"
+                      onClick={() => goTo(item.id)}
+                      aria-current={active === item.id ? "true" : undefined}
+                      aria-label={item.label}
+                      title={item.label}
+                      className={cn(
+                        "inline-flex items-center gap-1.5 rounded-full px-3 py-2 text-sm font-medium transition-colors",
+                        active === item.id
+                          ? "bg-accent text-primary"
+                          : "text-muted-foreground hover:text-primary",
+                      )}
+                    >
+                      <Icon className="h-4 w-4" />
+                      <span className="hidden lg:inline">{item.label}</span>
+                    </button>
+                  </li>
+                );
+              })}
             </ul>
           </nav>
 

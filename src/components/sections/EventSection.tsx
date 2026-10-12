@@ -180,7 +180,7 @@ export function EventSection() {
   const { akad, reception } = weddingData;
 
   return (
-    <SectionWrapper id="acara">
+    <SectionWrapper id="acara" variant="cream">
       <div className="container-wedding">
         <SectionTitle
           eyebrow="Save the Date"
