@@ -22,6 +22,14 @@
   --color-gold: #b8923f;
   --color-gold-light: #e2c98f;
   --color-gold-line: #dfc995;
+
+  --color-paper: #fffdf8;
+  --color-paper-ink: #3a332c;
+  --color-paper-muted: #7a6e62;
+  --color-paper-label: #7d5f1f;
+  --color-paper-line: #dfc995;
+  --color-paper-gold: #c9a24f;
+  --color-paper-button: #94712a;
   --color-ivory: #faf8f4;
   --color-warm: #efe3c9;
   --color-cream: #f3ebdf;

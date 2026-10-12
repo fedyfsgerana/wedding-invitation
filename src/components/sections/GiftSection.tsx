@@ -54,14 +54,14 @@ function BankCard({ account }: { account: BankAccount }) {
 
   return (
     <motion.li variants={itemVariants}>
-      <article className="relative flex aspect-[1.6/1] w-full flex-col justify-between overflow-hidden rounded-[22px] border border-[#dfc995] bg-[linear-gradient(135deg,#fffdf8_0%,#f6ecd6_55%,#ead7ac_100%)] p-5 text-[#3a332c] shadow-[0_18px_36px_-22px_rgba(58,51,44,0.55)] sm:p-6">
+      <article className="relative flex aspect-[1.6/1] w-full flex-col justify-between overflow-hidden rounded-[22px] border border-paper-line bg-[linear-gradient(135deg,var(--color-paper)_0%,#f6ecd6_55%,#ead7ac_100%)] p-5 text-paper-ink shadow-[0_18px_36px_-22px_rgba(58,51,44,0.55)] sm:p-6">
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full border border-[#c9a24f]/30"
+          className="pointer-events-none absolute -top-16 -right-16 h-56 w-56 rounded-full border border-paper-gold/30"
         />
         <span
           aria-hidden="true"
-          className="pointer-events-none absolute -top-6 -right-6 h-36 w-36 rounded-full border border-[#c9a24f]/25"
+          className="pointer-events-none absolute -top-6 -right-6 h-36 w-36 rounded-full border border-paper-gold/25"
         />
         <span
           aria-hidden="true"
@@ -69,7 +69,7 @@ function BankCard({ account }: { account: BankAccount }) {
         />
 
         <div className="relative flex items-start justify-between gap-3">
-          <span className="text-xs font-semibold tracking-[0.16em] text-[#7d5f1f] uppercase">
+          <span className="text-xs font-semibold tracking-[0.16em] text-paper-label uppercase">
             {account.bank}
           </span>
           <Monogram size={36} />
@@ -78,10 +78,10 @@ function BankCard({ account }: { account: BankAccount }) {
         <div className="relative flex items-center gap-3">
           <span
             aria-hidden="true"
-            className="grid h-8 w-11 grid-cols-3 gap-px overflow-hidden rounded-md border border-[#b8923f]/60 bg-[linear-gradient(135deg,#ecd59b,#c9a24f)] p-0.5"
+            className="grid h-8 w-11 grid-cols-3 gap-px overflow-hidden rounded-md border border-paper-gold/70 bg-[linear-gradient(135deg,#ecd59b,#c9a24f)] p-0.5"
           >
             {Array.from({ length: 6 }, (_, i) => (
-              <span key={i} className="rounded-[2px] bg-white/25" />
+              <span key={i} className="rounded-xs bg-white/25" />
             ))}
           </span>
           <p className="font-serif text-[26px] font-semibold tracking-[0.08em] tabular-nums sm:text-[28px]">
@@ -91,7 +91,7 @@ function BankCard({ account }: { account: BankAccount }) {
 
         <div className="relative flex items-end justify-between gap-3">
           <div className="min-w-0">
-            <span className="block text-[10.5px] font-semibold tracking-[0.18em] text-[#7a6e62] uppercase">
+            <span className="block text-[10.5px] font-semibold tracking-[0.18em] text-paper-muted uppercase">
               Atas nama
             </span>
             <span className="block truncate font-serif text-lg font-semibold">
@@ -104,7 +104,7 @@ function BankCard({ account }: { account: BankAccount }) {
             disabled={pending}
             aria-busy={pending}
             aria-label={`Salin nomor rekening ${account.accountName}`}
-            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-[#94712a] px-3.5 text-[13px] font-semibold text-white shadow-[0_10px_20px_-12px_rgba(148,113,42,0.7)] transition hover:brightness-105 disabled:opacity-85"
+            className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl bg-paper-button px-3.5 text-[13px] font-semibold text-white shadow-[0_10px_20px_-12px_rgba(148,113,42,0.7)] transition hover:brightness-105 disabled:opacity-85"
           >
             {pending ? (
               <Spinner className="h-4 w-4" />
