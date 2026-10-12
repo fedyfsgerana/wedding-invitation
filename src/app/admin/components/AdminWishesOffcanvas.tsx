@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { getLucideIcon } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
+import { Spinner } from "@/components/ui/Spinner";
+import { cn, getLucideIcon } from "@/lib/utils";
 import { WishItem } from "@/types";
 
 interface Props {
@@ -16,19 +17,29 @@ interface Props {
 
 const XIcon = getLucideIcon("X");
 const MessageIcon = getLucideIcon("MessageCircle");
-const UsersIcon = getLucideIcon("Users");
 const TrashIcon = getLucideIcon("Trash2");
 const RefreshIcon = getLucideIcon("RefreshCw");
 
-function attendanceBadge(attendance: string) {
-  if (attendance === "hadir") {
-    return { label: "Hadir", className: "bg-success-soft text-success" };
-  }
-  if (attendance === "tidak_hadir") {
-    return { label: "Tidak Hadir", className: "bg-danger-soft text-danger" };
-  }
-  return { label: "Masih Ragu", className: "bg-warning-soft text-warning" };
-}
+const ATTENDANCE = {
+  hadir: {
+    label: "Hadir",
+    icon: getLucideIcon("CircleCheck"),
+    badge: "bg-success-soft text-success",
+  },
+  tidak_hadir: {
+    label: "Tidak hadir",
+    icon: getLucideIcon("CircleX"),
+    badge: "bg-danger-soft text-danger",
+  },
+  masih_ragu: {
+    label: "Masih ragu",
+    icon: getLucideIcon("CircleHelp"),
+    badge: "bg-warning-soft text-warning",
+  },
+} as const;
+
+const iconButton =
+  "flex h-10 w-10 items-center justify-center rounded-xl border border-border bg-card text-primary transition hover:bg-accent disabled:opacity-50";
 
 export function AdminWishesOffcanvas({
   open,
@@ -47,14 +58,18 @@ export function AdminWishesOffcanvas({
     };
   }, [open]);
 
-  const totalHadir = wishes.filter((w) => w.attendance === "hadir").length;
-  const totalTidakHadir = wishes.filter(
-    (w) => w.attendance === "tidak_hadir",
-  ).length;
-  const totalRagu = wishes.filter((w) => w.attendance === "masih_ragu").length;
-  const totalPerkiraan = wishes
+  const count = (key: WishItem["attendance"]) =>
+    wishes.filter((w) => w.attendance === key).length;
+  const estimate = wishes
     .filter((w) => w.attendance === "hadir")
     .reduce((sum, w) => sum + (w.guestCount || 1), 0);
+
+  const summary = [
+    { label: "Hadir", value: count("hadir"), tone: "text-success" },
+    { label: "Tidak hadir", value: count("tidak_hadir"), tone: "text-danger" },
+    { label: "Masih ragu", value: count("masih_ragu"), tone: "text-warning" },
+    { label: "Perkiraan tamu", value: estimate, tone: "text-primary" },
+  ];
 
   return (
     <AnimatePresence>
@@ -63,163 +78,167 @@ export function AdminWishesOffcanvas({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-100 flex"
+          className="fixed inset-0 z-100 flex justify-end"
         >
-          <motion.div
+          <div
+            aria-hidden="true"
             onClick={onClose}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-[#171411]/55 backdrop-blur-sm"
           />
 
-          <motion.div
-            initial={{ x: "-100%" }}
+          <motion.aside
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="wishes-title"
+            initial={{ x: "100%" }}
             animate={{ x: 0 }}
-            exit={{ x: "-100%" }}
+            exit={{ x: "100%" }}
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative bg-card w-full max-w-sm h-full border-r border-border shadow-xl flex flex-col"
+            className="relative flex h-full w-full max-w-md flex-col border-l border-border bg-background shadow-xl"
           >
-            <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
-              <div className="flex items-center gap-2">
-                <MessageIcon className="w-4.5 h-4.5 text-primary" />
-                <h3 className="font-semibold text-foreground text-sm">
-                  Ucapan &amp; Doa Masuk
-                </h3>
-                <span className="px-2 py-0.5 rounded-full bg-primary/10 text-primary text-xs font-medium">
-                  {wishes.length}
+            <header className="flex shrink-0 items-center justify-between gap-3 border-b border-border px-5 py-4">
+              <div className="flex items-center gap-2.5">
+                <span className="flex h-10 w-10 items-center justify-center rounded-full bg-accent text-primary">
+                  <MessageIcon className="h-4.5 w-4.5" />
                 </span>
+                <div>
+                  <h2
+                    id="wishes-title"
+                    className="font-serif text-xl font-semibold leading-tight text-foreground"
+                  >
+                    Ucapan &amp; Doa
+                  </h2>
+                  <p className="text-xs text-muted-foreground">
+                    {wishes.length} ucapan masuk
+                  </p>
+                </div>
               </div>
               <div className="flex items-center gap-2">
-                <motion.button
-                  whileTap={{ scale: 0.9 }}
+                <button
+                  type="button"
                   onClick={onRefresh}
                   disabled={loading}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-primary hover:bg-primary/10 disabled:opacity-50 transition-all"
-                  title="Muat ulang ucapan"
+                  className={iconButton}
                   aria-label="Muat ulang ucapan"
+                  title="Muat ulang ucapan"
                 >
-                  <RefreshIcon
-                    className={`w-4 h-4 ${loading ? "animate-spin" : ""}`}
-                  />
-                </motion.button>
+                  {loading ? (
+                    <Spinner className="h-4 w-4" />
+                  ) : (
+                    <RefreshIcon className="h-4 w-4" />
+                  )}
+                </button>
                 <button
+                  type="button"
                   onClick={onClose}
-                  className="w-8 h-8 rounded-full flex items-center justify-center text-muted-foreground hover:text-foreground hover:bg-muted transition-all"
+                  className={iconButton}
+                  aria-label="Tutup"
                 >
-                  <XIcon className="w-4 h-4" />
+                  <XIcon className="h-4.5 w-4.5" />
                 </button>
               </div>
-            </div>
+            </header>
 
             {!loading && wishes.length > 0 && (
-              <div className="px-5 py-3 border-b border-border shrink-0 grid grid-cols-4 gap-2">
-                <div className="text-center">
-                  <p className="text-base font-bold text-success">
-                    {totalHadir}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground">Hadir</p>
-                </div>
-                <div className="text-center">
-                  <p className="text-base font-bold text-danger">
-                    {totalTidakHadir}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground">
-                    Tidak Hadir
-                  </p>
-                </div>
-                <div className="text-center">
-                  <p className="text-base font-bold text-warning">
-                    {totalRagu}
-                  </p>
-                  <p className="text-[10px] text-muted-foreground">
-                    Masih Ragu
-                  </p>
-                </div>
-                <div className="text-center border-l border-border">
-                  <div className="flex items-center justify-center gap-1">
-                    <UsersIcon className="w-3 h-3 text-primary" />
-                    <p className="text-base font-bold text-primary">
-                      {totalPerkiraan}
+              <div className="grid shrink-0 grid-cols-4 gap-2 border-b border-border bg-cream px-5 py-3.5">
+                {summary.map((item) => (
+                  <div key={item.label} className="text-center">
+                    <p
+                      className={cn(
+                        "font-serif text-2xl font-semibold leading-none",
+                        item.tone,
+                      )}
+                    >
+                      {item.value}
+                    </p>
+                    <p className="mt-1 text-[11px] leading-tight text-muted-foreground">
+                      {item.label}
                     </p>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">Est. Tamu</p>
-                </div>
+                ))}
               </div>
             )}
 
-            <div className="overflow-y-auto flex-1 px-5 py-4 space-y-3">
+            <div className="flex-1 overflow-y-auto px-5 py-4">
               {loading ? (
-                <p className="text-xs uppercase tracking-widest text-muted-foreground text-center py-10">
+                <div className="flex items-center justify-center gap-2.5 py-12 text-sm text-muted-foreground">
+                  <Spinner className="text-primary" />
                   Memuat ucapan...
-                </p>
+                </div>
               ) : wishes.length === 0 ? (
-                <div className="text-center py-10">
-                  <MessageIcon className="w-10 h-10 text-muted-foreground/30 mx-auto mb-3" />
+                <div className="flex flex-col items-center gap-2 py-12 text-center">
+                  <MessageIcon className="h-9 w-9 text-gold-line" />
                   <p className="text-sm text-muted-foreground">
                     Belum ada ucapan yang masuk.
                   </p>
                 </div>
               ) : (
-                <AnimatePresence initial={false}>
-                  {wishes.map((wish) => {
-                    const badge = attendanceBadge(wish.attendance);
-                    return (
-                      <motion.div
-                        key={wish.id}
-                        initial={{ opacity: 0, y: -10, scale: 0.98 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, scale: 0.96 }}
-                        transition={{
-                          duration: 0.25,
-                          ease: [0.25, 0.1, 0.25, 1],
-                        }}
-                        layout
-                        className="rounded-xl border border-border bg-background p-3.5"
-                      >
-                        <div className="flex items-start gap-3">
-                          <div className="w-11 h-11 rounded-full flex items-center justify-center shrink-0 font-bold text-sm border bg-primary/10 text-primary border-primary/20">
-                            {wish.name.charAt(0).toUpperCase()}
-                          </div>
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center justify-between gap-2 mb-1 flex-wrap">
-                              <p className="text-sm font-medium text-foreground truncate">
-                                {wish.name}
-                              </p>
-                              <div className="flex items-center gap-1.5 shrink-0">
+                <ul className="flex flex-col gap-2.5">
+                  <AnimatePresence initial={false}>
+                    {wishes.map((wish) => {
+                      const meta = ATTENDANCE[wish.attendance];
+                      const Icon = meta.icon;
+                      return (
+                        <motion.li
+                          key={wish.id}
+                          layout
+                          initial={{ opacity: 0, y: -8 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, scale: 0.97 }}
+                          transition={{
+                            duration: 0.25,
+                            ease: [0.25, 0.1, 0.25, 1],
+                          }}
+                          className="card-wedding flex gap-3 p-4"
+                        >
+                          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent font-serif text-lg font-semibold text-primary">
+                            {wish.name.trim().charAt(0).toUpperCase()}
+                          </span>
+                          <div className="flex min-w-0 flex-1 flex-col gap-1.5">
+                            <div className="flex items-start justify-between gap-2">
+                              <div className="flex min-w-0 flex-wrap items-center gap-2">
+                                <p className="truncate text-sm font-semibold text-foreground">
+                                  {wish.name}
+                                </p>
                                 <span
-                                  className={
-                                    "text-[10px] px-2 py-0.5 rounded-full font-medium " +
-                                    badge.className
-                                  }
+                                  className={cn(
+                                    "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
+                                    meta.badge,
+                                  )}
                                 >
-                                  {badge.label}
+                                  <Icon className="h-3.5 w-3.5" />
+                                  {meta.label}
+                                  {wish.attendance === "hadir" &&
+                                  wish.guestCount
+                                    ? ` · ${wish.guestCount} orang`
+                                    : ""}
                                 </span>
-                                <motion.button
-                                  whileTap={{ scale: 0.9 }}
-                                  onClick={() => onDelete(wish.id)}
-                                  className="p-1.5 rounded-lg text-muted-foreground hover:bg-danger-soft hover:text-danger transition-all duration-200"
-                                  title="Hapus ucapan"
-                                >
-                                  <TrashIcon className="w-3.5 h-3.5" />
-                                </motion.button>
                               </div>
+                              <button
+                                type="button"
+                                onClick={() => onDelete(wish.id)}
+                                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-muted-foreground transition-colors hover:bg-danger-soft hover:text-danger"
+                                aria-label={`Hapus ucapan dari ${wish.name}`}
+                                title="Hapus ucapan"
+                              >
+                                <TrashIcon className="h-4 w-4" />
+                              </button>
                             </div>
-                            <p className="text-sm text-muted-foreground leading-relaxed wrap-break-word">
+                            <p className="wrap-break-word text-[13.5px] leading-normal text-foreground/80">
                               {wish.message}
                             </p>
-                            <p className="text-xs text-muted-foreground/60 mt-1.5">
+                            <span className="text-[11.5px] text-muted-foreground">
                               {wish.timestamp}
-                              {wish.attendance === "hadir" && wish.guestCount
-                                ? ` · ${wish.guestCount} orang`
-                                : ""}
-                            </p>
+                            </span>
                           </div>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </AnimatePresence>
+                        </motion.li>
+                      );
+                    })}
+                  </AnimatePresence>
+                </ul>
               )}
             </div>
-          </motion.div>
+          </motion.aside>
         </motion.div>
       )}
     </AnimatePresence>

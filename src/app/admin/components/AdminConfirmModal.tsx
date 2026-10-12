@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
+import { Spinner } from "@/components/ui/Spinner";
 import { getLucideIcon } from "@/lib/utils";
 
 interface Props {
@@ -17,7 +18,6 @@ interface Props {
 }
 
 const AlertTriangleIcon = getLucideIcon("TriangleAlert");
-const Loader2Icon = getLucideIcon("Loader2");
 const TrashIcon = getLucideIcon("Trash2");
 const XIcon = getLucideIcon("X");
 
@@ -50,69 +50,81 @@ export function AdminConfirmModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-110 flex items-end sm:items-center justify-center p-0 sm:p-4"
+          className="fixed inset-0 z-110 flex items-end justify-center sm:items-center sm:p-4"
         >
-          <motion.div
+          <div
+            aria-hidden="true"
             onClick={loading ? undefined : onCancel}
-            className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+            className="absolute inset-0 bg-[#171411]/55 backdrop-blur-sm"
           />
 
           <motion.div
-            initial={{ opacity: 0, y: 40, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 40, scale: 0.98 }}
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="confirm-title"
+            aria-describedby="confirm-description"
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.25, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative bg-card w-full sm:max-w-sm sm:rounded-2xl rounded-t-2xl border border-border shadow-xl p-6"
+            className="card-wedding relative w-full rounded-b-none px-5.5 pt-6 pb-[calc(1.5rem+env(safe-area-inset-bottom))] sm:max-w-sm sm:rounded-b-[1.375rem] sm:pb-6"
           >
-            <div className="flex flex-col items-center text-center gap-4">
-              <div
+            <div className="flex flex-col items-center gap-4 text-center">
+              <span
                 className={
-                  "w-14 h-14 rounded-full flex items-center justify-center " +
+                  "flex h-14 w-14 items-center justify-center rounded-full " +
                   (isDanger
                     ? "bg-danger-soft text-danger"
-                    : "bg-primary/10 text-primary")
+                    : "bg-accent text-primary")
                 }
               >
-                <AlertTriangleIcon className="w-7 h-7" />
-              </div>
+                <AlertTriangleIcon className="h-7 w-7" />
+              </span>
 
               <div>
-                <h3 className="font-semibold text-foreground text-base">
+                <h3
+                  id="confirm-title"
+                  className="font-serif text-xl font-semibold text-foreground"
+                >
                   {title}
                 </h3>
-                <p className="text-sm text-muted-foreground mt-1.5 leading-relaxed">
+                <p
+                  id="confirm-description"
+                  className="mt-1.5 text-sm leading-relaxed text-muted-foreground"
+                >
                   {description}
                 </p>
               </div>
 
-              <div className="flex items-center gap-2 w-full mt-1">
-                <motion.button
-                  whileTap={{ scale: 0.97 }}
+              <div className="mt-1 grid w-full grid-cols-2 gap-2.5">
+                <button
+                  type="button"
                   onClick={onCancel}
                   disabled={loading}
-                  className="flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-foreground bg-muted hover:bg-muted/70 transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                  className="flex h-11 items-center justify-center gap-2 rounded-xl border border-border bg-card text-sm font-semibold text-foreground transition hover:bg-accent disabled:opacity-50"
                 >
-                  <XIcon className="w-4 h-4" />
+                  <XIcon className="h-4 w-4" />
                   {cancelLabel}
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.97 }}
+                </button>
+                <button
+                  type="button"
                   onClick={onConfirm}
                   disabled={loading}
+                  aria-busy={loading}
                   className={
-                    "flex-1 px-4 py-2.5 rounded-xl text-sm font-medium text-white transition-all disabled:opacity-60 flex items-center justify-center gap-2 " +
+                    "flex h-11 items-center justify-center gap-2 rounded-xl text-sm font-semibold text-white transition disabled:opacity-85 " +
                     (isDanger
-                      ? "bg-danger hover:bg-danger/90"
-                      : "bg-primary hover:bg-primary/90")
+                      ? "bg-danger hover:brightness-105"
+                      : "bg-primary hover:brightness-105")
                   }
                 >
                   {loading ? (
-                    <Loader2Icon className="w-4 h-4 animate-spin" />
+                    <Spinner className="h-4 w-4" />
                   ) : isDanger ? (
-                    <TrashIcon className="w-4 h-4" />
+                    <TrashIcon className="h-4 w-4" />
                   ) : null}
                   {confirmLabel}
-                </motion.button>
+                </button>
               </div>
             </div>
           </motion.div>
