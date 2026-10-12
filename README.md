@@ -94,8 +94,8 @@ Isi `.env.local` sebelum menjalankan aplikasi:
 <tr><th align="left">Variabel</th><th align="left">Isi</th></tr>
 </thead>
 <tbody>
-<tr><td><code>ADMIN_PASSWORD</code></td><td>Password halaman admin. Wajib diisi dengan password yang kuat</td></tr>
-<tr><td><code>ADMIN_SESSION_SECRET</code></td><td>Teks acak panjang untuk sesi admin. Buat dengan <code>node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"</code></td></tr>
+<tr><td><code>ADMIN_PASSWORD</code></td><td>Password halaman admin. Wajib diisi dengan password yang kuat; kalau kosong, login admin ditolak</td></tr>
+<tr><td><code>ADMIN_SESSION_SECRET</code></td><td>Kunci penanda tangan sesi admin, minimal 16 karakter acak; kalau kosong atau terlalu pendek, login admin ditolak. Mengganti nilainya membuat semua admin harus login ulang. Buat dengan <code>node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"</code></td></tr>
 <tr><td><code>ADMIN_ROUTE_SLUG</code></td><td>Alamat rahasia halaman admin, misalnya <code>auth/administrator</code>. Bisa lebih dari satu, dipisah koma</td></tr>
 <tr><td><code>GOOGLE_SHEET_ID</code></td><td>ID spreadsheet dari alamatnya: <code>/spreadsheets/d/ID/edit</code></td></tr>
 <tr><td><code>GOOGLE_SERVICE_ACCOUNT_EMAIL</code></td><td><code>client_email</code> dari kunci JSON service account. Spreadsheet harus dibagikan ke email ini sebagai Editor</td></tr>

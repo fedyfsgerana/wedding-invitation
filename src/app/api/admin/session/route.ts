@@ -1,12 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAuthenticated, SESSION_MAX_AGE } from "@/lib/auth";
+import { SESSION_COOKIE, sessionExpiresAt } from "@/lib/auth";
 
 export async function GET(req: NextRequest) {
-  if (!isAuthenticated(req)) {
+  const expiresAt = sessionExpiresAt(req.cookies.get(SESSION_COOKIE)?.value);
+
+  if (expiresAt === null) {
     return NextResponse.json({ authenticated: false }, { status: 401 });
   }
-  return NextResponse.json({
-    authenticated: true,
-    expiresAt: Date.now() + SESSION_MAX_AGE * 1000,
-  });
+
+  return NextResponse.json({ authenticated: true, expiresAt });
 }

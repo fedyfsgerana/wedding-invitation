@@ -1,5 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
-import { SESSION_COOKIE, SESSION_VALUE, SESSION_MAX_AGE } from "@/lib/auth";
+import {
+  SESSION_COOKIE,
+  SESSION_MAX_AGE,
+  createSessionToken,
+  isAdminConfigured,
+  verifyPassword,
+} from "@/lib/auth";
 
 const loginAttempts = new Map<
   string,
@@ -55,13 +61,30 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const { password } = await req.json();
+  if (!isAdminConfigured()) {
+    return NextResponse.json(
+      { success: false, error: "Login admin belum dikonfigurasi." },
+      { status: 503 },
+    );
+  }
 
-  if (password === process.env.ADMIN_PASSWORD) {
+  const body = await req.json().catch(() => null);
+  const password = body && typeof body === "object" ? body.password : null;
+
+  if (verifyPassword(password)) {
+    const token = createSessionToken();
+
+    if (!token) {
+      return NextResponse.json(
+        { success: false, error: "Login admin belum dikonfigurasi." },
+        { status: 503 },
+      );
+    }
+
     loginAttempts.delete(ip);
 
     const res = NextResponse.json({ success: true });
-    res.cookies.set(SESSION_COOKIE, SESSION_VALUE, {
+    res.cookies.set(SESSION_COOKIE, token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
