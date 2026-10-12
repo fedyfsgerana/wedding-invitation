@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useEffect, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 
 const ChevronUpIcon = getLucideIcon("ChevronUp");
@@ -15,24 +15,20 @@ export function BackToTop() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   return (
     <AnimatePresence>
       {visible && (
         <motion.button
-          initial={{ opacity: 0, scale: 0.5 }}
+          type="button"
+          initial={{ opacity: 0, scale: 0.8 }}
           animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.5 }}
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.9 }}
-          onClick={scrollToTop}
-          className="fixed bottom-20 right-4 md:bottom-6 md:right-6 z-50 p-3 rounded-full bg-primary text-primary-foreground shadow-lg hover:shadow-xl transition-shadow"
-          aria-label="Back to top"
+          exit={{ opacity: 0, scale: 0.8 }}
+          whileTap={{ scale: 0.92 }}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          className="fixed right-4 bottom-24 z-50 flex h-11 w-11 items-center justify-center rounded-xl border border-gold-line bg-card text-primary shadow-[0_10px_24px_-14px_rgba(58,51,44,0.45)] transition hover:bg-accent md:right-6 md:bottom-6"
+          aria-label="Kembali ke atas"
         >
-          <ChevronUpIcon className="w-5 h-5" />
+          <ChevronUpIcon className="h-5 w-5" />
         </motion.button>
       )}
     </AnimatePresence>

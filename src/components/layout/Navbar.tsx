@@ -1,189 +1,203 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { useTheme } from "@/components/providers/ThemeProvider";
 import { useAudio } from "@/components/providers/AudioProvider";
-import { getLucideIcon, cn } from "@/lib/utils";
+import { useTheme } from "@/components/providers/ThemeProvider";
+import { cn, getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
-const navItems = [
-  { label: "Pembuka", href: "#pembuka", icon: "BookOpen" },
-  { label: "Mempelai", href: "#mempelai", icon: "Heart" },
-  { label: "Acara", href: "#acara", icon: "Calendar" },
-  { label: "Galeri", href: "#galeri", icon: "Image" },
-  { label: "RSVP", href: "#rsvp", icon: "MessageCircle" },
-  { label: "Hadiah", href: "#hadiah", icon: "Gift" },
-  { label: "Penutup", href: "#penutup", icon: "Sparkles" },
+const desktopItems = [
+  { label: "Pembuka", id: "pembuka" },
+  { label: "Mempelai", id: "mempelai" },
+  { label: "Acara", id: "acara" },
+  { label: "Galeri", id: "galeri" },
+  { label: "Ucapan", id: "rsvp" },
+  { label: "Hadiah", id: "hadiah" },
+  { label: "Penutup", id: "penutup" },
 ];
+
+const mobileItems = [
+  { label: "Beranda", id: "pembuka", icon: getLucideIcon("House") },
+  { label: "Mempelai", id: "mempelai", icon: getLucideIcon("Heart") },
+  { label: "Acara", id: "acara", icon: getLucideIcon("CalendarDays") },
+  { label: "Galeri", id: "galeri", icon: getLucideIcon("Image") },
+  { label: "Ucapan", id: "rsvp", icon: getLucideIcon("MessageCircle") },
+];
+
+const SECTION_ORDER = desktopItems.map((item) => item.id);
 
 const SunIcon = getLucideIcon("Sun");
 const MoonIcon = getLucideIcon("Moon");
 const MusicIcon = getLucideIcon("Music");
 const MusicOffIcon = getLucideIcon("VolumeX");
 
-const navIconMap = Object.fromEntries(
-  navItems.map((item) => [item.icon, getLucideIcon(item.icon)]),
-);
+const iconButton =
+  "flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card text-primary transition hover:bg-accent";
+
+function mobileTarget(active: string) {
+  if (active === "countdown") return "mempelai";
+  if (active === "agenda") return "acara";
+  if (active === "hadiah" || active === "penutup") return "rsvp";
+  return active;
+}
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [activeSection, setActiveSection] = useState("");
+  const [active, setActive] = useState("pembuka");
   const { theme, toggleTheme } = useTheme();
   const { isPlaying, toggleAudio } = useAudio();
   const { groom, bride } = weddingData;
 
   useEffect(() => {
+    const ids = [...SECTION_ORDER, "countdown", "agenda"];
     const handleScroll = () => {
-      setScrolled(window.scrollY > 50);
+      setScrolled(window.scrollY > 24);
 
       const atBottom =
         window.innerHeight + window.scrollY >=
         document.documentElement.scrollHeight - 2;
       if (atBottom) {
-        setActiveSection(navItems[navItems.length - 1].href.replace("#", ""));
+        setActive("penutup");
         return;
       }
 
-      const sections = [...navItems].map((item) => item.href.replace("#", ""));
-      for (const section of sections.reverse()) {
-        const el = document.getElementById(section);
-        if (el && window.scrollY >= el.offsetTop - 120) {
-          setActiveSection(section);
-          break;
+      let current = "pembuka";
+      let best = -Infinity;
+      for (const id of ids) {
+        const el = document.getElementById(id);
+        if (!el) continue;
+        const top = el.getBoundingClientRect().top;
+        if (top <= 140 && top > best) {
+          best = top;
+          current = id;
         }
       }
+      setActive(current);
     };
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const handleNavClick = (href: string) => {
-    const el = document.querySelector(href);
-    el?.scrollIntoView({ behavior: "smooth" });
+  const goTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
   };
+
+  const controls = (
+    <div className="flex items-center gap-2">
+      <button
+        type="button"
+        onClick={toggleAudio}
+        className={iconButton}
+        aria-label={isPlaying ? "Jeda musik" : "Putar musik"}
+      >
+        {isPlaying ? (
+          <MusicIcon className="h-4.5 w-4.5" />
+        ) : (
+          <MusicOffIcon className="h-4.5 w-4.5" />
+        )}
+      </button>
+      <button
+        type="button"
+        onClick={toggleTheme}
+        className={iconButton}
+        aria-label={theme === "light" ? "Mode gelap" : "Mode terang"}
+      >
+        {theme === "light" ? (
+          <MoonIcon className="h-4.5 w-4.5" />
+        ) : (
+          <SunIcon className="h-4.5 w-4.5" />
+        )}
+      </button>
+    </div>
+  );
+
+  const brand = (
+    <button
+      type="button"
+      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      className="font-script text-[28px] leading-none text-primary"
+      aria-label="Kembali ke atas"
+    >
+      {groom.nickname} &amp; {bride.nickname}
+    </button>
+  );
+
+  const mobileActive = mobileTarget(active);
 
   return (
     <>
-      <motion.nav
-        initial={{ y: -100 }}
+      <motion.header
+        initial={{ y: -80 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
         className={cn(
-          "fixed top-0 left-0 right-0 z-50 transition-all duration-300 hidden md:block",
+          "fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300",
           scrolled
-            ? "bg-background/90 backdrop-blur-md border-b border-border shadow-sm py-3"
-            : "bg-transparent py-5",
+            ? "border-border bg-background/92 backdrop-blur-md"
+            : "border-transparent bg-transparent",
         )}
       >
-        <div className="container-wedding flex items-center justify-between gap-2 px-4">
-          <button
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="relative w-10 h-10 shrink-0"
-            aria-label="Kembali ke atas"
-          >
-            <div className="absolute inset-0 rounded-full gradient-primary opacity-20 animate-pulse-soft" />
-            <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
-              <span className="font-serif text-sm text-primary">
-                {groom.nickname.charAt(0)}&amp;{bride.nickname.charAt(0)}
-              </span>
-            </div>
-          </button>
-          <div className="flex flex-1 min-w-0 items-center justify-center gap-3 lg:gap-6">
-            {navItems.map((item) => {
-              const Icon = navIconMap[item.icon];
-              return (
-                <button
-                  key={item.href}
-                  onClick={() => handleNavClick(item.href)}
-                  className={cn(
-                    "flex items-center gap-1.5 text-xs lg:text-sm font-medium transition-colors whitespace-nowrap shrink-0",
-                    activeSection === item.href.replace("#", "")
-                      ? "text-primary"
-                      : "text-foreground/70 hover:text-primary",
-                  )}
-                >
-                  <Icon className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-          <div className="flex items-center justify-end gap-2 shrink-0">
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleAudio}
-              className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
-              aria-label="Putar/Hentikan musik"
-            >
-              {isPlaying ? (
-                <MusicIcon className="w-4 h-4" />
-              ) : (
-                <MusicOffIcon className="w-4 h-4" />
-              )}
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.9 }}
-              onClick={toggleTheme}
-              className="p-2 rounded-full hover:bg-muted transition-colors text-foreground/70"
-              aria-label="Ganti mode terang/gelap"
-            >
-              {theme === "light" ? (
-                <MoonIcon className="w-4 h-4" />
-              ) : (
-                <SunIcon className="w-4 h-4" />
-              )}
-            </motion.button>
-          </div>
+        <div className="container-wedding flex h-15 items-center justify-between gap-4 px-4.5 md:h-18">
+          {brand}
+
+          <nav aria-label="Navigasi undangan" className="hidden md:block">
+            <ul className="flex items-center gap-1 lg:gap-2">
+              {desktopItems.map((item) => (
+                <li key={item.id}>
+                  <button
+                    type="button"
+                    onClick={() => goTo(item.id)}
+                    aria-current={active === item.id ? "true" : undefined}
+                    className={cn(
+                      "rounded-full px-3 py-2 text-sm font-medium transition-colors",
+                      active === item.id
+                        ? "bg-accent text-primary"
+                        : "text-muted-foreground hover:text-primary",
+                    )}
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          {controls}
         </div>
-      </motion.nav>
+      </motion.header>
 
       <motion.nav
         initial={{ y: 100 }}
         animate={{ y: 0 }}
-        transition={{ duration: 0.4, delay: 0.5 }}
-        className="fixed bottom-0 left-0 right-0 z-50 md:hidden"
+        transition={{ duration: 0.4, delay: 0.4 }}
+        aria-label="Navigasi undangan"
+        className="pb-safe fixed inset-x-4 bottom-4 z-50 md:hidden"
       >
-        <div className="bg-background/95 backdrop-blur-md border-t border-border shadow-lg">
-          <div className="flex items-center justify-around px-1 py-1.5">
-            {navItems.map((item) => {
-              const Icon = navIconMap[item.icon];
-              const isActive = activeSection === item.href.replace("#", "");
-              return (
-                <motion.button
-                  key={item.href}
-                  onClick={() => handleNavClick(item.href)}
-                  whileTap={{ scale: 0.9 }}
-                  className="flex flex-col items-center gap-0.5 px-1 py-1 rounded-xl transition-all flex-1"
+        <ul className="flex h-16 items-center justify-around rounded-[20px] border border-border bg-card/95 px-1 shadow-[0_18px_30px_-18px_rgba(58,51,44,0.45)] backdrop-blur-md">
+          {mobileItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = mobileActive === item.id;
+            return (
+              <li key={item.id}>
+                <button
+                  type="button"
+                  onClick={() => goTo(item.id)}
+                  aria-current={isActive ? "true" : undefined}
+                  className={cn(
+                    "flex h-13 w-13 flex-col items-center justify-center gap-0.5 rounded-[14px] text-[9.5px] font-semibold transition-colors",
+                    isActive
+                      ? "bg-accent text-primary"
+                      : "text-muted-foreground hover:text-primary",
+                  )}
                 >
-                  <div
-                    className={cn(
-                      "w-7 h-7 rounded-full flex items-center justify-center transition-all",
-                      isActive ? "bg-primary/15" : "bg-transparent",
-                    )}
-                  >
-                    <Icon
-                      className={cn(
-                        "w-4 h-4 transition-colors",
-                        isActive ? "text-primary" : "text-muted-foreground",
-                      )}
-                    />
-                  </div>
-                  <span
-                    className={cn(
-                      "text-[9px] font-medium transition-colors leading-tight",
-                      isActive ? "text-primary" : "text-muted-foreground",
-                    )}
-                  >
-                    {item.label}
-                  </span>
-                </motion.button>
-              );
-            })}
-          </div>
-        </div>
+                  <Icon className="h-4.5 w-4.5" />
+                  {item.label}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
       </motion.nav>
     </>
   );

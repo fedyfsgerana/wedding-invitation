@@ -71,7 +71,7 @@ export function WeddingApp({ guestName }: WeddingAppProps) {
               <ScrollProgress />
               <FloatingPetals />
               <BackToTop />
-              <FloatingControls />
+              {!isOpened && <FloatingControls />}
 
               <AnimatePresence>
                 {!isOpened && (
@@ -89,7 +89,7 @@ export function WeddingApp({ guestName }: WeddingAppProps) {
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
                     transition={{ duration: 0.6 }}
-                    className="pb-20 md:pb-0"
+                    className="pt-15 md:pt-18"
                   >
                     <Navbar />
                     <ErrorBoundary>

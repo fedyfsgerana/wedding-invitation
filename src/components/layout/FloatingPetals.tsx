@@ -9,16 +9,9 @@ interface Petal {
   color: string;
 }
 
-const PETAL_COLORS = [
-  "#d4a843",
-  "#e8c97a",
-  "#c9a84c",
-  "#f0dfa0",
-  "#b8956a",
-  "#e2c97e",
-];
+const PETAL_COLORS = ["#e2c98f", "#dfc995", "#efe0bd", "#d0b06b", "#f3e9d2"];
 
-const PETAL_COUNT = 10;
+const PETAL_COUNT = 8;
 
 function seededRandom(seed: number): number {
   const x = Math.sin(seed) * 10000;

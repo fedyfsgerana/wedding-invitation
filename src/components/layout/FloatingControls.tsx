@@ -1,8 +1,8 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useTheme } from "@/components/providers/ThemeProvider";
 import { useAudio } from "@/components/providers/AudioProvider";
+import { useTheme } from "@/components/providers/ThemeProvider";
 import { getLucideIcon } from "@/lib/utils";
 
 const SunIcon = getLucideIcon("Sun");
@@ -10,45 +10,44 @@ const MoonIcon = getLucideIcon("Moon");
 const MusicIcon = getLucideIcon("Music");
 const MusicOffIcon = getLucideIcon("VolumeX");
 
+const buttonClass =
+  "flex h-11 w-11 items-center justify-center rounded-xl border border-border bg-card/90 text-primary shadow-sm backdrop-blur-md transition hover:bg-accent";
+
 export function FloatingControls() {
   const { theme, toggleTheme } = useTheme();
   const { isPlaying, toggleAudio } = useAudio();
 
   return (
-    <>
-      <motion.button
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+    <motion.div
+      initial={{ opacity: 0, y: -12 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.6 }}
+      className="fixed top-6 right-6 z-50 flex gap-2"
+    >
+      <button
+        type="button"
         onClick={toggleAudio}
-        className="fixed top-4 left-4 z-50 p-2.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-sm hover:bg-muted transition-colors text-foreground/70 md:hidden"
-        aria-label="Putar/Hentikan musik"
+        className={buttonClass}
+        aria-label={isPlaying ? "Jeda musik" : "Putar musik"}
       >
         {isPlaying ? (
-          <MusicIcon className="w-4 h-4" />
+          <MusicIcon className="h-4.5 w-4.5" />
         ) : (
-          <MusicOffIcon className="w-4 h-4" />
+          <MusicOffIcon className="h-4.5 w-4.5" />
         )}
-      </motion.button>
-
-      <motion.button
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-        whileHover={{ scale: 1.1 }}
-        whileTap={{ scale: 0.9 }}
+      </button>
+      <button
+        type="button"
         onClick={toggleTheme}
-        className="fixed top-4 right-4 z-50 p-2.5 rounded-full bg-background/80 backdrop-blur-md border border-border shadow-sm hover:bg-muted transition-colors text-foreground/70 md:hidden"
-        aria-label="Ganti mode terang/gelap"
+        className={buttonClass}
+        aria-label={theme === "light" ? "Mode gelap" : "Mode terang"}
       >
         {theme === "light" ? (
-          <MoonIcon className="w-4 h-4" />
+          <MoonIcon className="h-4.5 w-4.5" />
         ) : (
-          <SunIcon className="w-4 h-4" />
+          <SunIcon className="h-4.5 w-4.5" />
         )}
-      </motion.button>
-    </>
+      </button>
+    </motion.div>
   );
 }
