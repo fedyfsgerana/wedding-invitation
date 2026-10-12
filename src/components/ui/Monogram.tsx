@@ -1,4 +1,3 @@
-import { useId } from "react";
 import { cn } from "@/lib/utils";
 
 interface MonogramProps {
@@ -8,8 +7,6 @@ interface MonogramProps {
 }
 
 export function Monogram({ size = 40, className, title }: MonogramProps) {
-  const gradientId = useId();
-
   return (
     <svg
       width={size}
@@ -20,20 +17,21 @@ export function Monogram({ size = 40, className, title }: MonogramProps) {
       aria-label={title}
       className={cn("shrink-0", className)}
     >
-      <defs>
-        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#c9a24f" />
-          <stop offset="1" stopColor="#94712a" />
-        </linearGradient>
-      </defs>
-      <circle cx="32" cy="32" r="31" fill={`url(#${gradientId})`} />
+      <circle
+        cx="32"
+        cy="32"
+        r="31"
+        fill="#fffdf8"
+        stroke="#c9a24f"
+        strokeWidth="1.4"
+      />
       <circle
         cx="32"
         cy="32"
         r="27"
         fill="none"
-        stroke="#f6eedd"
-        strokeOpacity="0.7"
+        stroke="#dfc995"
+        strokeOpacity="0.75"
         strokeWidth="0.8"
       />
       <text
@@ -43,7 +41,7 @@ export function Monogram({ size = 40, className, title }: MonogramProps) {
         fontFamily="var(--font-cormorant), Georgia, serif"
         fontSize="22"
         fontWeight="600"
-        fill="#fdf9f0"
+        fill="#94712a"
       >
         F
       </text>
@@ -53,7 +51,7 @@ export function Monogram({ size = 40, className, title }: MonogramProps) {
         textAnchor="middle"
         fontFamily="var(--font-italianno), cursive"
         fontSize="24"
-        fill="#f3e3bb"
+        fill="#b8923f"
       >
         &amp;
       </text>
@@ -64,7 +62,7 @@ export function Monogram({ size = 40, className, title }: MonogramProps) {
         fontFamily="var(--font-cormorant), Georgia, serif"
         fontSize="22"
         fontWeight="600"
-        fill="#fdf9f0"
+        fill="#94712a"
       >
         S
       </text>
