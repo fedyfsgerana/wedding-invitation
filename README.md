@@ -82,8 +82,28 @@ src/
 
 ```bash
 npm install
+cp .env.example .env.local
 npm run dev
 ```
+
+Isi `.env.local` sebelum menjalankan aplikasi:
+
+<table style="width:100%; border-collapse:collapse;">
+<colgroup><col style="width:32%"><col style="width:68%"></colgroup>
+<thead>
+<tr><th align="left">Variabel</th><th align="left">Isi</th></tr>
+</thead>
+<tbody>
+<tr><td><code>ADMIN_PASSWORD</code></td><td>Password halaman admin. Wajib diisi dengan password yang kuat</td></tr>
+<tr><td><code>ADMIN_SESSION_SECRET</code></td><td>Teks acak panjang untuk sesi admin. Buat dengan <code>node -e "console.log(require('crypto').randomBytes(32).toString('base64url'))"</code></td></tr>
+<tr><td><code>ADMIN_ROUTE_SLUG</code></td><td>Alamat rahasia halaman admin, misalnya <code>auth/administrator</code>. Bisa lebih dari satu, dipisah koma</td></tr>
+<tr><td><code>GOOGLE_SHEET_ID</code></td><td>ID spreadsheet dari alamatnya: <code>/spreadsheets/d/ID/edit</code></td></tr>
+<tr><td><code>GOOGLE_SERVICE_ACCOUNT_EMAIL</code></td><td><code>client_email</code> dari kunci JSON service account. Spreadsheet harus dibagikan ke email ini sebagai Editor</td></tr>
+<tr><td><code>GOOGLE_PRIVATE_KEY</code></td><td><code>private_key</code> dari kunci JSON service account, dalam tanda kutip dengan <code>\n</code> sebagai baris baru</td></tr>
+<tr><td><code>GOOGLE_GUESTS_SHEET_GID</code></td><td>GID sheet <b>Guests</b> (kolom: id, name, link, sent, createdAt), dari <code>#gid=</code> di alamat</td></tr>
+<tr><td><code>GOOGLE_WISHES_SHEET_GID</code></td><td>GID sheet <b>Wishes</b> (kolom: id, name, message, attendance, guestCount, timestamp)</td></tr>
+</tbody>
+</table>
 
 Buka `http://localhost:3000`. Untuk link personal tamu: `http://localhost:3000/?to=Budi`
 
