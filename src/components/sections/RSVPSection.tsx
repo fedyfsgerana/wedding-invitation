@@ -62,7 +62,13 @@ function CornerOrnament({ className }: { className: string }) {
   );
 }
 
-export function RSVPSection() {
+const MAX_GUEST_COUNT = 5;
+
+interface RSVPSectionProps {
+  guestName: string | null;
+}
+
+export function RSVPSection({ guestName }: RSVPSectionProps) {
   const [form, setForm] = useState<RSVPData>({
     name: "",
     attendance: "hadir",
@@ -107,6 +113,7 @@ export function RSVPSection() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          to: guestName,
           name: form.name,
           message: form.message,
           attendance: form.attendance,
@@ -303,7 +310,10 @@ export function RSVPSection() {
                             onClick={() =>
                               setForm({
                                 ...form,
-                                guestCount: Math.min(10, form.guestCount + 1),
+                                guestCount: Math.min(
+                                  MAX_GUEST_COUNT,
+                                  form.guestCount + 1,
+                                ),
                               })
                             }
                             disabled={loading}

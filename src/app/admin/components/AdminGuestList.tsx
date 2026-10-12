@@ -17,6 +17,7 @@ interface Props {
   onToggleSent: (id: string) => void;
   onDelete: (id: string) => void;
   onEditName: (id: string, newName: string) => void;
+  onEditQuota: (id: string, quota: number) => void;
   pageSize: number;
   setPageSize: (v: number) => void;
   currentPage: number;
@@ -60,6 +61,7 @@ export function AdminGuestList({
   onToggleSent,
   onDelete,
   onEditName,
+  onEditQuota,
   pageSize,
   setPageSize,
   currentPage,
@@ -315,6 +317,7 @@ export function AdminGuestList({
               onToggleSent={onToggleSent}
               onDelete={onDelete}
               onEditName={onEditName}
+              onEditQuota={onEditQuota}
             />
           ))}
         </AnimatePresence>

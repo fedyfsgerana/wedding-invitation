@@ -17,6 +17,7 @@ interface Props {
   onToggleSent: (id: string) => void;
   onDelete: (id: string) => void;
   onEditName: (id: string, newName: string) => void;
+  onEditQuota: (id: string, quota: number) => void;
 }
 
 const CopyIcon = getLucideIcon("Copy");
@@ -40,10 +41,13 @@ export function AdminGuestCard({
   onToggleSent,
   onDelete,
   onEditName,
+  onEditQuota,
 }: Props) {
   const isStriped = index % 2 === 1;
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(guest.name);
+  const [quotaValue, setQuotaValue] = useState(String(guest.quota));
+  const quotaFull = guest.used >= guest.quota;
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -55,6 +59,7 @@ export function AdminGuestCard({
 
   const startEdit = () => {
     setEditValue(guest.name);
+    setQuotaValue(String(guest.quota));
     setIsEditing(true);
   };
 
@@ -63,11 +68,21 @@ export function AdminGuestCard({
     if (trimmed && trimmed !== guest.name) {
       onEditName(guest.id, trimmed);
     }
+    const quota = Number(quotaValue);
+    if (
+      Number.isInteger(quota) &&
+      quota >= 1 &&
+      quota <= 1000 &&
+      quota !== guest.quota
+    ) {
+      onEditQuota(guest.id, quota);
+    }
     setIsEditing(false);
   };
 
   const cancelEdit = () => {
     setEditValue(guest.name);
+    setQuotaValue(String(guest.quota));
     setIsEditing(false);
   };
 
@@ -131,16 +146,29 @@ export function AdminGuestCard({
 
           <div className="min-w-0 flex-1">
             {isEditing ? (
-              <input
-                ref={inputRef}
-                type="text"
-                value={editValue}
-                onChange={(e) => setEditValue(e.target.value)}
-                onKeyDown={handleEditKeyDown}
-                maxLength={100}
-                className="w-full text-sm font-semibold text-foreground bg-card border border-primary/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary/30"
-                aria-label={`Edit nama ${guest.name}`}
-              />
+              <div className="flex items-center gap-2">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={editValue}
+                  onChange={(e) => setEditValue(e.target.value)}
+                  onKeyDown={handleEditKeyDown}
+                  maxLength={100}
+                  className="w-full min-w-0 text-sm font-semibold text-foreground bg-card border border-primary/40 rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  aria-label={`Edit nama ${guest.name}`}
+                />
+                <input
+                  type="number"
+                  min={1}
+                  max={1000}
+                  value={quotaValue}
+                  onChange={(e) => setQuotaValue(e.target.value)}
+                  onKeyDown={handleEditKeyDown}
+                  className="w-16 shrink-0 text-sm text-center text-foreground bg-card border border-primary/40 rounded-lg px-1 py-1 focus:outline-none focus:ring-2 focus:ring-primary/30"
+                  aria-label={`Edit kuota ${guest.name}`}
+                  title="Kuota ucapan"
+                />
+              </div>
             ) : (
               <div className="flex items-center gap-2">
                 <p className="text-sm font-semibold text-foreground truncate">
@@ -153,9 +181,20 @@ export function AdminGuestCard({
                 )}
               </div>
             )}
-            <p className="text-xs text-muted-foreground/60 mt-0.5 flex items-center gap-1">
+            <p className="text-xs text-muted-foreground/60 mt-0.5 flex items-center gap-1 flex-wrap">
               <ClockIcon className="w-3 h-3 shrink-0" />
               {guest.createdAt}
+              <span
+                className={
+                  "ml-1 px-1.5 py-0.5 rounded-md border " +
+                  (quotaFull
+                    ? "bg-danger-soft text-danger border-danger-border"
+                    : "bg-muted text-muted-foreground border-border")
+                }
+                title="Ucapan terpakai / kuota"
+              >
+                Ucapan {guest.used}/{guest.quota}
+              </span>
             </p>
           </div>
         </div>
@@ -170,7 +209,7 @@ export function AdminGuestCard({
                 ? "text-success hover:bg-success-soft"
                 : "text-muted-foreground hover:bg-primary/10 hover:text-primary")
             }
-            title={isEditing ? "Simpan nama" : "Edit nama tamu"}
+            title={isEditing ? "Simpan" : "Edit nama dan kuota"}
           >
             {isEditing ? (
               <SaveIcon className="w-4 h-4" />

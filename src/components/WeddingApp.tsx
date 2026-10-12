@@ -99,7 +99,7 @@ export function WeddingApp({ guestName }: WeddingAppProps) {
                       <EventSection />
                       <AgendaSection />
                       <GallerySection />
-                      <RSVPSection />
+                      <RSVPSection guestName={guestName} />
                       <GiftSection />
                       <ClosingSection />
                     </ErrorBoundary>

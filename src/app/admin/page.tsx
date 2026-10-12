@@ -22,6 +22,8 @@ export interface Guest {
   link: string;
   sent: boolean;
   createdAt: string;
+  quota: number;
+  used: number;
 }
 
 export default function AdminPage() {
@@ -33,6 +35,7 @@ export default function AdminPage() {
   const [guests, setGuests] = useState<Guest[]>([]);
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [guestName, setGuestName] = useState("");
+  const [guestQuota, setGuestQuota] = useState("1");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [search, setSearch] = useState("");
   const [filterSent, setFilterSent] = useState<"all" | "sent" | "unsent">(
@@ -240,12 +243,14 @@ export default function AdminPage() {
     if (!guestName.trim()) return;
     const name = guestName.trim();
     const link = generateLink(name);
+    const quota = Number(guestQuota) || 1;
     setGuestName("");
+    setGuestQuota("1");
     try {
       const res = await fetchWithAuth("/api/guests", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, link }),
+        body: JSON.stringify({ name, link, quota }),
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Gagal menambah tamu");
@@ -355,6 +360,31 @@ export default function AdminPage() {
         err instanceof Error
           ? err.message
           : "Gagal menyimpan nama tamu ke Google Sheets",
+        "error",
+      );
+    }
+  };
+
+  const editGuestQuota = async (id: string, quota: number) => {
+    const target = guests.find((g) => g.id === id);
+    if (!target || quota === target.quota) return;
+    const backup = guests;
+    setGuests(guests.map((g) => (g.id === id ? { ...g, quota } : g)));
+    try {
+      const res = await fetchWithAuth("/api/guests", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, quota }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Gagal memperbarui kuota");
+      showToast(`Kuota "${target.name}" diubah menjadi ${quota}`, "success");
+    } catch (err) {
+      setGuests(backup);
+      showToast(
+        err instanceof Error
+          ? err.message
+          : "Gagal menyimpan kuota ke Google Sheets",
         "error",
       );
     }
@@ -650,6 +680,8 @@ export default function AdminPage() {
             <AdminAddGuest
               guestName={guestName}
               setGuestName={setGuestName}
+              guestQuota={guestQuota}
+              setGuestQuota={setGuestQuota}
               onAdd={addGuest}
             />
           </motion.div>
@@ -681,6 +713,7 @@ export default function AdminPage() {
               onToggleSent={toggleSent}
               onDelete={deleteGuest}
               onEditName={editGuestName}
+              onEditQuota={editGuestQuota}
               pageSize={pageSize}
               setPageSize={setPageSize}
               currentPage={currentPage}
