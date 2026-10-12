@@ -53,6 +53,8 @@ export interface GalleryItem {
   alt: string;
   width: number;
   height: number;
+  focus?: string;
+  shape?: "portrait" | "landscape";
 }
 
 export interface AgendaItem {

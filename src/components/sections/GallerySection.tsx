@@ -65,51 +65,42 @@ export function GallerySection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mx-auto grid max-w-xl grid-cols-3 gap-2 md:gap-3"
+          className="mx-auto grid max-w-xl grid-cols-6 gap-2 md:gap-3"
         >
-          {gallery.map((item, index) => (
-            <motion.li
-              key={item.id}
-              variants={itemVariants}
-              className="aspect-3/4"
-            >
-              <button
-                type="button"
-                onClick={() => setSelected(index)}
-                aria-label={`Lihat ${item.alt}`}
-                className="group relative block h-full w-full overflow-hidden rounded-xl border border-border bg-accent md:rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
+          {gallery.map((item, index) => {
+            const wideImage = item.width > item.height;
+            const shape = item.shape ?? (wideImage ? "landscape" : "portrait");
+            const wideCard = shape === "landscape";
+            const sizes = wideCard
+              ? "(min-width: 768px) 560px, 90vw"
+              : wideImage
+                ? "(min-width: 768px) 520px, 80vw"
+                : "(min-width: 768px) 280px, 45vw";
+
+            return (
+              <motion.li
+                key={item.id}
+                variants={itemVariants}
+                className={wideCard ? "col-span-4" : "col-span-2 aspect-3/4"}
               >
-                {item.width > item.height ? (
-                  <>
-                    <Image
-                      src={item.src}
-                      alt=""
-                      aria-hidden="true"
-                      fill
-                      sizes="64px"
-                      className="photo-tone scale-125 object-cover opacity-70 blur-xl"
-                    />
-                    <Image
-                      src={item.src}
-                      alt={item.alt}
-                      fill
-                      sizes="(min-width: 768px) 400px, 66vw"
-                      className="photo-tone object-contain transition duration-500 group-hover:filter-none group-focus-visible:filter-none"
-                    />
-                  </>
-                ) : (
+                <button
+                  type="button"
+                  onClick={() => setSelected(index)}
+                  aria-label={`Lihat ${item.alt}`}
+                  className="group relative block h-full w-full overflow-hidden rounded-xl border border-border bg-accent md:rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
+                >
                   <Image
                     src={item.src}
                     alt={item.alt}
                     fill
-                    sizes="(min-width: 768px) 400px, 66vw"
+                    sizes={sizes}
                     style={{ objectPosition: item.focus ?? "50% 30%" }}
                     className="photo-tone object-cover transition duration-500 group-hover:filter-none group-focus-visible:filter-none"
                   />
-                )}
-              </button>
-            </motion.li>
-          ))}
+                </button>
+              </motion.li>
+            );
+          })}
         </motion.ul>
       </div>
 
