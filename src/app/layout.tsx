@@ -42,7 +42,6 @@ export const metadata: Metadata = {
       "Dengan penuh rasa syukur, kami mengundang Anda untuk menjadi saksi momen bahagia kami.",
     url: "https://wedding-invitation-fedy-suci.vercel.app",
     siteName: "Fedy & Suci Wedding",
-    images: [{ url: "/images/og-image.jpg", width: 1200, height: 630 }],
     type: "website",
   },
   icons: {
