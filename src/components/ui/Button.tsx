@@ -47,26 +47,24 @@ export function Button({
   const isDisabled = disabled || loading;
 
   const baseClass = cn(
-    "inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all duration-300 cursor-pointer select-none",
+    "inline-flex items-center justify-center gap-2 rounded-xl font-semibold transition-all duration-300 cursor-pointer select-none focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40",
     {
       "w-full": fullWidth,
       "opacity-50 pointer-events-none": isDisabled,
     },
     {
-      "bg-primary text-primary-foreground hover:opacity-90 shadow-md hover:shadow-lg":
-        variant === "primary",
-      "bg-secondary text-secondary-foreground hover:bg-secondary/80":
+      "bg-primary text-primary-foreground shadow-[0_12px_24px_-14px_rgba(148,113,42,0.55)] hover:brightness-105":
+        variant === "primary" || variant === "gold",
+      "bg-secondary text-secondary-foreground hover:bg-accent":
         variant === "secondary",
-      "border-2 border-primary text-primary hover:bg-primary hover:text-primary-foreground":
+      "border border-gold-line bg-card text-primary hover:bg-accent":
         variant === "outline",
       "text-foreground hover:bg-muted": variant === "ghost",
-      "bg-linear-to-r from-yellow-400 to-yellow-600 text-white hover:opacity-90 shadow-md hover:shadow-lg":
-        variant === "gold",
     },
     {
-      "text-xs px-4 py-2": size === "sm",
-      "text-sm px-6 py-3": size === "md",
-      "text-base px-8 py-4": size === "lg",
+      "h-10 px-4 text-xs": size === "sm",
+      "h-11 px-5 text-sm": size === "md",
+      "h-13 px-7 text-[15px]": size === "lg",
     },
     className,
   );
@@ -74,11 +72,15 @@ export function Button({
   const content = (
     <>
       {Icon && iconPosition === "left" && (
-        <Icon className={cn("w-4 h-4 shrink-0", loading && "animate-spin")} />
+        <Icon
+          className={cn("w-4.5 h-4.5 shrink-0", loading && "animate-spin")}
+        />
       )}
       {children}
       {Icon && iconPosition === "right" && (
-        <Icon className={cn("w-4 h-4 shrink-0", loading && "animate-spin")} />
+        <Icon
+          className={cn("w-4.5 h-4.5 shrink-0", loading && "animate-spin")}
+        />
       )}
     </>
   );
@@ -90,7 +92,6 @@ export function Button({
         target={target}
         rel={target === "_blank" ? "noopener noreferrer" : undefined}
         className={baseClass}
-        whileHover={{ scale: 1.03 }}
         whileTap={{ scale: 0.97 }}
       >
         {content}
@@ -104,7 +105,6 @@ export function Button({
       disabled={isDisabled}
       aria-busy={loading}
       className={baseClass}
-      whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
     >
       {content}

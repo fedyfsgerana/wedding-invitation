@@ -1,9 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Playfair_Display,
-  Plus_Jakarta_Sans,
-  Great_Vibes,
-} from "next/font/google";
+import { Geist, Great_Vibes, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
@@ -13,9 +9,9 @@ const playfair = Playfair_Display({
   display: "swap",
 });
 
-const jakarta = Plus_Jakarta_Sans({
+const geist = Geist({
   subsets: ["latin"],
-  variable: "--font-jakarta",
+  variable: "--font-geist",
   display: "swap",
 });
 
@@ -57,7 +53,7 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body
-        className={`${playfair.variable} ${jakarta.variable} ${greatVibes.variable} font-sans`}
+        className={`${playfair.variable} ${geist.variable} ${greatVibes.variable} font-sans`}
       >
         <ThemeProvider>{children}</ThemeProvider>
       </body>

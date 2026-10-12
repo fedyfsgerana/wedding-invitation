@@ -5,41 +5,42 @@
 @theme {
   --breakpoint-xs: 25rem;
 
-  --color-background: hsl(45 40% 97%);
-  --color-foreground: hsl(30 15% 15%);
-  --color-card: hsl(45 35% 99%);
-  --color-card-foreground: hsl(30 15% 15%);
-  --color-primary: hsl(43 65% 42%);
-  --color-primary-foreground: hsl(45 100% 97%);
-  --color-secondary: hsl(40 30% 92%);
-  --color-secondary-foreground: hsl(30 15% 20%);
-  --color-muted: hsl(40 25% 93%);
-  --color-muted-foreground: hsl(30 10% 50%);
-  --color-accent: hsl(40 30% 92%);
-  --color-accent-foreground: hsl(30 15% 20%);
-  --color-border: hsl(40 20% 88%);
-  --color-input: hsl(40 20% 88%);
-  --color-gold: hsl(43 65% 42%);
-  --color-gold-light: hsl(43 70% 65%);
-  --color-ivory: hsl(45 40% 97%);
-  --color-warm: hsl(35 30% 88%);
-  --color-cream: hsl(45 50% 94%);
-  --color-blush: hsl(40 30% 90%);
+  --color-background: #faf8f4;
+  --color-foreground: #3a332c;
+  --color-card: #ffffff;
+  --color-card-foreground: #3a332c;
+  --color-primary: #94712a;
+  --color-primary-foreground: #ffffff;
+  --color-secondary: #f4efe7;
+  --color-secondary-foreground: #3a332c;
+  --color-muted: #f4efe7;
+  --color-muted-foreground: #776c61;
+  --color-accent: #f7efdc;
+  --color-accent-foreground: #7d5f1f;
+  --color-border: #ece6dc;
+  --color-input: #ece6dc;
+  --color-gold: #b8923f;
+  --color-gold-light: #e2c98f;
+  --color-gold-line: #dfc995;
+  --color-ivory: #faf8f4;
+  --color-warm: #efe3c9;
+  --color-cream: #f4efe7;
+  --color-blush: #f7efdc;
   --color-sage: hsl(150 20% 55%);
 
-  --color-success: hsl(142 65% 38%);
-  --color-success-soft: hsl(142 45% 94%);
-  --color-success-border: hsl(142 40% 85%);
-  --color-warning: hsl(38 85% 42%);
-  --color-warning-soft: hsl(40 70% 94%);
-  --color-warning-border: hsl(40 55% 85%);
-  --color-danger: hsl(0 70% 52%);
-  --color-danger-soft: hsl(0 70% 96%);
-  --color-danger-border: hsl(0 60% 88%);
+  --color-success: #2f855a;
+  --color-success-soft: #eaf5ef;
+  --color-success-border: #c6e3d2;
+  --color-warning: #8a6510;
+  --color-warning-soft: #fbf3e2;
+  --color-warning-border: #f0dfb4;
+  --color-danger: #b8392b;
+  --color-danger-soft: #f9ecea;
+  --color-danger-border: #edc8c2;
 
-  --font-serif: "Playfair Display", "Georgia", serif;
-  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
-  --font-script: "Great Vibes", "Dancing Script", cursive;
+  --font-serif: var(--font-playfair), "Georgia", serif;
+  --font-sans: var(--font-geist), "Helvetica Neue", sans-serif;
+  --font-script: var(--font-great-vibes), cursive;
 
   --radius: 0.75rem;
 }
@@ -84,10 +85,10 @@
   }
 
   .section-padding {
-    padding-top: 4rem;
-    padding-bottom: 4rem;
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    padding-left: 1.375rem;
+    padding-right: 1.375rem;
   }
 
   @media (min-width: 768px) {
@@ -107,13 +108,48 @@
 
   .card-wedding {
     background-color: var(--color-card);
-    border-radius: 1rem;
+    border-radius: 1.375rem;
     border: 1px solid var(--color-border);
-    box-shadow: 0 1px 4px rgba(180, 140, 60, 0.07);
+    box-shadow:
+      0 1px 2px rgba(58, 51, 44, 0.04),
+      0 8px 24px -16px rgba(58, 51, 44, 0.12);
+  }
+
+  .text-gold-gradient {
+    background: linear-gradient(180deg, #c39a45 0%, #94712a 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    color: var(--color-primary);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.32em;
+    text-transform: uppercase;
+  }
+
+  .eyebrow::before,
+  .eyebrow::after {
+    content: "";
+    width: 1.5rem;
+    height: 1px;
+    background: var(--color-gold-line);
   }
 
   .gradient-primary {
     background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
+  }
+
+  .dark .text-gold-gradient {
+    background: linear-gradient(180deg, #e8cf94 0%, #c9a65c 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
   }
 
   .gradient-soft {
@@ -201,34 +237,35 @@
 }
 
 .dark {
-  --color-background: hsl(30 10% 8%);
-  --color-foreground: hsl(45 30% 92%);
-  --color-card: hsl(30 10% 11%);
-  --color-card-foreground: hsl(45 30% 92%);
-  --color-primary: hsl(43 65% 55%);
-  --color-primary-foreground: hsl(30 10% 8%);
-  --color-secondary: hsl(30 10% 16%);
-  --color-secondary-foreground: hsl(45 30% 92%);
-  --color-muted: hsl(30 10% 16%);
-  --color-muted-foreground: hsl(40 10% 55%);
-  --color-accent: hsl(30 10% 16%);
-  --color-accent-foreground: hsl(45 30% 92%);
-  --color-border: hsl(30 10% 20%);
-  --color-input: hsl(30 10% 20%);
-  --color-gold: hsl(43 65% 55%);
-  --color-gold-light: hsl(43 60% 70%);
-  --color-ivory: hsl(30 10% 12%);
-  --color-warm: hsl(35 10% 18%);
-  --color-cream: hsl(30 10% 14%);
-  --color-blush: hsl(30 10% 16%);
+  --color-background: #171411;
+  --color-foreground: #f1ebe0;
+  --color-card: #201c18;
+  --color-card-foreground: #f1ebe0;
+  --color-primary: #d4b26a;
+  --color-primary-foreground: #171411;
+  --color-secondary: #2a251f;
+  --color-secondary-foreground: #f1ebe0;
+  --color-muted: #2a251f;
+  --color-muted-foreground: #b3a796;
+  --color-accent: #2f281d;
+  --color-accent-foreground: #e2c98f;
+  --color-border: #342d25;
+  --color-input: #342d25;
+  --color-gold: #d4b26a;
+  --color-gold-light: #e2c98f;
+  --color-gold-line: #6b5a36;
+  --color-ivory: #1c1814;
+  --color-warm: #2f281d;
+  --color-cream: #1f1b16;
+  --color-blush: #2a2419;
 
-  --color-success: hsl(142 50% 55%);
-  --color-success-soft: hsl(142 30% 16%);
-  --color-success-border: hsl(142 30% 26%);
-  --color-warning: hsl(38 75% 60%);
-  --color-warning-soft: hsl(38 40% 16%);
-  --color-warning-border: hsl(38 35% 26%);
-  --color-danger: hsl(0 70% 65%);
-  --color-danger-soft: hsl(0 40% 16%);
-  --color-danger-border: hsl(0 40% 28%);
+  --color-success: #6fcf97;
+  --color-success-soft: #17271e;
+  --color-success-border: #24412f;
+  --color-warning: #e2b75a;
+  --color-warning-soft: #2b2416;
+  --color-warning-border: #463a1f;
+  --color-danger: #ef8a7d;
+  --color-danger-soft: #2c1a17;
+  --color-danger-border: #4a2a25;
 }

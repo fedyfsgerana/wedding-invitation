@@ -40,8 +40,8 @@ export function SectionWrapper({
         !noPadding && "section-padding",
         {
           "bg-background": variant === "default",
-          "bg-muted/40": variant === "muted",
-          "bg-cream dark:bg-muted/20": variant === "cream",
+          "bg-muted": variant === "muted",
+          "bg-cream": variant === "cream",
           "bg-foreground text-background": variant === "dark",
           "gradient-soft": variant === "gradient",
         },
@@ -56,7 +56,7 @@ export function SectionWrapper({
 interface SectionTitleProps {
   title: string;
   subtitle?: string;
-  decorative?: string;
+  eyebrow?: string;
   center?: boolean;
   className?: string;
 }
@@ -64,28 +64,21 @@ interface SectionTitleProps {
 export function SectionTitle({
   title,
   subtitle,
-  decorative,
+  eyebrow,
   center = true,
   className,
 }: SectionTitleProps) {
   return (
-    <div className={cn("mb-12", center && "text-center", className)}>
-      {decorative && (
-        <p className="font-script text-3xl text-primary mb-2">{decorative}</p>
-      )}
-      <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-3">
+    <div className={cn("mb-8 md:mb-12", center && "text-center", className)}>
+      {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
+      <h2 className="font-serif text-[27px] md:text-4xl font-semibold text-foreground">
         {title}
       </h2>
       {subtitle && (
-        <p className="text-muted-foreground text-sm md:text-base max-w-xl mx-auto">
+        <p className="mt-2 text-sm md:text-base text-muted-foreground max-w-xl mx-auto leading-relaxed">
           {subtitle}
         </p>
       )}
-      <div className="flex items-center justify-center gap-2 mt-4">
-        <div className="h-px w-12 bg-primary/40 rounded-full" />
-        <div className="w-2 h-2 rounded-full bg-primary" />
-        <div className="h-px w-12 bg-primary/40 rounded-full" />
-      </div>
     </div>
   );
 }
