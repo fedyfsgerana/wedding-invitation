@@ -631,24 +631,6 @@ export default function AdminPage() {
     <div className="min-h-screen bg-background relative">
       <LoadingScreen isLoading={pageLoading} text="Memuat halaman Admin..." />
 
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute inset-0 opacity-[0.05]">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `radial-gradient(circle at 10% 10%, var(--color-gold) 0%, transparent 40%),
-                             radial-gradient(circle at 90% 90%, var(--color-gold) 0%, transparent 40%)`,
-            }}
-          />
-        </div>
-        <div className="absolute top-10 left-10 w-32 h-32 rounded-full border border-primary/20 animate-pulse-soft" />
-        <div className="absolute top-16 left-16 w-20 h-20 rounded-full border border-primary/10" />
-        <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full border border-primary/20 animate-pulse-soft" />
-        <div className="absolute bottom-16 right-16 w-24 h-24 rounded-full border border-primary/10" />
-        <div className="absolute top-1/2 -translate-y-1/2 left-6 w-1.5 h-1.5 rounded-full bg-primary/40" />
-        <div className="absolute top-1/2 -translate-y-1/2 right-6 w-1.5 h-1.5 rounded-full bg-primary/40" />
-      </div>
-
       <div className="relative z-10">
         <AdminHeader
           wishesCount={wishesCount}
@@ -659,8 +641,16 @@ export default function AdminPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1] }}
-          className="max-w-4xl mx-auto px-4 py-6 space-y-6"
+          className="mx-auto max-w-4xl space-y-5 px-4.5 py-6 md:space-y-6 md:py-8"
         >
+          <div>
+            <p className="eyebrow justify-start! before:hidden">
+              Halaman Admin
+            </p>
+            <h1 className="mt-1 font-serif text-[30px] font-semibold leading-tight text-foreground md:text-[36px]">
+              Daftar Tamu
+            </h1>
+          </div>
           <motion.div
             initial={{ opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
@@ -730,25 +720,9 @@ export default function AdminPage() {
               onBulkMarkSent={bulkMarkSent}
             />
           </motion.div>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-            className="text-center pb-8 pt-2"
-          >
-            <div className="relative w-12 h-12 mx-auto mb-3 opacity-40">
-              <div className="absolute inset-0 rounded-full gradient-primary opacity-20" />
-              <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
-                <span className="font-serif text-base text-primary">
-                  {weddingData.groom.nickname.charAt(0)}&amp;
-                  {weddingData.bride.nickname.charAt(0)}
-                </span>
-              </div>
-            </div>
-            <p className="text-xs text-muted-foreground/40">
-              Data tersimpan di Google Sheets · /admin
-            </p>
-          </motion.div>
+          <p className="pb-8 text-center text-xs text-muted-foreground">
+            Data tersimpan di Google Sheets
+          </p>
         </motion.div>
       </div>
 

@@ -9,76 +9,55 @@ interface Props {
   unsent: number;
 }
 
-const UsersIcon = getLucideIcon("Users");
-const SendIcon = getLucideIcon("Send");
-const ClockIcon = getLucideIcon("Clock");
+const STATS = [
+  {
+    key: "total",
+    label: "Total tamu",
+    icon: getLucideIcon("Users"),
+    tone: "bg-accent text-primary",
+  },
+  {
+    key: "sent",
+    label: "Terkirim",
+    icon: getLucideIcon("Send"),
+    tone: "bg-success-soft text-success",
+  },
+  {
+    key: "unsent",
+    label: "Belum dikirim",
+    icon: getLucideIcon("Clock"),
+    tone: "bg-warning-soft text-warning",
+  },
+] as const;
 
 export function AdminStats({ total, sent, unsent }: Props) {
-  const stats = [
-    {
-      label: "Total Tamu",
-      value: total,
-      icon: UsersIcon,
-      accent: "text-primary",
-      badge: "bg-primary/10",
-      border: "border-primary/15",
-      hoverBorder: "hover:border-primary/30",
-    },
-    {
-      label: "Terkirim",
-      value: sent,
-      icon: SendIcon,
-      accent: "text-success",
-      badge: "bg-success-soft",
-      border: "border-success-border",
-      hoverBorder: "hover:border-success",
-    },
-    {
-      label: "Belum Kirim",
-      value: unsent,
-      icon: ClockIcon,
-      accent: "text-warning",
-      badge: "bg-warning-soft",
-      border: "border-warning-border",
-      hoverBorder: "hover:border-warning",
-    },
-  ];
+  const values = { total, sent, unsent };
 
   return (
-    <div className="grid grid-cols-3 gap-2 xs:gap-3">
-      {stats.map((stat, i) => {
+    <div className="grid grid-cols-3 gap-2.5 sm:gap-4">
+      {STATS.map((stat, i) => {
         const Icon = stat.icon;
         return (
           <motion.div
-            key={stat.label}
+            key={stat.key}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: i * 0.08 }}
-            className={
-              "flex flex-col items-center justify-center gap-1.5 xs:gap-2 rounded-2xl border bg-card p-2.5 xs:p-4 text-center shadow-sm transition-all duration-300 cursor-default " +
-              stat.border +
-              " " +
-              stat.hoverBorder
-            }
+            className="card-wedding flex flex-col items-center gap-2 px-2 py-4 text-center sm:flex-row sm:gap-3.5 sm:px-5 sm:text-left"
           >
-            <div
-              className={
-                "w-7 h-7 xs:w-9 xs:h-9 rounded-full flex items-center justify-center shrink-0 " +
-                stat.badge
-              }
+            <span
+              className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${stat.tone}`}
             >
-              <Icon className={"w-3.5 h-3.5 xs:w-4 xs:h-4 " + stat.accent} />
-            </div>
-            <p
-              className={
-                "text-lg xs:text-2xl font-bold leading-none " + stat.accent
-              }
-            >
-              {stat.value}
-            </p>
-            <p className="text-[10px] xs:text-xs text-muted-foreground leading-tight">
-              {stat.label}
-            </p>
+              <Icon className="h-4.5 w-4.5" />
+            </span>
+            <span className="flex flex-col">
+              <span className="font-serif text-[28px] font-semibold leading-none text-foreground">
+                {values[stat.key]}
+              </span>
+              <span className="mt-1 text-xs text-muted-foreground">
+                {stat.label}
+              </span>
+            </span>
           </motion.div>
         );
       })}
