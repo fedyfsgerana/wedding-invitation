@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { Button } from "@/components/ui/Button";
 import { SectionTitle, SectionWrapper } from "@/components/ui/SectionWrapper";
@@ -62,6 +62,7 @@ export function CountdownSection() {
     `${akad.date}T${akad.time}:00`,
   );
   const status = getStatus(akad.date, akad.time, akad.endTime ?? "23:59");
+  const reduce = useReducedMotion();
 
   return (
     <SectionWrapper
@@ -102,7 +103,7 @@ export function CountdownSection() {
           <div className="card-wedding w-full px-5.5 py-6">
             <span className="inline-flex items-center gap-2 rounded-full bg-accent px-3 py-1 text-xs font-semibold text-accent-foreground">
               <motion.span
-                animate={{ scale: [1, 1.3, 1] }}
+                animate={reduce ? undefined : { scale: [1, 1.3, 1] }}
                 transition={{ repeat: Infinity, duration: 1 }}
                 className="h-2 w-2 rounded-full bg-gold"
               />

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Amiri, Cormorant_Garamond, Geist, Italianno } from "next/font/google";
 import "./globals.css";
+import { MotionProvider } from "@/components/providers/MotionProvider";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
 const cormorant = Cormorant_Garamond({
@@ -65,7 +66,9 @@ export default function RootLayout({
       className={`${cormorant.variable} ${geist.variable} ${italianno.variable} ${amiri.variable}`}
     >
       <body className="font-sans">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <MotionProvider>{children}</MotionProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -8,6 +8,7 @@ import { MusicBars } from "@/components/ui/MusicBars";
 import { Monogram } from "@/components/ui/Monogram";
 import { cn, getLucideIcon } from "@/lib/utils";
 import { siteConfig, weddingData } from "@/lib/weddingData";
+import { scrollBehavior } from "@/lib/scroll";
 
 const desktopItems = [
   { label: "Pembuka", id: "pembuka", icon: getLucideIcon("BookOpen") },
@@ -100,7 +101,7 @@ export function Navbar() {
   }, [active]);
 
   const goTo = (id: string) => {
-    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    document.getElementById(id)?.scrollIntoView({ behavior: scrollBehavior() });
   };
 
   const controls = (
@@ -131,7 +132,7 @@ export function Navbar() {
   const brand = (
     <button
       type="button"
-      onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+      onClick={() => window.scrollTo({ top: 0, behavior: scrollBehavior() })}
       className="rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
       aria-label={`${groom.nickname} & ${bride.nickname}, kembali ke atas`}
     >

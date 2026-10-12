@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 const BARS = [
@@ -10,6 +10,8 @@ const BARS = [
 ];
 
 export function MusicBars({ className }: { className?: string }) {
+  const reduce = useReducedMotion();
+
   return (
     <span
       aria-hidden="true"
@@ -19,8 +21,8 @@ export function MusicBars({ className }: { className?: string }) {
         <motion.span
           key={bar.duration}
           className="w-1 rounded-full bg-current"
-          initial={{ height: bar.heights[0] }}
-          animate={{ height: bar.heights }}
+          initial={{ height: bar.heights[1] }}
+          animate={reduce ? { height: bar.heights[1] } : { height: bar.heights }}
           transition={{
             duration: bar.duration,
             repeat: Infinity,

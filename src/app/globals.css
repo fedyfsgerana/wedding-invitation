@@ -280,3 +280,19 @@
   --color-danger-soft: #2c1a17;
   --color-danger-border: #4a2a25;
 }
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .petal,
+  .animate-float,
+  .animate-pulse-soft {
+    animation: none;
+  }
+
+  .petal {
+    display: none;
+  }
+}

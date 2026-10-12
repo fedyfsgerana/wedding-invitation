@@ -23,6 +23,7 @@ import { GiftSection } from "@/components/sections/GiftSection";
 import { ClosingSection } from "@/components/sections/ClosingSection";
 import { FloatingControls } from "@/components/layout/FloatingControls";
 import { weddingData } from "@/lib/weddingData";
+import { scrollBehavior } from "@/lib/scroll";
 
 interface WeddingAppProps {
   guestName: string | null;
@@ -48,7 +49,7 @@ export function WeddingApp({ guestName }: WeddingAppProps) {
   const handleOpen = () => {
     setIsOpened(true);
     setTimeout(() => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: scrollBehavior() });
     }, 100);
   };
 

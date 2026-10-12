@@ -1,6 +1,6 @@
 "use client";
 
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { Monogram } from "@/components/ui/Monogram";
 import { weddingData } from "@/lib/weddingData";
 
@@ -14,6 +14,7 @@ export function LoadingScreen({
   text = "Memuat undangan",
 }: LoadingScreenProps) {
   const { groom, bride } = weddingData;
+  const reduce = useReducedMotion();
 
   return (
     <AnimatePresence>
@@ -31,18 +32,11 @@ export function LoadingScreen({
           <div className="relative flex h-40 w-40 items-center justify-center">
             <motion.span
               aria-hidden="true"
-              animate={{ scale: [1, 1.08, 1], opacity: [0.7, 0.3, 0.7] }}
-              transition={{
-                repeat: Infinity,
-                duration: 2.4,
-                ease: "easeInOut",
-              }}
+              animate={reduce ? undefined : { scale: [1, 1.08, 1], opacity: [0.7, 0.3, 0.7] }}
+              transition={{ repeat: Infinity, duration: 2.4, ease: "easeInOut" }}
               className="absolute inset-0 rounded-full border border-gold-line"
             />
-            <Monogram
-              size={104}
-              title={`${groom.nickname} & ${bride.nickname}`}
-            />
+            <Monogram size={104} title={`${groom.nickname} & ${bride.nickname}`} />
           </div>
           <p className="text-[11px] font-semibold uppercase tracking-[0.32em] text-muted-foreground">
             {text}
@@ -51,7 +45,7 @@ export function LoadingScreen({
             {[0, 1, 2].map((i) => (
               <motion.span
                 key={i}
-                animate={{ opacity: [0.3, 1, 0.3] }}
+                animate={reduce ? undefined : { opacity: [0.3, 1, 0.3] }}
                 transition={{
                   repeat: Infinity,
                   duration: 1,

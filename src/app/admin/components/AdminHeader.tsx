@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { getLucideIcon } from "@/lib/utils";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { weddingData } from "@/lib/weddingData";
+import { scrollBehavior } from "@/lib/scroll";
 
 interface Props {
   wishesCount: number;
@@ -24,7 +25,9 @@ export function AdminHeader({ wishesCount, onOpenWishes, onLogout }: Props) {
     <div className="sticky top-0 z-50 bg-background/80 backdrop-blur-md border-b border-border">
       <div className="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
         <button
-          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          onClick={() =>
+            window.scrollTo({ top: 0, behavior: scrollBehavior() })
+          }
           className="relative w-10 h-10 shrink-0"
           aria-label="Kembali ke atas"
         >
