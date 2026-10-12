@@ -58,7 +58,7 @@ export function GallerySection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid auto-rows-[120px] grid-cols-2 gap-2.5 md:auto-rows-[200px] md:grid-cols-3 md:gap-4"
+          className="grid auto-rows-30 grid-cols-2 gap-2.5 md:auto-rows-50 md:grid-cols-3 md:gap-4"
         >
           {gallery.map((item, index) => (
             <motion.li
