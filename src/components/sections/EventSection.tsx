@@ -3,13 +3,13 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { SectionWrapper } from "@/components/ui/SectionWrapper";
 import { Button } from "@/components/ui/Button";
-import { getLucideIcon, formatDate, formatTime } from "@/lib/utils";
+import { SectionTitle, SectionWrapper } from "@/components/ui/SectionWrapper";
 import {
-  generateGoogleCalendarUrl,
   generateAppleCalendarUrl,
+  generateGoogleCalendarUrl,
 } from "@/lib/calendarHelper";
+import { formatDate, getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 import { EventDetail } from "@/types";
 
@@ -24,49 +24,35 @@ const cardVariants: Variants = {
 
 const ClockIcon = getLucideIcon("Clock");
 const MapPinIcon = getLucideIcon("MapPin");
-const CalendarIcon = getLucideIcon("Calendar");
 const CopyIcon = getLucideIcon("Copy");
 const CheckIcon = getLucideIcon("Check");
 
-const EVENT_ICONS = {
-  BookOpen: getLucideIcon("BookOpen"),
-  UtensilsCrossed: getLucideIcon("UtensilsCrossed"),
-} as const;
+function timeRange(event: EventDetail) {
+  const start = event.time.replace(":", ".");
+  const end = event.endTime ? ` – ${event.endTime.replace(":", ".")}` : "";
+  return `${start}${end} WIB`;
+}
 
-function CornerOrnament({ className }: { className: string }) {
-  return (
-    <svg
-      className={className}
-      viewBox="0 0 40 40"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="0.75"
-    >
-      <path d="M4 4 Q4 16 16 16 Q4 16 4 28" strokeLinecap="round" />
-      <circle cx="16" cy="16" r="1.6" fill="currentColor" stroke="none" />
-      <path d="M9 9 Q13 11 12 16 Q10 12 6 13" strokeLinecap="round" />
-      <path d="M9 9 Q11 13 16 12 Q12 10 13 6" strokeLinecap="round" />
-    </svg>
-  );
+function dateBadge(value: string) {
+  const date = new Date(`${value}T00:00:00`);
+  return {
+    day: String(date.getDate()).padStart(2, "0"),
+    month: date
+      .toLocaleDateString("id-ID", { month: "short" })
+      .replace(".", "")
+      .toUpperCase(),
+  };
 }
 
 interface EventCardProps {
   title: string;
   event: EventDetail;
-  calendarTitle: string;
-  icon: keyof typeof EVENT_ICONS;
   index: number;
 }
 
-function EventCard({
-  title,
-  event,
-  calendarTitle,
-  icon,
-  index,
-}: EventCardProps) {
-  const Icon = EVENT_ICONS[icon];
+function EventCard({ title, event, index }: EventCardProps) {
   const [copied, setCopied] = useState(false);
+  const badge = dateBadge(event.date);
 
   const copyAddress = async () => {
     try {
@@ -74,145 +60,119 @@ function EventCard({
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      console.error("Gagal menyalin alamat");
+      setCopied(false);
     }
   };
 
-  const handleAppleCalendar = () => {
-    const url = generateAppleCalendarUrl(event, calendarTitle);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${calendarTitle}.ics`;
-    a.click();
+  const downloadIcs = () => {
+    const url = generateAppleCalendarUrl(event, event.calendarTitle);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `${event.calendarTitle}.ics`;
+    link.click();
     URL.revokeObjectURL(url);
   };
 
   return (
-    <motion.div
+    <motion.article
       variants={cardVariants}
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
-      className="relative border border-primary/20 rounded-[1.75rem] px-2 py-2"
+      className="card-wedding flex flex-col gap-3.5 overflow-hidden py-4.5"
     >
-      <CornerOrnament className="absolute top-3 left-3 w-8 h-8 text-primary/40" />
-      <CornerOrnament className="absolute top-3 right-3 w-8 h-8 text-primary/40 -scale-x-100" />
-      <CornerOrnament className="absolute bottom-3 left-3 w-8 h-8 text-primary/40 -scale-y-100" />
-      <CornerOrnament className="absolute bottom-3 right-3 w-8 h-8 text-primary/40 -scale-x-100 -scale-y-100" />
-
-      <div className="px-5 py-8 md:px-6">
-        <div className="flex flex-col items-center text-center mb-7">
-          <div className="relative w-12 h-12 mb-4">
-            <div className="absolute inset-0 rounded-full gradient-primary opacity-20" />
-            <div className="absolute inset-0.75 rounded-full border border-primary/30 bg-card flex items-center justify-center">
-              <Icon className="w-4.5 h-4.5 text-primary" />
-            </div>
-          </div>
-          <h3 className="font-serif text-2xl font-semibold text-foreground tracking-tight">
+      <header className="flex items-center gap-3 px-4.5">
+        <span className="flex w-14 shrink-0 flex-col items-center rounded-[14px] border border-border bg-accent py-1.75 leading-tight">
+          <b className="font-serif text-[22px] text-primary">{badge.day}</b>
+          <span className="text-[10px] font-semibold tracking-[0.14em] text-muted-foreground">
+            {badge.month}
+          </span>
+        </span>
+        <div>
+          <h3 className="font-serif text-[21px] font-semibold text-foreground">
             {title}
           </h3>
+          <p className="mt-0.5 text-[13px] text-muted-foreground">
+            {formatDate(event.date)}
+          </p>
         </div>
+      </header>
 
-        <div className="space-y-3 mb-6 text-left">
-          <div className="flex items-start gap-2.5">
-            <CalendarIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-            <p className="text-sm text-foreground font-sans">
-              {formatDate(event.date)}
-            </p>
-          </div>
-          <div className="flex items-start gap-2.5">
-            <ClockIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-            <p className="text-sm text-foreground font-sans">
-              {formatTime(event.time)}
-              {event.endTime && ` - ${formatTime(event.endTime)}`}
-            </p>
-          </div>
-          <div className="flex items-start gap-2.5">
-            <MapPinIcon className="w-4 h-4 text-primary mt-0.5 shrink-0" />
-            <div className="flex-1 flex items-start justify-between gap-2">
-              <div>
-                <p className="text-sm font-medium text-foreground font-sans">
-                  {event.venue}
-                </p>
-                <p className="text-xs text-muted-foreground mt-0.5 font-sans">
-                  {event.address}
-                </p>
-              </div>
-              <button
-                onClick={copyAddress}
-                className="shrink-0 w-7 h-7 rounded-full border border-primary/20 hover:bg-primary/5 transition-colors flex items-center justify-center"
-                title="Salin alamat"
-              >
-                {copied ? (
-                  <CheckIcon className="w-3 h-3 text-primary" />
-                ) : (
-                  <CopyIcon className="w-3 h-3 text-primary" />
-                )}
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <div className="rounded-2xl overflow-hidden border border-primary/15 mb-4 h-44">
-          <iframe
-            src={event.embedUrl}
-            width="100%"
-            height="100%"
-            style={{ border: 0 }}
-            allowFullScreen
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            title={`Lokasi ${title}`}
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-2 mb-2">
-          <Button
-            href={event.mapsUrl}
-            target="_blank"
-            variant="outline"
-            size="sm"
-            icon="Map"
-            className="rounded-full! text-[11px]! uppercase! tracking-widest! font-sans!"
+      <div className="flex flex-col gap-2.5 px-4.5 text-sm">
+        <p className="flex items-center gap-2.5 text-foreground">
+          <ClockIcon className="h-4.5 w-4.5 shrink-0 text-gold" />
+          {timeRange(event)}
+        </p>
+        <div className="flex items-start gap-2.5">
+          <MapPinIcon className="mt-0.5 h-4.5 w-4.5 shrink-0 text-gold" />
+          <p className="flex-1 leading-snug">
+            <span className="font-semibold text-foreground">{event.venue}</span>
+            <br />
+            <span className="text-muted-foreground">{event.address}</span>
+          </p>
+          <button
+            type="button"
+            onClick={copyAddress}
+            aria-label={copied ? "Alamat disalin" : "Salin alamat"}
+            title={copied ? "Alamat disalin" : "Salin alamat"}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl border border-border bg-card text-primary transition hover:bg-accent"
           >
-            Google Maps
-          </Button>
-          <Button
-            href={event.wazeUrl}
-            target="_blank"
-            variant="outline"
-            size="sm"
-            icon="Navigation"
-            className="rounded-full! text-[11px]! uppercase! tracking-widest! font-sans!"
-          >
-            Waze
-          </Button>
-        </div>
-
-        <div className="grid grid-cols-2 gap-2">
-          <Button
-            href={generateGoogleCalendarUrl(event, calendarTitle)}
-            target="_blank"
-            variant="secondary"
-            size="sm"
-            icon="CalendarPlus"
-            className="rounded-full! text-[11px]! uppercase! tracking-widest! font-sans!"
-          >
-            Google Cal
-          </Button>
-          <Button
-            onClick={handleAppleCalendar}
-            variant="secondary"
-            size="sm"
-            icon="CalendarCheck"
-            className="rounded-full! text-[11px]! uppercase! tracking-widest! font-sans!"
-          >
-            Apple Cal
-          </Button>
+            {copied ? (
+              <CheckIcon className="h-4 w-4" />
+            ) : (
+              <CopyIcon className="h-4 w-4" />
+            )}
+          </button>
         </div>
       </div>
-    </motion.div>
+
+      <div className="mx-4.5 h-36 overflow-hidden rounded-2xl border border-border">
+        <iframe
+          src={event.embedUrl}
+          width="100%"
+          height="100%"
+          style={{ border: 0 }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title={`Peta lokasi ${title}`}
+        />
+      </div>
+
+      <div className="grid grid-cols-2 gap-2.5 px-4.5">
+        <Button href={event.mapsUrl} target="_blank" icon="MapPin">
+          Petunjuk Arah
+        </Button>
+        <Button
+          href={generateGoogleCalendarUrl(event, event.calendarTitle)}
+          target="_blank"
+          variant="outline"
+          icon="CalendarPlus"
+        >
+          Kalender
+        </Button>
+      </div>
+
+      <p className="flex items-center justify-center gap-2 px-4.5 text-xs text-muted-foreground">
+        <a
+          href={event.wazeUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
+          Buka di Waze
+        </a>
+        <span aria-hidden="true">·</span>
+        <button
+          type="button"
+          onClick={downloadIcs}
+          className="font-medium text-primary underline-offset-4 hover:underline"
+        >
+          Unduh file kalender (.ics)
+        </button>
+      </p>
+    </motion.article>
   );
 }
 
@@ -220,41 +180,16 @@ export function EventSection() {
   const { akad, reception } = weddingData;
 
   return (
-    <SectionWrapper id="acara" variant="default">
-      <div className="container-wedding px-4">
-        <motion.div
-          initial={{ opacity: 0, y: 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-12"
-        >
-          <p className="text-[11px] uppercase tracking-[0.4em] text-primary mb-3 font-sans font-medium">
-            Jadwal Acara
-          </p>
-          <h2 className="font-serif text-3xl md:text-4xl font-semibold text-foreground tracking-tight">
-            Informasi Acara
-          </h2>
-          <p className="text-muted-foreground text-sm font-sans mt-3 max-w-sm mx-auto">
-            Kami mengundang Bapak/Ibu/Saudara/i untuk hadir dan memberikan doa
-            restu
-          </p>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
-          <EventCard
-            title="Akad Nikah"
-            event={akad}
-            calendarTitle={akad.calendarTitle}
-            icon="BookOpen"
-            index={0}
-          />
-          <EventCard
-            title="Resepsi Pernikahan"
-            event={reception}
-            calendarTitle={reception.calendarTitle}
-            icon="UtensilsCrossed"
-            index={1}
-          />
+    <SectionWrapper id="acara">
+      <div className="container-wedding">
+        <SectionTitle
+          eyebrow="Save the Date"
+          title="Rangkaian Acara"
+          subtitle="Dengan hormat kami mengundang Anda pada"
+        />
+        <div className="grid grid-cols-1 gap-4.5 md:grid-cols-2 md:gap-6">
+          <EventCard title="Akad Nikah" event={akad} index={0} />
+          <EventCard title="Resepsi" event={reception} index={1} />
         </div>
       </div>
     </SectionWrapper>
