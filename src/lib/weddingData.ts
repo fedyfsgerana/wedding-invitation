@@ -96,24 +96,24 @@ export const weddingData: WeddingData = {
   gallery: [
     {
       id: 1,
-      src: "/images/gallery-1.jpg",
+      src: "/images/galeri-kamera.jpg",
       alt: "Fedy dan Suci berfoto bersama",
       width: 899,
       height: 1599,
     },
     {
       id: 2,
-      src: "https://picsum.photos/seed/wedding2/600/800",
-      alt: "Foto prewedding 2",
-      width: 600,
-      height: 800,
+      src: "/images/galeri-memotret.jpg",
+      alt: "Fedy dan Suci memotret bersama",
+      width: 1599,
+      height: 899,
     },
     {
       id: 3,
-      src: "https://picsum.photos/seed/wedding3/800/600",
-      alt: "Foto prewedding 3",
-      width: 800,
-      height: 600,
+      src: "/images/galeri-cincin.jpg",
+      alt: "Fedy dan Suci menunjukkan cincin",
+      width: 960,
+      height: 1280,
     },
     {
       id: 4,

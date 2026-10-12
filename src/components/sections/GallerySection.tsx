@@ -65,13 +65,13 @@ export function GallerySection() {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-3 gap-2 md:gap-4"
+          className="mx-auto grid max-w-xl grid-cols-3 gap-2 md:gap-3"
         >
           {gallery.map((item, index) => (
             <motion.li
               key={item.id}
               variants={itemVariants}
-              className="aspect-square"
+              className="aspect-3/4"
             >
               <button
                 type="button"
@@ -79,13 +79,34 @@ export function GallerySection() {
                 aria-label={`Lihat ${item.alt}`}
                 className="group relative block h-full w-full overflow-hidden rounded-xl border border-border bg-accent md:rounded-2xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
               >
-                <Image
-                  src={item.src}
-                  alt={item.alt}
-                  fill
-                  sizes="(min-width: 768px) 300px, 33vw"
-                  className="photo-tone object-cover transition duration-500 group-hover:scale-105 group-hover:filter-none group-focus-visible:filter-none"
-                />
+                {item.width > item.height ? (
+                  <>
+                    <Image
+                      src={item.src}
+                      alt=""
+                      aria-hidden="true"
+                      fill
+                      sizes="64px"
+                      className="photo-tone scale-125 object-cover opacity-70 blur-xl"
+                    />
+                    <Image
+                      src={item.src}
+                      alt={item.alt}
+                      fill
+                      sizes="(min-width: 768px) 400px, 66vw"
+                      className="photo-tone object-contain transition duration-500 group-hover:filter-none group-focus-visible:filter-none"
+                    />
+                  </>
+                ) : (
+                  <Image
+                    src={item.src}
+                    alt={item.alt}
+                    fill
+                    sizes="(min-width: 768px) 400px, 66vw"
+                    style={{ objectPosition: item.focus ?? "50% 30%" }}
+                    className="photo-tone object-cover transition duration-500 group-hover:filter-none group-focus-visible:filter-none"
+                  />
+                )}
               </button>
             </motion.li>
           ))}
