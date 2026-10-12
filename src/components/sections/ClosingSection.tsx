@@ -5,6 +5,8 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { useToast } from "@/components/providers/ToastProvider";
 import { DotDivider, FloralSprig } from "@/components/ui/Ornament";
+import { Spinner } from "@/components/ui/Spinner";
+import { usePending } from "@/hooks/usePending";
 import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
@@ -29,17 +31,19 @@ export function ClosingSection() {
   const { groom, bride, akad } = weddingData;
   const [copied, setCopied] = useState(false);
   const { showToast } = useToast();
+  const { pending, run } = usePending(450);
 
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(window.location.href);
-      setCopied(true);
-      showToast("Link undangan berhasil disalin");
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      showToast("Link undangan gagal disalin", "error");
-    }
-  };
+  const copyLink = () =>
+    run(async () => {
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setCopied(true);
+        showToast("Link undangan berhasil disalin");
+        setTimeout(() => setCopied(false), 2000);
+      } catch {
+        showToast("Link undangan gagal disalin", "error");
+      }
+    });
 
   return (
     <section
@@ -97,10 +101,14 @@ export function ClosingSection() {
           variants={itemVariants}
           type="button"
           onClick={copyLink}
+          disabled={pending}
+          aria-busy={pending}
           whileTap={{ scale: 0.97 }}
           className="inline-flex h-11 items-center gap-2 rounded-xl border border-gold-line bg-card px-5 text-sm font-semibold text-primary transition hover:bg-accent"
         >
-          {copied ? (
+          {pending ? (
+            <Spinner className="h-4 w-4" />
+          ) : copied ? (
             <CheckIcon className="h-4 w-4" />
           ) : (
             <LinkIcon className="h-4 w-4" />

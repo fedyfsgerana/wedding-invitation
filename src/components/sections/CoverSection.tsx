@@ -3,6 +3,8 @@
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { FloralSprig } from "@/components/ui/Ornament";
+import { Spinner } from "@/components/ui/Spinner";
+import { usePending } from "@/hooks/usePending";
 import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
@@ -47,6 +49,7 @@ export function CoverSection({
   isOpened,
 }: CoverSectionProps) {
   const { groom, bride, akad } = weddingData;
+  const { pending, run } = usePending(700);
 
   if (isOpened) return null;
 
@@ -131,12 +134,14 @@ export function CoverSection({
 
           <motion.button
             type="button"
-            onClick={onOpen}
+            onClick={() => run().then(onOpen)}
+            disabled={pending}
+            aria-busy={pending}
             whileTap={{ scale: 0.97 }}
-            className="inline-flex h-13 items-center justify-center gap-2 rounded-full bg-primary px-7.5 text-[15px] font-semibold text-primary-foreground shadow-[0_12px_24px_-14px_rgba(148,113,42,0.55)] transition hover:brightness-105 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
+            className="inline-flex h-13 items-center justify-center gap-2 rounded-full bg-primary px-7.5 text-[15px] font-semibold text-primary-foreground shadow-[0_12px_24px_-14px_rgba(148,113,42,0.55)] transition hover:brightness-105 disabled:cursor-wait disabled:opacity-85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gold/40"
           >
-            <MailIcon className="h-4.5 w-4.5" />
-            Buka Undangan
+            {pending ? <Spinner /> : <MailIcon className="h-4.5 w-4.5" />}
+            {pending ? "Membuka..." : "Buka Undangan"}
           </motion.button>
 
           <span className="text-[11px] text-muted-foreground">

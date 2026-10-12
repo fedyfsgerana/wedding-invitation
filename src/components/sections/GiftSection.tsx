@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { useToast } from "@/components/providers/ToastProvider";
 import { SectionTitle, SectionWrapper } from "@/components/ui/SectionWrapper";
+import { Spinner } from "@/components/ui/Spinner";
 import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
@@ -32,16 +33,25 @@ function groupDigits(value: string) {
 export function GiftSection() {
   const { bankAccounts } = weddingData;
   const [copiedId, setCopiedId] = useState<number | null>(null);
+  const [copyingId, setCopyingId] = useState<number | null>(null);
   const { showToast } = useToast();
 
   const copyAccountNumber = async (number: string, id: number) => {
+    if (copyingId !== null) return;
+    setCopyingId(id);
+    const started = Date.now();
     try {
       await navigator.clipboard.writeText(number.replace(/\s+/g, ""));
+      await new Promise((r) =>
+        setTimeout(r, Math.max(0, 450 - (Date.now() - started))),
+      );
       setCopiedId(id);
       showToast("Nomor rekening berhasil disalin");
       setTimeout(() => setCopiedId(null), 2000);
     } catch {
       showToast("Nomor rekening gagal disalin", "error");
+    } finally {
+      setCopyingId(null);
     }
   };
 
@@ -63,6 +73,7 @@ export function GiftSection() {
         >
           {bankAccounts.map((account) => {
             const copied = copiedId === account.id;
+            const copying = copyingId === account.id;
             return (
               <motion.li
                 key={account.id}
@@ -84,9 +95,13 @@ export function GiftSection() {
                     onClick={() =>
                       copyAccountNumber(account.accountNumber, account.id)
                     }
-                    className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-gold-line bg-card px-3.5 text-[13px] font-semibold text-primary transition hover:bg-accent"
+                    disabled={copying}
+                    aria-busy={copying}
+                    className="inline-flex h-10 shrink-0 items-center gap-1.5 rounded-xl border border-gold-line bg-card px-3.5 text-[13px] font-semibold text-primary transition hover:bg-accent disabled:cursor-wait"
                   >
-                    {copied ? (
+                    {copying ? (
+                      <Spinner className="h-4 w-4" />
+                    ) : copied ? (
                       <CheckIcon className="h-4 w-4" />
                     ) : (
                       <CopyIcon className="h-4 w-4" />
