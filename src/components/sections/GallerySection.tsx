@@ -45,7 +45,11 @@ export function GallerySection() {
   };
 
   return (
-    <SectionWrapper id="galeri" variant="cream">
+    <SectionWrapper
+      id="galeri"
+      variant="cream"
+      ornament={{ variant: "fern", corner: "top-left" }}
+    >
       <div className="container-wedding">
         <SectionTitle
           eyebrow="Galeri"

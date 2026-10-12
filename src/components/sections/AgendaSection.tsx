@@ -24,7 +24,10 @@ export function AgendaSection() {
   const { agenda } = weddingData;
 
   return (
-    <SectionWrapper id="agenda">
+    <SectionWrapper
+      id="agenda"
+      ornament={{ variant: "tulip", corner: "bottom-right" }}
+    >
       <div className="mx-auto max-w-lg">
         <SectionTitle
           eyebrow="Agenda"

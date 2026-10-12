@@ -81,7 +81,11 @@ export function BrideGroomSection() {
   const { groom, bride, groomParents, brideParents } = weddingData;
 
   return (
-    <SectionWrapper id="mempelai" variant="cream">
+    <SectionWrapper
+      id="mempelai"
+      variant="cream"
+      ornament={{ variant: "lavender", corner: "bottom-left" }}
+    >
       <div className="container-wedding">
         <SectionTitle
           eyebrow="Mempelai"

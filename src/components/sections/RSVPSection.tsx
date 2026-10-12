@@ -145,7 +145,10 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
   };
 
   return (
-    <SectionWrapper id="rsvp">
+    <SectionWrapper
+      id="rsvp"
+      ornament={{ variant: "babysbreath", corner: "top-right" }}
+    >
       <div className="container-wedding">
         <SectionTitle
           eyebrow="Doa & Ucapan"

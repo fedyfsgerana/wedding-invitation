@@ -64,7 +64,10 @@ export function CountdownSection() {
   const status = getStatus(akad.date, akad.time, akad.endTime ?? "23:59");
 
   return (
-    <SectionWrapper id="countdown">
+    <SectionWrapper
+      id="countdown"
+      ornament={{ variant: "daisy", corner: "top-left" }}
+    >
       <div className="mx-auto flex max-w-lg flex-col items-center text-center">
         <SectionTitle
           eyebrow="Menuju Hari Bahagia"

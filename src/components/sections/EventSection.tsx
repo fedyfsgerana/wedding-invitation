@@ -196,7 +196,11 @@ export function EventSection() {
   const { akad, reception } = weddingData;
 
   return (
-    <SectionWrapper id="acara" variant="cream">
+    <SectionWrapper
+      id="acara"
+      variant="cream"
+      ornament={{ variant: "eucalyptus", corner: "top-right" }}
+    >
       <div className="container-wedding">
         <SectionTitle
           eyebrow="Save the Date"

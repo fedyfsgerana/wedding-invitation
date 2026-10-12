@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { Monogram } from "@/components/ui/Monogram";
-import { DotDivider, FloralSprig } from "@/components/ui/Ornament";
+import { DotDivider, Floral } from "@/components/ui/Ornament";
 import { weddingData } from "@/lib/weddingData";
 
 const itemVariants: Variants = {
@@ -41,9 +41,9 @@ export function ClosingSection() {
           viewport={{ once: true }}
           className="mx-auto flex max-w-lg flex-col items-center gap-5 text-center"
         >
-          <motion.div variants={itemVariants} className="flex">
-            <FloralSprig size={64} className="-scale-x-100" />
-            <FloralSprig size={64} />
+          <motion.div variants={itemVariants} className="flex items-end">
+            <Floral variant="tulip" size={72} className="-scale-x-100" />
+            <Floral variant="daisy" size={64} />
           </motion.div>
 
           <motion.h2

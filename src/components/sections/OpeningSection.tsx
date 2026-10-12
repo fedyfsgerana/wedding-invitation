@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { SectionWrapper } from "@/components/ui/SectionWrapper";
-import { DotDivider, FloralSprig } from "@/components/ui/Ornament";
+import { DotDivider } from "@/components/ui/Ornament";
 import { weddingData } from "@/lib/weddingData";
 
 const itemVariants: Variants = {
@@ -24,12 +24,10 @@ export function OpeningSection() {
   const { verse } = weddingData;
 
   return (
-    <SectionWrapper id="pembuka" className="overflow-hidden">
-      <FloralSprig
-        size={84}
-        className="absolute top-2 right-1.5 -scale-x-100 md:top-8 md:right-[12%]"
-      />
-
+    <SectionWrapper
+      id="pembuka"
+      ornament={{ variant: "blossom", corner: "top-right" }}
+    >
       <motion.div
         variants={containerVariants}
         initial="hidden"

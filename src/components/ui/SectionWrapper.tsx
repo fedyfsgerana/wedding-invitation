@@ -2,6 +2,8 @@
 
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
+import { CornerFloral } from "@/components/ui/Ornament";
+import type { FloralVariant, OrnamentCorner } from "@/components/ui/Ornament";
 import { cn } from "@/lib/utils";
 
 interface SectionWrapperProps {
@@ -10,6 +12,7 @@ interface SectionWrapperProps {
   className?: string;
   variant?: "default" | "cream";
   noPadding?: boolean;
+  ornament?: { variant: FloralVariant; corner: OrnamentCorner };
 }
 
 const sectionVariants: Variants = {
@@ -26,6 +29,7 @@ export function SectionWrapper({
   className,
   variant = "default",
   noPadding = false,
+  ornament,
 }: SectionWrapperProps) {
   return (
     <motion.section
@@ -36,12 +40,16 @@ export function SectionWrapper({
       variants={sectionVariants}
       className={cn(
         "relative w-full scroll-mt-20 md:scroll-mt-24",
+        ornament && "overflow-hidden",
         !noPadding && "section-padding",
         variant === "cream" ? "bg-cream" : "bg-background",
         className,
       )}
     >
-      {children}
+      {ornament && (
+        <CornerFloral variant={ornament.variant} corner={ornament.corner} />
+      )}
+      <div className="relative">{children}</div>
     </motion.section>
   );
 }

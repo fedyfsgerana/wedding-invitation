@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
-import { FloralSprig } from "@/components/ui/Ornament";
+import { Floral, FloralSprig } from "@/components/ui/Ornament";
 import { Spinner } from "@/components/ui/Spinner";
 import { usePending } from "@/hooks/usePending";
 import { getLucideIcon } from "@/lib/utils";
@@ -62,7 +62,28 @@ export function CoverSection({
         transition: { duration: 0.6, ease: [0.25, 0.1, 0.25, 1] },
       }}
     >
-      <div className="pointer-events-none fixed inset-3.5 rounded-[30px] border border-gold-line/60" />
+      <div className="pointer-events-none fixed inset-3.5 overflow-hidden rounded-[30px] border border-gold-line/60">
+        <Floral
+          variant="eucalyptus"
+          size={120}
+          className="absolute -top-2 -left-2 h-32 w-32 -scale-y-100 md:h-48 md:w-48"
+        />
+        <Floral
+          variant="lavender"
+          size={120}
+          className="absolute -top-2 -right-2 h-28 w-28 rotate-180 md:h-40 md:w-40"
+        />
+        <Floral
+          variant="fern"
+          size={120}
+          className="absolute -bottom-2 -left-2 h-28 w-28 md:h-40 md:w-40"
+        />
+        <Floral
+          variant="blossom"
+          size={120}
+          className="absolute -right-2 -bottom-2 h-32 w-32 -scale-x-100 md:h-48 md:w-48"
+        />
+      </div>
 
       <motion.div
         variants={containerVariants}

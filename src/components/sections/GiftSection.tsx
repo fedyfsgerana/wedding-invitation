@@ -91,7 +91,11 @@ export function GiftSection() {
   const { bankAccounts } = weddingData;
 
   return (
-    <SectionWrapper id="hadiah" variant="cream">
+    <SectionWrapper
+      id="hadiah"
+      variant="cream"
+      ornament={{ variant: "sprig", corner: "bottom-left" }}
+    >
       <div className="mx-auto max-w-lg">
         <SectionTitle
           eyebrow="Wedding Gift"
