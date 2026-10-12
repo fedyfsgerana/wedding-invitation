@@ -6,59 +6,32 @@ import {
   isAdminConfigured,
   verifyPassword,
 } from "@/lib/auth";
-
-const loginAttempts = new Map<
-  string,
-  { attempts: number; firstAttempt: number }
->();
+import { clientIp, remainingMs, resetTokens, takeToken } from "@/lib/rateLimit";
 
 const MAX_ATTEMPTS = 5;
+const MAX_GLOBAL_ATTEMPTS = 30;
 const WINDOW_MS = 15 * 60 * 1000;
+const GLOBAL_KEY = "login:all";
 
-function getIP(req: NextRequest): string {
-  return (
-    req.headers.get("x-forwarded-for")?.split(",")[0].trim() ||
-    req.headers.get("x-real-ip") ||
-    "unknown"
+function tooMany(minutesLeft: number) {
+  return NextResponse.json(
+    {
+      success: false,
+      error: `Terlalu banyak percobaan. Coba lagi dalam ${minutesLeft} menit.`,
+    },
+    { status: 429 },
   );
 }
 
-function checkRateLimit(ip: string): { allowed: boolean; remainingMs: number } {
-  const now = Date.now();
-  const record = loginAttempts.get(ip);
-
-  if (!record) {
-    loginAttempts.set(ip, { attempts: 1, firstAttempt: now });
-    return { allowed: true, remainingMs: 0 };
-  }
-
-  if (now - record.firstAttempt > WINDOW_MS) {
-    loginAttempts.set(ip, { attempts: 1, firstAttempt: now });
-    return { allowed: true, remainingMs: 0 };
-  }
-
-  if (record.attempts >= MAX_ATTEMPTS) {
-    const remainingMs = WINDOW_MS - (now - record.firstAttempt);
-    return { allowed: false, remainingMs };
-  }
-
-  record.attempts += 1;
-  return { allowed: true, remainingMs: 0 };
-}
-
 export async function POST(req: NextRequest) {
-  const ip = getIP(req);
-  const { allowed, remainingMs } = checkRateLimit(ip);
+  const ipKey = `login:${clientIp(req)}`;
 
-  if (!allowed) {
-    const minutes = Math.ceil(remainingMs / 60000);
-    return NextResponse.json(
-      {
-        success: false,
-        error: `Terlalu banyak percobaan. Coba lagi dalam ${minutes} menit.`,
-      },
-      { status: 429 },
-    );
+  if (!takeToken(ipKey, MAX_ATTEMPTS, WINDOW_MS)) {
+    return tooMany(Math.ceil(remainingMs(ipKey, WINDOW_MS) / 60000));
+  }
+
+  if (!takeToken(GLOBAL_KEY, MAX_GLOBAL_ATTEMPTS, WINDOW_MS)) {
+    return tooMany(Math.ceil(remainingMs(GLOBAL_KEY, WINDOW_MS) / 60000));
   }
 
   if (!isAdminConfigured()) {
@@ -81,7 +54,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    loginAttempts.delete(ip);
+    resetTokens(ipKey);
 
     const res = NextResponse.json({ success: true });
     res.cookies.set(SESSION_COOKIE, token, {

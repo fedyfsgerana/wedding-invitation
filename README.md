@@ -131,6 +131,8 @@ npm run start
 
 Bisa langsung di-deploy ke [Vercel](https://vercel.com/new) atau platform hosting Next.js lainnya.
 
+Kalau di-host sendiri (bukan Vercel), jalankan aplikasi di belakang reverse proxy seperti Nginx yang mengisi header `X-Forwarded-For`, karena batas percobaan login dan kiriman ucapan memakai alamat IP dari header itu. Halaman pratinjau `/develop/administrator` hanya bisa dibuka saat development atau setelah login admin.
+
 ## Pengembang
 
 <table style="width:100%; border-collapse:collapse;">
