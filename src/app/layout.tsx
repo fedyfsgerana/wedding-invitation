@@ -1,11 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Great_Vibes, Playfair_Display } from "next/font/google";
+import { Amiri, Cormorant_Garamond, Geist, Italianno } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/providers/ThemeProvider";
 
-const playfair = Playfair_Display({
+const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
-  variable: "--font-playfair",
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-cormorant",
   display: "swap",
 });
 
@@ -15,10 +17,17 @@ const geist = Geist({
   display: "swap",
 });
 
-const greatVibes = Great_Vibes({
+const italianno = Italianno({
   subsets: ["latin"],
   weight: "400",
-  variable: "--font-great-vibes",
+  variable: "--font-italianno",
+  display: "swap",
+});
+
+const amiri = Amiri({
+  subsets: ["arabic"],
+  weight: ["400", "700"],
+  variable: "--font-amiri",
   display: "swap",
 });
 
@@ -53,7 +62,7 @@ export default function RootLayout({
   return (
     <html lang="id" suppressHydrationWarning>
       <body
-        className={`${playfair.variable} ${geist.variable} ${greatVibes.variable} font-sans`}
+        className={`${cormorant.variable} ${geist.variable} ${italianno.variable} ${amiri.variable} font-sans`}
       >
         <ThemeProvider>{children}</ThemeProvider>
       </body>

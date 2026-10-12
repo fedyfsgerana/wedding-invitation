@@ -116,7 +116,7 @@ export function Navbar() {
     <button
       type="button"
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-      className="font-script text-[28px] leading-none text-primary"
+      className="font-script text-[32px] leading-none text-primary"
       aria-label="Kembali ke atas"
     >
       {groom.nickname} &amp; {bride.nickname}

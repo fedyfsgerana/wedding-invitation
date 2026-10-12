@@ -57,7 +57,7 @@ export function ClosingSection() {
 
         <motion.h2
           variants={itemVariants}
-          className="font-serif text-[27px] font-semibold text-foreground md:text-4xl"
+          className="font-serif text-[30px] font-semibold text-foreground md:text-[40px]"
         >
           Terima Kasih
         </motion.h2>
@@ -83,10 +83,10 @@ export function ClosingSection() {
 
         <motion.p
           variants={itemVariants}
-          className="mt-1 font-serif text-[34px] font-medium leading-tight"
+          className="mt-1 font-serif text-[38px] font-medium leading-tight"
         >
           <span className="text-gold-gradient">{groom.nickname}</span>{" "}
-          <span className="font-script text-gold">&amp;</span>{" "}
+          <span className="font-script text-[44px] text-gold">&amp;</span>{" "}
           <span className="text-gold-gradient">{bride.nickname}</span>
         </motion.p>
 

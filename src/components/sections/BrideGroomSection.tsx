@@ -62,7 +62,7 @@ function PersonCard({ person, parents, childLabel, index }: PersonCardProps) {
         {person.role}
       </span>
 
-      <h3 className="font-serif text-[25px] font-semibold leading-tight text-gold-gradient">
+      <h3 className="font-serif text-[28px] font-semibold leading-tight text-gold-gradient">
         {person.fullName}
       </h3>
 
@@ -103,7 +103,7 @@ export function BrideGroomSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.5, delay: 0.2 }}
             aria-hidden="true"
-            className="text-center font-script text-[44px] leading-none text-gold"
+            className="text-center font-script text-[56px] leading-none text-gold"
           >
             &amp;
           </motion.p>

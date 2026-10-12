@@ -72,7 +72,7 @@ export function GiftSection() {
                 <span className="text-xs font-semibold uppercase tracking-[0.16em] text-primary">
                   {account.bank}
                 </span>
-                <p className="font-serif text-[22px] font-semibold tracking-[0.06em] text-foreground tabular-nums">
+                <p className="font-serif text-2xl font-semibold tracking-[0.06em] text-foreground tabular-nums">
                   {groupDigits(account.accountNumber)}
                 </p>
                 <div className="flex items-center justify-between gap-3">

@@ -38,7 +38,7 @@ export function LoadingScreen({
               }}
               className="absolute inset-0 rounded-full border border-gold-line"
             />
-            <span className="font-script text-5xl leading-none text-primary">
+            <span className="font-script text-6xl leading-none text-primary">
               {groom.nickname.charAt(0)}&amp;{bride.nickname.charAt(0)}
             </span>
           </div>

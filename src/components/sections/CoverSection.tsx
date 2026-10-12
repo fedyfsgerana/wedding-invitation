@@ -94,13 +94,13 @@ export function CoverSection({
               className="absolute -top-4.5 -right-6.5 rotate-180"
             />
             <h1 className="flex flex-col items-center">
-              <span className="font-serif text-[44px] xs:text-[52px] font-medium leading-none text-gold-gradient">
+              <span className="font-serif text-[50px] xs:text-[58px] font-medium leading-none text-gold-gradient">
                 {groom.nickname}
               </span>
-              <span className="font-script text-[44px] xs:text-[48px] leading-[1.15] text-gold">
+              <span className="font-script text-[56px] xs:text-[64px] leading-[1.05] text-gold">
                 &amp;
               </span>
-              <span className="font-serif text-[44px] xs:text-[52px] font-medium leading-none text-gold-gradient">
+              <span className="font-serif text-[50px] xs:text-[58px] font-medium leading-none text-gold-gradient">
                 {bride.nickname}
               </span>
             </h1>
@@ -124,7 +124,7 @@ export function CoverSection({
             <span className="text-xs text-muted-foreground">
               Kepada Yth. Bapak/Ibu/Saudara/i
             </span>
-            <span className="font-serif text-[23px] font-semibold text-foreground">
+            <span className="font-serif text-[26px] font-semibold text-foreground">
               {guestName ?? "Tamu Undangan"}
             </span>
           </div>

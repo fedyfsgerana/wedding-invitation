@@ -33,7 +33,9 @@ function CountdownCircle({ value, label }: { value: number; label: string }) {
     >
       <span
         className={`font-serif font-semibold leading-none tabular-nums text-gold-gradient ${
-          display.length > 2 ? "text-xl md:text-3xl" : "text-[26px] md:text-4xl"
+          display.length > 2
+            ? "text-2xl md:text-3xl"
+            : "text-[30px] md:text-[40px]"
         }`}
       >
         {display}

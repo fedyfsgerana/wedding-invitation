@@ -38,9 +38,10 @@
   --color-danger-soft: #f9ecea;
   --color-danger-border: #edc8c2;
 
-  --font-serif: var(--font-playfair), "Georgia", serif;
+  --font-serif: var(--font-cormorant), "Georgia", serif;
   --font-sans: var(--font-geist), "Helvetica Neue", sans-serif;
-  --font-script: var(--font-great-vibes), cursive;
+  --font-script: var(--font-italianno), cursive;
+  --font-arabic: var(--font-amiri), "Traditional Arabic", serif;
 
   --radius: 0.75rem;
 }
@@ -143,7 +144,11 @@
   }
 
   .gradient-primary {
-    background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-gold) 0%,
+      var(--color-gold-light) 100%
+    );
   }
 
   .dark .text-gold-gradient {
@@ -153,11 +158,19 @@
   }
 
   .gradient-soft {
-    background: linear-gradient(180deg, var(--color-ivory) 0%, var(--color-cream) 100%);
+    background: linear-gradient(
+      180deg,
+      var(--color-ivory) 0%,
+      var(--color-cream) 100%
+    );
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-light) 100%);
+    background: linear-gradient(
+      135deg,
+      var(--color-gold) 0%,
+      var(--color-gold-light) 100%
+    );
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -200,7 +213,6 @@
   }
 
   @keyframes float {
-
     0%,
     100% {
       transform: translateY(0px);
@@ -212,7 +224,6 @@
   }
 
   @keyframes pulse-soft {
-
     0%,
     100% {
       opacity: 1;

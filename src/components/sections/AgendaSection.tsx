@@ -59,7 +59,7 @@ export function AgendaSection() {
                     <span className="inline-block rounded-full bg-accent px-2 py-0.5 text-xs font-semibold text-accent-foreground">
                       {item.time.replace(/:/g, ".").replace(" - ", " – ")}
                     </span>
-                    <h3 className="mt-1.5 font-serif text-[17px] font-semibold text-foreground">
+                    <h3 className="mt-1.5 font-serif text-[19px] font-semibold text-foreground">
                       {item.title}
                     </h3>
                     {item.description && (

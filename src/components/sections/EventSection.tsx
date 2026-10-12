@@ -84,13 +84,13 @@ function EventCard({ title, event, index }: EventCardProps) {
     >
       <header className="flex items-center gap-3 px-4.5">
         <span className="flex w-14 shrink-0 flex-col items-center rounded-[14px] border border-border bg-accent py-1.75 leading-tight">
-          <b className="font-serif text-[22px] text-primary">{badge.day}</b>
+          <b className="font-serif text-2xl text-primary">{badge.day}</b>
           <span className="text-[10px] font-semibold tracking-[0.14em] text-muted-foreground">
             {badge.month}
           </span>
         </span>
         <div>
-          <h3 className="font-serif text-[21px] font-semibold text-foreground">
+          <h3 className="font-serif text-[23px] font-semibold text-foreground">
             {title}
           </h3>
           <p className="mt-0.5 text-[13px] text-muted-foreground">

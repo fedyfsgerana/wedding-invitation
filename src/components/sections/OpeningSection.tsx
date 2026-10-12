@@ -41,14 +41,14 @@ export function OpeningSection() {
           variants={itemVariants}
           lang="ar"
           dir="rtl"
-          className="text-2xl text-primary"
+          className="font-arabic text-[28px] leading-relaxed text-primary"
         >
           بِسْمِ اللّٰهِ الرَّحْمٰنِ الرَّحِيْمِ
         </motion.p>
 
         <motion.h2
           variants={itemVariants}
-          className="font-serif text-[22px] md:text-3xl font-semibold text-foreground"
+          className="font-serif text-[25px] md:text-[34px] font-semibold text-foreground"
         >
           Assalamu&apos;alaikum Wr. Wb.
         </motion.h2>
@@ -69,7 +69,7 @@ export function OpeningSection() {
           variants={itemVariants}
           className="card-wedding w-full px-5.5 py-6.5"
         >
-          <blockquote className="font-serif text-[15px] italic leading-[1.75] text-foreground/80">
+          <blockquote className="font-serif text-[17px] italic leading-[1.7] text-foreground/80">
             &ldquo;{verse.text}&rdquo;
           </blockquote>
           <figcaption className="mt-3 text-[11.5px] font-semibold uppercase tracking-[0.16em] text-gold">

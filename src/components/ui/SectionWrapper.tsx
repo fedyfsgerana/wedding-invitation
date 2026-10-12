@@ -71,7 +71,7 @@ export function SectionTitle({
   return (
     <div className={cn("mb-8 md:mb-12", center && "text-center", className)}>
       {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
-      <h2 className="font-serif text-[27px] md:text-4xl font-semibold text-foreground">
+      <h2 className="font-serif text-[30px] md:text-[40px] font-semibold leading-tight text-foreground">
         {title}
       </h2>
       {subtitle && (
