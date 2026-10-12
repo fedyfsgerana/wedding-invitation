@@ -10,7 +10,6 @@ interface SectionWrapperProps {
   className?: string;
   variant?: "default" | "cream";
   noPadding?: boolean;
-  divider?: boolean;
 }
 
 const sectionVariants: Variants = {
@@ -21,31 +20,12 @@ const sectionVariants: Variants = {
   },
 };
 
-export function SectionDivider() {
-  return (
-    <motion.div
-      aria-hidden="true"
-      initial={{ opacity: 0, scaleX: 0.4 }}
-      whileInView={{ opacity: 1, scaleX: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
-      className="pointer-events-none absolute inset-x-0 top-0 flex -translate-y-1/2 items-center justify-center"
-    >
-      <span className="h-px w-[min(70%,32rem)] bg-linear-to-r from-transparent via-gold-line to-transparent" />
-      <span className="absolute flex h-7 w-7 items-center justify-center rounded-full border border-gold-line bg-background">
-        <span className="h-1.5 w-1.5 rotate-45 bg-gold" />
-      </span>
-    </motion.div>
-  );
-}
-
 export function SectionWrapper({
   children,
   id,
   className,
   variant = "default",
   noPadding = false,
-  divider = true,
 }: SectionWrapperProps) {
   return (
     <motion.section
@@ -57,13 +37,10 @@ export function SectionWrapper({
       className={cn(
         "relative w-full scroll-mt-20 md:scroll-mt-24",
         !noPadding && "section-padding",
-        variant === "cream"
-          ? "bg-linear-to-b from-cream via-cream to-background/40"
-          : "bg-background",
+        variant === "cream" ? "bg-cream" : "bg-background",
         className,
       )}
     >
-      {divider && <SectionDivider />}
       {children}
     </motion.section>
   );

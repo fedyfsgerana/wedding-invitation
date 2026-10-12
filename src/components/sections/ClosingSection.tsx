@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { useToast } from "@/components/providers/ToastProvider";
 import { DotDivider, FloralSprig } from "@/components/ui/Ornament";
-import { SectionDivider } from "@/components/ui/SectionWrapper";
 import { getLucideIcon } from "@/lib/utils";
 import { weddingData } from "@/lib/weddingData";
 
@@ -45,9 +44,8 @@ export function ClosingSection() {
   return (
     <section
       id="penutup"
-      className="relative w-full bg-background px-5.5 pt-14 pb-28 md:pb-16"
+      className="w-full bg-background px-5.5 pt-12 pb-28 md:pb-16"
     >
-      <SectionDivider />
       <motion.div
         variants={containerVariants}
         initial="hidden"

@@ -24,7 +24,7 @@ export function OpeningSection() {
   const { verse } = weddingData;
 
   return (
-    <SectionWrapper id="pembuka" divider={false} className="overflow-hidden">
+    <SectionWrapper id="pembuka" className="overflow-hidden">
       <FloralSprig
         size={84}
         className="absolute top-2 right-1.5 -scale-x-100 md:top-8 md:right-[12%]"

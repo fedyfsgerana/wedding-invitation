@@ -6,7 +6,7 @@ import { useAudio } from "@/components/providers/AudioProvider";
 import { useTheme } from "@/components/providers/ThemeProvider";
 import { Monogram } from "@/components/ui/Monogram";
 import { cn, getLucideIcon } from "@/lib/utils";
-import { weddingData } from "@/lib/weddingData";
+import { siteConfig, weddingData } from "@/lib/weddingData";
 
 const desktopItems = [
   { label: "Pembuka", id: "pembuka", icon: getLucideIcon("BookOpen") },
@@ -27,6 +27,18 @@ const mobileItems = [
 ];
 
 const SECTION_ORDER = desktopItems.map((item) => item.id);
+
+const SECTION_TITLES: Record<string, string> = {
+  pembuka: "Pembuka",
+  mempelai: "Mempelai",
+  countdown: "Hitung Mundur",
+  acara: "Acara",
+  agenda: "Susunan Acara",
+  galeri: "Galeri",
+  rsvp: "Ucapan",
+  hadiah: "Hadiah",
+  penutup: "Penutup",
+};
 
 const SunIcon = getLucideIcon("Sun");
 const MoonIcon = getLucideIcon("Moon");
@@ -79,6 +91,13 @@ export function Navbar() {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    const label = SECTION_TITLES[active];
+    document.title = label
+      ? `${siteConfig.title} - ${label}`
+      : siteConfig.title;
+  }, [active]);
 
   const goTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
