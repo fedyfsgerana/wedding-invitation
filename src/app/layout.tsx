@@ -60,10 +60,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="id" suppressHydrationWarning>
-      <body
-        className={`${cormorant.variable} ${geist.variable} ${italianno.variable} ${amiri.variable} font-sans`}
-      >
+    <html
+      lang="id"
+      suppressHydrationWarning
+      className={`${cormorant.variable} ${geist.variable} ${italianno.variable} ${amiri.variable}`}
+    >
+      <body className="font-sans">
         <ThemeProvider>{children}</ThemeProvider>
       </body>
     </html>
