@@ -96,10 +96,10 @@ export const weddingData: WeddingData = {
   gallery: [
     {
       id: 1,
-      src: "https://picsum.photos/seed/wedding1/800/600",
-      alt: "Foto prewedding 1",
-      width: 800,
-      height: 600,
+      src: "/images/gallery-1.jpg",
+      alt: "Fedy dan Suci berfoto bersama",
+      width: 899,
+      height: 1599,
     },
     {
       id: 2,

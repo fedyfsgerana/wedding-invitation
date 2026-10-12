@@ -84,7 +84,7 @@ export function GallerySection() {
                   alt={item.alt}
                   fill
                   sizes="(min-width: 768px) 300px, 33vw"
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  className="photo-tone object-cover transition duration-500 group-hover:scale-105 group-hover:filter-none group-focus-visible:filter-none"
                 />
               </button>
             </motion.li>

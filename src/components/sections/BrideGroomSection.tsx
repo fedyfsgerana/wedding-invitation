@@ -52,7 +52,7 @@ function PersonCard({ person, parents, childLabel, index }: PersonCardProps) {
             alt={person.fullName}
             width={256}
             height={256}
-            className="h-full w-full object-cover"
+            className="photo-tone h-full w-full object-cover"
             onError={handleErr}
           />
         </div>
