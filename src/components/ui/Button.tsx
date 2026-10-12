@@ -18,6 +18,7 @@ interface ButtonProps {
   className?: string;
   fullWidth?: boolean;
   target?: "_blank" | "_self";
+  type?: "button" | "submit";
 }
 
 export function Button({
@@ -33,6 +34,7 @@ export function Button({
   className,
   fullWidth = false,
   target = "_self",
+  type = "button",
 }: ButtonProps) {
   const Icon = useMemo(() => {
     if (loading) return LucideIcons.Loader2;
@@ -101,6 +103,7 @@ export function Button({
 
   return (
     <motion.button
+      type={type}
       onClick={onClick}
       disabled={isDisabled}
       aria-busy={loading}
