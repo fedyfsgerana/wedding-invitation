@@ -26,7 +26,10 @@ export function AgendaSection() {
   return (
     <SectionWrapper
       id="agenda"
-      ornament={{ variant: "tulip", corner: "bottom-right" }}
+      ornaments={[
+        { variant: "tulip", corner: "bottom-right" },
+        { variant: "babysbreath", corner: "top-left", size: "sm" },
+      ]}
     >
       <div className="mx-auto max-w-lg">
         <SectionTitle

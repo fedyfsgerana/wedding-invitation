@@ -94,7 +94,10 @@ export function GiftSection() {
     <SectionWrapper
       id="hadiah"
       variant="cream"
-      ornament={{ variant: "sprig", corner: "bottom-left" }}
+      ornaments={[
+        { variant: "sprig", corner: "bottom-left" },
+        { variant: "lavender", corner: "top-right", size: "sm" },
+      ]}
     >
       <div className="mx-auto max-w-lg">
         <SectionTitle

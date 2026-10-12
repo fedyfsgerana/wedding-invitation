@@ -84,7 +84,10 @@ export function BrideGroomSection() {
     <SectionWrapper
       id="mempelai"
       variant="cream"
-      ornament={{ variant: "lavender", corner: "bottom-left" }}
+      ornaments={[
+        { variant: "lavender", corner: "bottom-left" },
+        { variant: "daisy", corner: "top-right", size: "sm" },
+      ]}
     >
       <div className="container-wedding">
         <SectionTitle

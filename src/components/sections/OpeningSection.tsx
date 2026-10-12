@@ -26,7 +26,10 @@ export function OpeningSection() {
   return (
     <SectionWrapper
       id="pembuka"
-      ornament={{ variant: "blossom", corner: "top-right" }}
+      ornaments={[
+        { variant: "blossom", corner: "top-right" },
+        { variant: "fern", corner: "bottom-left", size: "sm" },
+      ]}
     >
       <motion.div
         variants={containerVariants}

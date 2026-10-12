@@ -130,9 +130,7 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
       if (data.wish) setWishes((current) => [data.wish, ...current]);
       setSubmitted(true);
     } catch {
-      setError(
-        "Tidak dapat terhubung ke server. Periksa koneksi internet Anda.",
-      );
+      setError("Tidak dapat terhubung ke server. Periksa koneksi internet Anda.");
     } finally {
       setLoading(false);
     }
@@ -147,7 +145,10 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
   return (
     <SectionWrapper
       id="rsvp"
-      ornament={{ variant: "babysbreath", corner: "top-right" }}
+      ornaments={[
+        { variant: "babysbreath", corner: "top-right" },
+        { variant: "blossom", corner: "bottom-left", size: "sm" },
+      ]}
     >
       <div className="container-wedding">
         <SectionTitle
@@ -182,11 +183,7 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
                   <p className="text-sm text-muted-foreground">
                     Konfirmasi dan ucapan Anda telah kami terima.
                   </p>
-                  <Button
-                    onClick={handleReset}
-                    variant="outline"
-                    className="mt-2"
-                  >
+                  <Button onClick={handleReset} variant="outline" className="mt-2">
                     Kirim Ucapan Lain
                   </Button>
                 </motion.div>
@@ -216,10 +213,7 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
                   </AnimatePresence>
 
                   <div className="flex flex-col gap-1.5">
-                    <label
-                      htmlFor="rsvp-name"
-                      className="text-[13px] font-semibold text-foreground"
-                    >
+                    <label htmlFor="rsvp-name" className="text-[13px] font-semibold text-foreground">
                       Nama
                     </label>
                     <input
@@ -227,19 +221,14 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
                       type="text"
                       value={form.name}
                       maxLength={100}
-                      onChange={(e) =>
-                        setForm({ ...form, name: e.target.value })
-                      }
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
                       placeholder="Nama Anda"
                       disabled={loading}
                       className={cn(inputClass, "h-11.5")}
                     />
                   </div>
 
-                  <fieldset
-                    className="flex flex-col gap-1.5"
-                    disabled={loading}
-                  >
+                  <fieldset className="flex flex-col gap-1.5" disabled={loading}>
                     <legend className="mb-1.5 text-[13px] font-semibold text-foreground">
                       Kehadiran
                     </legend>
@@ -252,9 +241,7 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
                             key={key}
                             type="button"
                             aria-pressed={active}
-                            onClick={() =>
-                              setForm({ ...form, attendance: key })
-                            }
+                            onClick={() => setForm({ ...form, attendance: key })}
                             className={cn(
                               "flex h-11 items-center justify-center gap-1.5 rounded-xl border px-1.5 text-[13px] font-semibold transition disabled:opacity-60",
                               active
@@ -272,35 +259,22 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
 
                   {form.attendance === "hadir" && (
                     <div className="flex items-center justify-between gap-3">
-                      <span
-                        id="rsvp-count"
-                        className="text-[13px] font-semibold text-foreground"
-                      >
+                      <span id="rsvp-count" className="text-[13px] font-semibold text-foreground">
                         Jumlah tamu
                       </span>
-                      <div
-                        className="flex items-center gap-2.5"
-                        role="group"
-                        aria-labelledby="rsvp-count"
-                      >
+                      <div className="flex items-center gap-2.5" role="group" aria-labelledby="rsvp-count">
                         <button
                           type="button"
                           aria-label="Kurangi jumlah tamu"
                           onClick={() =>
-                            setForm({
-                              ...form,
-                              guestCount: Math.max(1, form.guestCount - 1),
-                            })
+                            setForm({ ...form, guestCount: Math.max(1, form.guestCount - 1) })
                           }
                           disabled={loading || form.guestCount <= 1}
                           className={stepperClass}
                         >
                           <MinusIcon className="h-4 w-4" />
                         </button>
-                        <span
-                          className="w-6 text-center font-serif text-lg font-semibold text-foreground"
-                          aria-live="polite"
-                        >
+                        <span className="w-6 text-center font-serif text-lg font-semibold text-foreground" aria-live="polite">
                           {form.guestCount}
                         </span>
                         <button
@@ -309,15 +283,10 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
                           onClick={() =>
                             setForm({
                               ...form,
-                              guestCount: Math.min(
-                                MAX_GUEST_COUNT,
-                                form.guestCount + 1,
-                              ),
+                              guestCount: Math.min(MAX_GUEST_COUNT, form.guestCount + 1),
                             })
                           }
-                          disabled={
-                            loading || form.guestCount >= MAX_GUEST_COUNT
-                          }
+                          disabled={loading || form.guestCount >= MAX_GUEST_COUNT}
                           className={stepperClass}
                         >
                           <PlusIcon className="h-4 w-4" />
@@ -327,19 +296,14 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
                   )}
 
                   <div className="flex flex-col gap-1.5">
-                    <label
-                      htmlFor="rsvp-message"
-                      className="text-[13px] font-semibold text-foreground"
-                    >
+                    <label htmlFor="rsvp-message" className="text-[13px] font-semibold text-foreground">
                       Ucapan &amp; doa
                     </label>
                     <textarea
                       id="rsvp-message"
                       value={form.message}
                       maxLength={MAX_MESSAGE}
-                      onChange={(e) =>
-                        setForm({ ...form, message: e.target.value })
-                      }
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
                       placeholder="Tulis ucapan untuk kedua mempelai"
                       rows={4}
                       disabled={loading}
@@ -374,9 +338,7 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
             className="flex flex-col gap-3"
           >
             <div className="flex items-center justify-between">
-              <h3 className="text-base font-semibold text-foreground">
-                Ucapan Tamu
-              </h3>
+              <h3 className="text-base font-semibold text-foreground">Ucapan Tamu</h3>
               <span className="inline-flex items-center gap-1.5 rounded-full bg-accent px-2.5 py-1 text-xs font-semibold text-accent-foreground">
                 <UsersIcon className="h-3.5 w-3.5" />
                 {wishes.length} ucapan
@@ -411,16 +373,10 @@ export function RSVPSection({ guestName }: RSVPSectionProps) {
                             <p className="truncate text-[14.5px] font-semibold text-foreground">
                               {wish.name}
                             </p>
-                            <span
-                              className={cn(
-                                "inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold",
-                                meta.badge,
-                              )}
-                            >
+                            <span className={cn("inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold", meta.badge)}>
                               <Icon className="h-3.5 w-3.5" />
                               {meta.label}
-                              {wish.attendance === "hadir" &&
-                              wish.guestCount > 0
+                              {wish.attendance === "hadir" && wish.guestCount > 0
                                 ? ` · ${wish.guestCount} orang`
                                 : ""}
                             </span>

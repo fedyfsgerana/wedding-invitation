@@ -199,7 +199,10 @@ export function EventSection() {
     <SectionWrapper
       id="acara"
       variant="cream"
-      ornament={{ variant: "eucalyptus", corner: "top-right" }}
+      ornaments={[
+        { variant: "eucalyptus", corner: "top-right" },
+        { variant: "tulip", corner: "bottom-left", size: "sm" },
+      ]}
     >
       <div className="container-wedding">
         <SectionTitle

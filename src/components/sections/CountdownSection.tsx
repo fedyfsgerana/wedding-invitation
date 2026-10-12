@@ -66,7 +66,10 @@ export function CountdownSection() {
   return (
     <SectionWrapper
       id="countdown"
-      ornament={{ variant: "daisy", corner: "top-left" }}
+      ornaments={[
+        { variant: "daisy", corner: "top-left" },
+        { variant: "eucalyptus", corner: "bottom-right", size: "sm" },
+      ]}
     >
       <div className="mx-auto flex max-w-lg flex-col items-center text-center">
         <SectionTitle

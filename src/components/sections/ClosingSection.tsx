@@ -3,7 +3,7 @@
 import { motion } from "framer-motion";
 import type { Variants } from "framer-motion";
 import { Monogram } from "@/components/ui/Monogram";
-import { DotDivider, Floral } from "@/components/ui/Ornament";
+import { CornerFloral, DotDivider, Floral } from "@/components/ui/Ornament";
 import { weddingData } from "@/lib/weddingData";
 
 const itemVariants: Variants = {
@@ -32,14 +32,16 @@ export function ClosingSection() {
     <>
       <section
         id="penutup"
-        className="w-full scroll-mt-20 bg-background px-5.5 py-12 md:scroll-mt-24 md:py-24"
+        className="relative w-full scroll-mt-20 overflow-hidden bg-background px-5.5 py-12 md:scroll-mt-24 md:py-24"
       >
+        <CornerFloral variant="eucalyptus" corner="top-left" size="sm" />
+        <CornerFloral variant="fern" corner="bottom-right" />
         <motion.div
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="mx-auto flex max-w-lg flex-col items-center gap-5 text-center"
+          className="relative mx-auto flex max-w-lg flex-col items-center gap-5 text-center"
         >
           <motion.div variants={itemVariants} className="flex items-end">
             <Floral variant="tulip" size={72} className="-scale-x-100" />
