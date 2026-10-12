@@ -6,6 +6,7 @@ import {
   updateCell,
 } from "@/lib/googleSheets";
 import { isAuthenticated } from "@/lib/auth";
+import { serverError } from "@/lib/apiError";
 import {
   GUESTS_SHEET_NAME,
   MAX_QUOTA,
@@ -53,7 +54,7 @@ export async function GET(req: NextRequest) {
       .reverse();
     return NextResponse.json({ guests });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return serverError("guests GET", err);
   }
 }
 
@@ -107,7 +108,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return serverError("guests POST", err);
   }
 }
 
@@ -168,7 +169,7 @@ export async function PATCH(req: NextRequest) {
     }
     return NextResponse.json({ success: true, updated: ids.length });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return serverError("guests PATCH", err);
   }
 }
 
@@ -191,6 +192,6 @@ export async function DELETE(req: NextRequest) {
     }
     return NextResponse.json({ success: true, deleted: ids.length });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return serverError("guests DELETE", err);
   }
 }

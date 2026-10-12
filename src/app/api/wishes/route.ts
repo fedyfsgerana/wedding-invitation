@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { appendRow, readRows, deleteRowById } from "@/lib/googleSheets";
 import { isAuthenticated } from "@/lib/auth";
+import { serverError } from "@/lib/apiError";
 import {
   WISHES_SHEET_NAME,
   findGuestByName,
@@ -43,7 +44,7 @@ export async function GET() {
     const wishes = rows.slice(1).map(rowToWish).reverse();
     return NextResponse.json({ wishes });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return serverError("wishes GET", err);
   }
 }
 
@@ -152,7 +153,7 @@ export async function POST(req: NextRequest) {
       },
     });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return serverError("wishes POST", err);
   }
 }
 
@@ -175,6 +176,6 @@ export async function DELETE(req: NextRequest) {
     }
     return NextResponse.json({ success: true, deleted: ids.length });
   } catch (err) {
-    return NextResponse.json({ error: String(err) }, { status: 500 });
+    return serverError("wishes DELETE", err);
   }
 }
