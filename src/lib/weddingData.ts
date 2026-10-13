@@ -107,6 +107,7 @@ export const weddingData: WeddingData = {
       alt: "Fedy dan Suci berdiri di tepi pantai",
       width: 1280,
       height: 960,
+      focus: "78% 60%",
     },
     {
       id: 3,
@@ -135,8 +136,7 @@ export const weddingData: WeddingData = {
       alt: "Fedy dan Suci duduk di tepi pantai",
       width: 1280,
       height: 960,
-      shape: "wide",
-      focus: "53% 72%",
+      focus: "53% 60%",
     },
   ],
   agenda: [
